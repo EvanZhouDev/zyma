@@ -2,7 +2,7 @@
 
 > Originally [built in a 12-hour hackathon](https://github.com/EvanZhouDev/codeforcause-hackathon)
 
-Zyma is a simple attendence-tracker for anyone to use, built specifically for high school clubs or programs managers.
+Zyma is a simple attendance tracker for anyone to use, built specifically for high school club or program managers.
 
 ## Usage and how to host
 
