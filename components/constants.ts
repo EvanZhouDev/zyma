@@ -1,0 +1,1 @@
+export const ATTENDENCE_STATUS_PRESENT = 0;

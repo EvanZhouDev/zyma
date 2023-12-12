@@ -1,0 +1,26 @@
+Ideas for being different
+* just get good ui :)
+* 3d qr cod
+*
+
+Problems:
+Verifying attendance is difficult for the teacher (should be integrated in-app)
+the main problem is that people who are absent can just request the login code from their friend who is in the room. We want to ensure physical presence in the room, make it as hard as possible to spoof.
+
+
+
+
+
+
+
+// UI
+* student sign in
+* teacher sign in
+* teacher dashboard
+* teacher code scan ui
+
+// technologies needed
+* sign in for student
+* auth for student
+* auth for teacher
+* QR code
