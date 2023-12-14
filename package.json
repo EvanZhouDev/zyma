@@ -10,13 +10,13 @@
     "fix-unsafe": "biome check --apply-unsafe ."
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "autoprefixer": "10.4.15",
     "daisyui": "^4.4.19",
     "formik": "^2.4.5",
     "geist": "^1.0.0",
-    "heroicons": "^2.0.18",
     "next": "latest",
     "postcss": "^8.4.32",
     "qrcode.react": "^3.1.0",

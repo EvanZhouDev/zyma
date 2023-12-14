@@ -10,8 +10,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-CREATE EXTENSION IF NOT EXISTS "pg_net" WITH SCHEMA "extensions";
-
 CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
 
 CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
@@ -45,10 +43,10 @@ SET default_table_access_method = "heap";
 
 CREATE TABLE IF NOT EXISTS "public"."attendance" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "code_used" bigint NOT NULL,
     "student" "uuid" NOT NULL,
     "status" smallint DEFAULT '0'::smallint NOT NULL,
-    "metadata" "json" DEFAULT 'null'::"json"
+    "metadata" "json" DEFAULT 'null'::"json",
+    "code_used" "uuid" NOT NULL
 );
 
 ALTER TABLE "public"."attendance" OWNER TO "postgres";
@@ -110,7 +108,7 @@ CREATE TABLE IF NOT EXISTS "public"."students" (
 ALTER TABLE "public"."students" OWNER TO "postgres";
 
 ALTER TABLE ONLY "public"."attendance"
-    ADD CONSTRAINT "attendance_pkey" PRIMARY KEY ("code_used", "student");
+    ADD CONSTRAINT "attendance_pkey" PRIMARY KEY ("student", "code_used");
 
 ALTER TABLE ONLY "public"."classes"
     ADD CONSTRAINT "classes_pkey" PRIMARY KEY ("id");
@@ -128,7 +126,7 @@ ALTER TABLE ONLY "public"."students"
     ADD CONSTRAINT "students_pkey" PRIMARY KEY ("student", "class");
 
 ALTER TABLE ONLY "public"."attendance"
-    ADD CONSTRAINT "attendance_code_used_fkey" FOREIGN KEY ("code_used") REFERENCES "public"."codes"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "attendance_code_used_fkey" FOREIGN KEY ("code_used") REFERENCES "public"."codes"("code") ON UPDATE CASCADE ON DELETE CASCADE;
 
 ALTER TABLE ONLY "public"."attendance"
     ADD CONSTRAINT "attendance_student_fkey" FOREIGN KEY ("student") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
@@ -165,8 +163,6 @@ CREATE POLICY "Enable read access for all users" ON "public"."students" FOR SELE
 CREATE POLICY "Enable select for authenticated users only" ON "public"."codes" FOR SELECT TO "authenticated" USING (true);
 
 CREATE POLICY "Enable update for users based on user_id" ON "public"."profiles" FOR UPDATE USING (("auth"."uid"() = "id"));
-
-ALTER TABLE "public"."attendance" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."classes" ENABLE ROW LEVEL SECURITY;
 

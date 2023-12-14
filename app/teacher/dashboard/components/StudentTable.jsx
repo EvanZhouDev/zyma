@@ -1,18 +1,27 @@
 import Icon from "@/components/Icon";
 import { createClient } from "@/utils/supabase/client";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 // import { getStudentData } from "../actions";
 export default async function StudentTable({ classId }) {
-	const client = createClient();
-	const res = await client
-		.from("students")
-		.select("student (username, email)")
-		.eq("class", classId);
-	console.log(res);
-	const data = (res.data ?? []).map((x) => {
-		return { email: x.student.email, name: x.student.username };
+	let data = [];
+	useEffect(() => {
+		(async () => {
+			if (classId) {
+				const client = await createClient();
+				const res = await client
+					.from("students")
+					.select("student (username, email)")
+					.eq("class", classId);
+				console.log(res);
+				data = (res.data ?? []).map((x) => {
+					return { email: x.student.email, name: x.student.username };
+				});
+			}
+		})();
 	});
+
 	console.log(data);
 	return (
 		<div className="overflow-x-auto">

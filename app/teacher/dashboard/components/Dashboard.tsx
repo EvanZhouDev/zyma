@@ -5,26 +5,14 @@ import ClassTable from "./ClassTable";
 import RegisterStudent from "./RegisterStudent";
 import StudentTable from "./StudentTable";
 
-import { createClient } from "@/utils/supabase/client";
-import { getStudentData } from "../actions";
 // import { createClass, getStudentData } from "../actions";
 import NewClass from "./NewClass";
 export default function Dashboard({
 	classes,
 }: { classes: { name: string; id: number }[] }) {
-	const supabase = createClient();
 	const [selectedClass, setSelectedClass] = useState(0);
-	const classId = classes[selectedClass].id;
-	const className = classes[selectedClass].name;
-	// const [studentData, setStudentData] = useState([
-	// 	{
-	// 		email: "bob.joe@gmail.com",
-	// 		deleteMe: () => {
-	// 			console.log("Bob deleted");
-	// 		},
-	// 		attendence: "10/13 classes", // TODO and implement the status codes... get that constnats file
-	// 	},
-	// ]);
+	const classId = classes[selectedClass]?.id;
+	const className = classes[selectedClass]?.name;
 	return (
 		<div className="w-fill h-screen bg-secondary overflow-hidden">
 			{/* class list and management */}
@@ -65,10 +53,31 @@ export default function Dashboard({
 									</select>
 									<RegisterStudent classId={classId} />
 								</div>
-								<h1 className="website-title pt-5 !-pt-2">
-									Students Registered in {className}
-								</h1>
-								<StudentTable classId={classId} />
+								{classId === undefined && className === undefined ? (
+									<div role="alert" className="alert alert-error my-2">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="stroke-current shrink-0 h-6 w-6"
+											fill="none"
+											viewBox="0 0 24 24"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth="2"
+												d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+											/>
+										</svg>
+										<span>Please select a class</span>
+									</div>
+								) : (
+									<>
+										<h1 className="website-title pt-5 !-pt-2">
+											Students Registered in {className}
+										</h1>
+										<StudentTable classId={classId} />
+									</>
+								)}
 							</div>
 						</div>
 						<input

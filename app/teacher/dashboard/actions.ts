@@ -1,19 +1,8 @@
 "use server";
 
-import { createClient as createBrowserClient } from "@/utils/supabase/client";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
-export async function getStudentData(classID: string) {
-	"use client";
-	const client = createBrowserClient();
-	const res = await client
-		.from("students")
-		.select("profiles (username)")
-		.eq("class", classID);
-	console.log(res); // rls issues?
-	return res;
-}
 export async function addStudent(classId, form: FormData) {
 	console.log("added", form.get("email"));
 	const cookieStore = cookies();
@@ -43,7 +32,7 @@ export async function createClass(className: string) {
 		.select();
 	return res;
 }
-export async function deleteClass(classId: string) {
+export async function deleteClass(classId: number) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
 	const res = await client.from("classes").delete().eq("id", classId);
