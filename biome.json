@@ -9,6 +9,8 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"correctness": { "all": true },
+			"nursery": { "all": false },
 			"a11y": { "all": false },
 			"style": { "noNonNullAssertion": "off" }
 		}

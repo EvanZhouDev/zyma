@@ -1,10 +1,11 @@
-import Icon from "@/components/Icon";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Excuse from "./components/Excuse";
 
-export default async function Page({ searchParams }) {
+export default async function Page({
+	searchParams,
+}: { searchParams: { code: string } }) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
 	if ((await client.auth.getUser()).data?.user?.id == null) {

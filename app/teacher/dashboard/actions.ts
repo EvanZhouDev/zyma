@@ -3,13 +3,13 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
-export async function addStudent(classId, form: FormData) {
+export async function addStudent(classId: number, form: FormData) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
 	const { data, error } = await client
 		.from("profiles")
 		.select("id")
-		.eq("email", form.get("email"));
+		.eq("email", form.get("email") as string);
 	if (data?.length == null) {
 		console.error("account non existing");
 		return;
