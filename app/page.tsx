@@ -38,7 +38,6 @@ export default async function Index({
 	const signUp = async (formData: FormData) => {
 		"use server";
 
-		console.log("HI");
 		const origin = headers().get("origin");
 		const email = formData.get("email") as string;
 		const password = formData.get("password") as string;
@@ -57,8 +56,6 @@ export default async function Index({
 				emailRedirectTo: `${origin}/auth/callback`,
 			},
 		});
-
-		console.log(error);
 
 		if (error) {
 			return redirect("/?message=Could not authenticate user");

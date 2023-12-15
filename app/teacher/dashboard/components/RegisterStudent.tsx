@@ -23,8 +23,7 @@ export default function RegisterStudent({ classId }) {
 							</p>
 							<QRCodeSVG
 								value={`http://localhost:3000/join?class=${classId}`}
-								renderAs="svg"
-								size="1000"
+								size={1000}
 								className="w-3/5 h-min bg-black mb-5"
 							/>
 							<div className="flex flex-col items-center opacity-50 mb-5 text-center text-lg px-10">

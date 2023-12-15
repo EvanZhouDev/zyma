@@ -27,7 +27,6 @@ export default async function Index({
 			.update({ expired: true })
 			.eq("id", id)
 			.select();
-		console.log("ed", data, error);
 		return redirect("/teacher/dashboard");
 	}
 	let code;
@@ -43,7 +42,6 @@ export default async function Index({
 			.from("codes")
 			.insert([{ class: searchParams.classId }])
 			.select();
-		console.log(data, _);
 		code = data![0].code;
 		codeId = data![0].id;
 	} else {
@@ -65,7 +63,6 @@ export default async function Index({
 						</p>
 						<QRCodeSVG
 							value={`http://localhost:3000/attend?code=${code}`}
-							renderAs="svg"
 							size={1000}
 							className="w-3/5 h-min bg-black mb-5"
 						/>

@@ -4,7 +4,6 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
 export async function addStudent(classId, form: FormData) {
-	console.log("added", form.get("email"));
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
 	const { data, error } = await client
@@ -19,7 +18,6 @@ export async function addStudent(classId, form: FormData) {
 		.from("students")
 		.insert([{ class: classId, student: data[0].id }])
 		.select();
-	console.log(error, data, res);
 }
 export async function createClass(className: string) {
 	const cookieStore = cookies();

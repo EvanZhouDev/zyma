@@ -40,7 +40,6 @@ export default function Dashboard({
 										value={selectedClass}
 										onChange={async (event) => {
 											const newClassIndex = parseInt(event.target.value);
-											console.log("asdfsdfsa");
 											setSelectedClass(newClassIndex);
 										}}
 									>
@@ -48,7 +47,9 @@ export default function Dashboard({
 											Pick a class...
 										</option>
 										{classes.map((x, i) => (
-											<option value={i}>{x.name}</option>
+											<option value={i} key={x.id}>
+												{x.name}
+											</option>
 										))}
 									</select>
 									<RegisterStudent classId={classId} />

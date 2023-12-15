@@ -21,7 +21,6 @@ export default async function Page({ searchParams }) {
 			},
 		])
 		.select("status");
-	console.log(data, error);
 
 	return (
 		<div className="hero min-h-screen bg-neutral">

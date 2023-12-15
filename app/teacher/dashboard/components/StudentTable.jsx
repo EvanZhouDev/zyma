@@ -14,15 +14,12 @@ export default async function StudentTable({ classId }) {
 					.from("students")
 					.select("student (username, email)")
 					.eq("class", classId);
-				console.log(res);
 				data = (res.data ?? []).map((x) => {
 					return { email: x.student.email, name: x.student.username };
 				});
 			}
 		})();
 	});
-
-	console.log(data);
 	return (
 		<div className="overflow-x-auto">
 			<table className="table mt-5">
