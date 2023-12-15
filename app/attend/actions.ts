@@ -8,7 +8,7 @@ export async function updateExcuse(code: string, user: string, status: number) {
 	const client = createClient(cookieStore);
 	const res = await client
 		.from("attendance")
-		.update([{ status }])
+		.update({ status })
 		.eq("code_used", code)
 		.eq("student", user)
 		.select();
