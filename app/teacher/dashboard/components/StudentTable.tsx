@@ -13,7 +13,7 @@ export default async function StudentTable({ classId }: { classId: number }) {
 				const client = await createClient();
 				const res = await client
 					.from("students")
-					.select("student (username, email, metadata)")
+					.select("student (username, email), metadata")
 					.eq("class", classId);
 				data = (res.data ?? []).flatMap((x) => x.student);
 			}
