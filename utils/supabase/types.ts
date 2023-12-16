@@ -11,21 +11,21 @@ export interface Database {
     Tables: {
       attendance: {
         Row: {
-          code_used: string
+          code_used: number
           created_at: string
           metadata: Json | null
           status: number
           student: string
         }
         Insert: {
-          code_used: string
+          code_used: number
           created_at?: string
           metadata?: Json | null
           status?: number
           student: string
         }
         Update: {
-          code_used?: string
+          code_used?: number
           created_at?: string
           metadata?: Json | null
           status?: number
@@ -37,7 +37,7 @@ export interface Database {
             columns: ["code_used"]
             isOneToOne: false
             referencedRelation: "codes"
-            referencedColumns: ["code"]
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "attendance_student_fkey"
@@ -272,3 +272,4 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
   ? Database["public"]["Enums"][PublicEnumNameOrOptions]
   : never
+
