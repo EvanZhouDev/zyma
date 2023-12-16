@@ -11,21 +11,21 @@ export interface Database {
     Tables: {
       attendance: {
         Row: {
-          code_used: number
+          code_used: string
           created_at: string
           metadata: Json | null
           status: number
           student: string
         }
         Insert: {
-          code_used: number
+          code_used: string
           created_at?: string
           metadata?: Json | null
           status?: number
           student: string
         }
         Update: {
-          code_used?: number
+          code_used?: string
           created_at?: string
           metadata?: Json | null
           status?: number
@@ -37,13 +37,13 @@ export interface Database {
             columns: ["code_used"]
             isOneToOne: false
             referencedRelation: "codes"
-            referencedColumns: ["id"]
+            referencedColumns: ["code"]
           },
           {
             foreignKeyName: "attendance_student_fkey"
             columns: ["student"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]
@@ -75,7 +75,7 @@ export interface Database {
             foreignKeyName: "classes_admin_fkey"
             columns: ["admin"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]
@@ -117,22 +117,19 @@ export interface Database {
       }
       profiles: {
         Row: {
-          created_at: string
-          email: string | null
+          email: string
           id: string
-          username: string
+          username: string | null
         }
         Insert: {
-          created_at?: string
-          email?: string | null
+          email: string
           id: string
-          username: string
+          username?: string | null
         }
         Update: {
-          created_at?: string
-          email?: string | null
+          email?: string
           id?: string
-          username?: string
+          username?: string | null
         }
         Relationships: [
           {

@@ -3,11 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Excuse from "./components/Excuse";
 import { v } from "@/utils";
-async function getCodeFromUUID(uuid: string) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
-	return v(await client.from("codes").select("id").eq("code", uuid))![0].id;
-}
+
 export default async function Page({
 	searchParams,
 }: { searchParams: { code: string } }) {
@@ -23,7 +19,7 @@ export default async function Page({
 			.from("attendance")
 			.upsert({
 				student: studentId,
-				code_used: await getCodeFromUUID(searchParams.code),
+				code_used: searchParams.code,
 			})
 			.select("status"),
 	)!;
