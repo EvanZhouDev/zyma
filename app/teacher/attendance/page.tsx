@@ -34,31 +34,30 @@ export default async function Index({
 		);
 		return redirect("/teacher/dashboard");
 	}
-	let code;
-	let codeId;
 	const data = v(
 		await client
 			.from("codes")
-			.select()
-			.eq("class", searchParams.classId)
-			.eq("expired", false),
+			.upsert([{ class: searchParams.classId }])
+			.select(),
 	);
-	// Create new code if there is no code
-	if (data?.length !== 1) {
-		const data = v(
-			await client
-				.from("codes")
-				.insert([{ class: searchParams.classId }])
-				.select(),
-		);
-		code = data![0].code;
-		codeId = data![0].id;
-	} else {
-		code = data[0].code;
-		codeId = data![0].id;
-	}
+	const code = data![0].code;
+	const codeId = data![0].id;
+	// const data = v(
+	// 	await client
+	// 		.from("codes")
+	// 		.select()
+	// 		.eq("class", searchParams.classId)
+	// 		.eq("expired", false),
+	// );
+	// // Create new code if there is no code
+	// if (data?.length !== 1) {
+
+	// } else {
+	// 	code = data[0].code;
+	// 	codeId = data![0].id;
+	// }
 	const joined = v(
-		await client.from("students").select("profiles (username), student"),
+		await client.from("attendance").select("profiles!inner(username), student"),
 	);
 	return (
 		<div className="w-fill h-screen bg-secondary overflow-hidden">
