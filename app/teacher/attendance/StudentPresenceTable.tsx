@@ -1,8 +1,8 @@
 "use client";
 
-import { getRelativeTime } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
+import TimeElapsed from "./TimeElapsed";
 function convertStatus(status: number) {
 	if (status === 0) return "Present";
 	return "Absent";
@@ -49,13 +49,6 @@ export default function StudentPresenceTable({
 				.subscribe();
 		})();
 	});
-	const [curTime, setCurTime] = useState(new Date().toISOString());
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setCurTime(new Date().toISOString());
-		}, 1000);
-		return () => clearInterval(interval);
-	}, []);
 	return (
 		<table className="table">
 			{/* head */}
@@ -73,16 +66,7 @@ export default function StudentPresenceTable({
 						<th>{i + 1}</th>
 						<td>{student.profiles!.username}</td>
 						<td>
-							{student.created_at ? (
-								<div
-									className="tooltip"
-									data-tip={getRelativeTime(student.created_at, curTime)}
-								>
-									{new Date(student.created_at).toLocaleTimeString()}
-								</div>
-							) : (
-								"--"
-							)}
+							<TimeElapsed time={student.created_at} />
 						</td>
 						<td>{convertStatus(statuses[student.student])}</td>
 					</tr>

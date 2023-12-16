@@ -5,7 +5,9 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import StudentPresenceTable from "./StudentPresenceTable";
-import TimeElapsed from "./TImeElapsed";
+import TimeElapsed from "./TimeElapsed";
+import { getRelativeMinuteTime } from "./utils";
+
 export default async function Index({
 	searchParams,
 }: {
@@ -48,6 +50,14 @@ export default async function Index({
 				.from("attendance")
 				.select("profiles (username), student, status, created_at"),
 		) ?? [];
+	const totalStudents = (
+		v(
+			await client
+				.from("students")
+				.select("*")
+				.eq("class", searchParams.classId),
+		) ?? []
+	).length;
 	return (
 		<div className="w-fill h-screen bg-secondary overflow-hidden">
 			{/* class list and management */}
@@ -87,8 +97,9 @@ export default async function Index({
 								<Icon.Outlined className="w-10" name="UserGroup" />
 							</div>
 							<div className="stat-title">Count</div>
-							<div className="stat-value text-primary">13 students</div>
-							<div className="stat-desc">out of 25</div>
+							{/* TODO */}
+							<div className="stat-value text-primary">12 students</div>
+							<div className="stat-desc">out of {totalStudents}</div>
 						</div>
 
 						<div className="stat">
@@ -97,9 +108,12 @@ export default async function Index({
 							</div>
 							<div className="stat-title">Time Elapsed</div>
 							<div className="stat-value text-primary">
-								<TimeElapsed time={data.created_at} />
+								<TimeElapsed
+									time={data.created_at}
+									getRelativeTime={getRelativeMinuteTime}
+								/>
 							</div>
-							<div className="stat-desc">Ends in 13 minutes</div>
+							{/* <div className="stat-desc">Ends in 13 minutes</div> */}
 						</div>
 					</div>
 					<div className="overflow-x-auto">
