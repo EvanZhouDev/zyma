@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import StudentPresenceTable from "./StudentPresenceTable";
+import TimeElapsed from "./TImeElapsed";
 export default async function Index({
 	searchParams,
 }: {
@@ -39,9 +40,7 @@ export default async function Index({
 			.from("codes")
 			.upsert([{ class: searchParams.classId }])
 			.select(),
-	);
-	const code = data![0].code;
-	const codeId = data![0].id;
+	)![0];
 
 	const joined =
 		v(
@@ -62,7 +61,7 @@ export default async function Index({
 							Scan code to mark attendance.
 						</p>
 						<QRCodeSVG
-							value={`http://localhost:3000/attend?code=${code}`}
+							value={`http://localhost:3000/attend?code=${data.code}`}
 							size={1000}
 							className="w-3/5 h-min bg-black mb-5"
 						/>
@@ -72,13 +71,13 @@ export default async function Index({
 						<p className="text-l text-secondary-content">
 							Alternatively, join the class with the code:
 						</p>
-						<h1 className="text-xl mt-3 font-bold text-primary">{code}</h1>
+						<h1 className="text-xl mt-3 font-bold text-primary">{data.code}</h1>
 					</div>
 				</div>
 				<div className="bg-base-100 outline outline-1 outline-[#CAC8C5] w-[48.5%] ml-[0.5%] h-[90vh] rounded-xl">
 					<div className="flex flex-row justify-between px-4 mt-4">
 						<h1 className="website-title !text-5xl">Students</h1>
-						<form action={handle.bind(null, codeId)}>
+						<form action={handle.bind(null, data.id)}>
 							<button className="btn btn-primary">End Session</button>
 						</form>
 					</div>
@@ -97,7 +96,9 @@ export default async function Index({
 								<Icon.Outlined className="w-10" name="Clock" />
 							</div>
 							<div className="stat-title">Time Elapsed</div>
-							<div className="stat-value text-primary">3 minutes</div>
+							<div className="stat-value text-primary">
+								<TimeElapsed time={data.created_at} />
+							</div>
 							<div className="stat-desc">Ends in 13 minutes</div>
 						</div>
 					</div>
