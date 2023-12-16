@@ -1,54 +1,65 @@
 import Icon from "@/components/Icon";
+import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
+import StudentPresenceTable from "./StudentPresenceTable";
 export default async function Index({
 	searchParams,
 }: {
-	searchParams: { classId: string };
+	searchParams: { classId: number };
 }) {
-	"use server";
-	// TODO: if there exists an exising code, use it
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
 	if ((await client.auth.getUser()).data?.user?.id == null) {
 		return redirect("/");
 	}
-	async function handle(id) {
+	// We pass it in with the .bind instead of re-using
+	// the codeId in the outer scope
+	// because React Server Components suck
+	async function handle(id: number) {
 		"use server";
 		const cookieStore = cookies();
 		const client = createClient(cookieStore);
 		if ((await client.auth.getUser()).data?.user?.id == null) {
 			return redirect("/");
 		}
-		const { data, error } = await client
-			.from("codes")
-			.update({ expired: true })
-			.eq("id", id)
-			.select();
+		v(
+			await client
+				.from("codes")
+				.update({ expired: true })
+				.eq("id", id)
+				.select(),
+		);
 		return redirect("/teacher/dashboard");
 	}
 	let code;
 	let codeId;
-	const { data, error: __ } = await client
-		.from("codes")
-		.select()
-		.eq("class", searchParams.classId)
-		.eq("expired", false);
-	// Todo: using the same code
-	if (data?.length !== 1) {
-		const { data, error: _ } = await client
+	const data = v(
+		await client
 			.from("codes")
-			.insert([{ class: searchParams.classId }])
-			.select();
+			.select()
+			.eq("class", searchParams.classId)
+			.eq("expired", false),
+	);
+	// Create new code if there is no code
+	if (data?.length !== 1) {
+		const data = v(
+			await client
+				.from("codes")
+				.insert([{ class: searchParams.classId }])
+				.select(),
+		);
 		code = data![0].code;
 		codeId = data![0].id;
 	} else {
 		code = data[0].code;
 		codeId = data![0].id;
 	}
-
+	const joined = v(
+		await client.from("students").select("profiles (username), student"),
+	);
 	return (
 		<div className="w-fill h-screen bg-secondary overflow-hidden">
 			{/* class list and management */}
@@ -102,40 +113,7 @@ export default async function Index({
 						</div>
 					</div>
 					<div className="overflow-x-auto">
-						<table className="table">
-							{/* head */}
-							<thead>
-								<tr>
-									<th />
-									<th>Name</th>
-									<th>Time Joined</th>
-									<th>Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								{/* row 1 */}
-								<tr>
-									<th>1</th>
-									<td>Cy Ganderton</td>
-									<td>4:30</td>
-									<td>Present</td>
-								</tr>
-								{/* row 2 */}
-								<tr>
-									<th>2</th>
-									<td>Hart Hagerty</td>
-									<td>4:31</td>
-									<td>Present</td>
-								</tr>
-								{/* row 3 */}
-								<tr>
-									<th>3</th>
-									<td>Brice Swyre</td>
-									<td>4:32</td>
-									<td>Absent</td>
-								</tr>
-							</tbody>
-						</table>
+						<StudentPresenceTable joined={joined} />
 					</div>
 				</div>
 			</div>
