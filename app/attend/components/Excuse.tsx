@@ -1,8 +1,8 @@
 "use client";
 import Icon from "@/components/Icon";
+import { convertStatus } from "@/components/constants";
 import { useState } from "react";
 import { updateExcuse } from "../actions";
-import { convertStatus } from "@/components/constants";
 
 export default function Excuse({
 	code,
