@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 export default function StudentCounter({
 	total,
 	attendanceCode,
-}: { total: number; attendanceCode: string }) {
-	const [studentCount, setStudentCount] = useState(0);
+	initialJoined,
+}: { total: number; attendanceCode: string; initialJoined: number }) {
+	const [studentCount, setStudentCount] = useState(initialJoined);
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
@@ -51,7 +52,9 @@ export default function StudentCounter({
 			</div>
 			<div className="stat-title">Count</div>
 			{/* TODO */}
-			<div className="stat-value text-primary">{studentCount} students</div>
+			<div className="stat-value text-primary">
+				{studentCount} student{studentCount === 1 ? "" : "s"}
+			</div>
 			<div className="stat-desc">out of {total}</div>
 		</div>
 	);

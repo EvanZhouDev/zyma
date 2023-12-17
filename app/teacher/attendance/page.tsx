@@ -107,7 +107,11 @@ export default async function Index({
 						</form>
 					</div>
 					<div className="ml-[5%] stats w-[90%] shadow my-5">
-						<StudentCounter total={totalStudents} attendanceCode={data.code} />
+						<StudentCounter
+							total={totalStudents}
+							attendanceCode={data.code}
+							initialJoined={joined.length}
+						/>
 
 						<div className="stat">
 							<div className="stat-figure text-primary">
