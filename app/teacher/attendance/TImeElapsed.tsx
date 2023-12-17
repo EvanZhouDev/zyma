@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 export default function TimeElapsed({
@@ -8,7 +9,7 @@ export default function TimeElapsed({
 	time?: string;
 	getRelativeTime?: (time1: string, time2: string) => string;
 }) {
-	console.log(time);
+	// console.log(time);
 	const getRelativeTime =
 		getR ??
 		((time1: string, time2: string) => {
@@ -30,12 +31,14 @@ export default function TimeElapsed({
 				seconds < 10 ? "0" : ""
 			}${seconds} second${seconds === 1 ? "" : "s"} ago`;
 		});
+
 	if (time === undefined) return <span>--</span>;
-	const [relativeTime, setRelativeTime] = useState<string>(
-		getRelativeTime(time, new Date().toISOString()),
-	);
+
+	const [relativeTime, setRelativeTime] = useState<string>("-- --");
 
 	useEffect(() => {
+		setRelativeTime(getRelativeTime(time, new Date().toISOString()));
+
 		const interval = setInterval(() => {
 			setRelativeTime(getRelativeTime(time, new Date().toISOString()));
 		}, 1000);
@@ -43,7 +46,7 @@ export default function TimeElapsed({
 		return () => {
 			clearInterval(interval);
 		};
-	}, [time, getR]);
+	}, []);
 
-	return <span>{relativeTime}</span>;
+	return <>{relativeTime}</>;
 }
