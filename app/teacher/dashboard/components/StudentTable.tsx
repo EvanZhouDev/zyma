@@ -1,24 +1,27 @@
 import Icon from "@/components/Icon";
+import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // import { getStudentData } from "../actions";
 type Metadata = { attendence?: [number, number] };
 type Student = { email: string; username: string; metadata?: Metadata };
-export default async function StudentTable({ classId }: { classId: number }) {
-	let data: Student[] = [];
+export default function StudentTable({ classId }: { classId: number }) {
+	const [data, setData] = useState<Student[]>([]);
 	useEffect(() => {
 		(async () => {
 			if (classId) {
 				const client = await createClient();
-				const res = await client
-					.from("students")
-					.select("student (username, email), metadata")
-					.eq("class", classId);
-				data = (res.data ?? []).flatMap((x) => x.student);
+				const students = v(
+					await client
+						.from("students")
+						.select("student (username, email), metadata")
+						.eq("class", classId),
+				);
+				setData((students ?? []).flatMap((x) => x.student));
 			}
 		})();
-	});
+	}, [classId]);
 	return (
 		<div className="overflow-x-auto">
 			<table className="table mt-5">

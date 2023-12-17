@@ -8,6 +8,7 @@ export default function TimeElapsed({
 	time?: string;
 	getRelativeTime?: (time1: string, time2: string) => string;
 }) {
+	console.log(time);
 	const getRelativeTime =
 		getR ??
 		((time1: string, time2: string) => {

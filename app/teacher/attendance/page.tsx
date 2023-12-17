@@ -7,6 +7,7 @@ import { QRCodeSVG } from "qrcode.react";
 import StudentPresenceTable from "./StudentPresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
+import StudentCounter from "./StudentCounter";
 
 export default async function Index({
 	searchParams,
@@ -31,24 +32,38 @@ export default async function Index({
 		v(
 			await client
 				.from("codes")
+				// XXX: Perhaps we should just delete it
 				.update({ expired: true })
 				.eq("id", id)
 				.select(),
 		);
 		return redirect("/teacher/dashboard");
 	}
-	const data = v(
+	const existingCode = v(
 		await client
 			.from("codes")
-			.upsert([{ class: searchParams.classId }])
-			.select(),
-	)![0];
+			.select()
+			.eq("class", searchParams.classId)
+			.eq("expired", false),
+	)!;
+	let data;
+	if (existingCode.length === 1) {
+		data = existingCode[0];
+	} else {
+		data = v(
+			await client
+				.from("codes")
+				.insert([{ class: searchParams.classId }])
+				.select(),
+		)![0];
+	}
 
 	const joined =
 		v(
 			await client
 				.from("attendance")
-				.select("profiles (username), student, status, created_at"),
+				.select("profiles (username), student, status, created_at")
+				.eq("code_used", data.code),
 		) ?? [];
 	const totalStudents = (
 		v(
@@ -92,15 +107,7 @@ export default async function Index({
 						</form>
 					</div>
 					<div className="ml-[5%] stats w-[90%] shadow my-5">
-						<div className="stat">
-							<div className="stat-figure text-primary">
-								<Icon.Outlined className="w-10" name="UserGroup" />
-							</div>
-							<div className="stat-title">Count</div>
-							{/* TODO */}
-							<div className="stat-value text-primary">12 students</div>
-							<div className="stat-desc">out of {totalStudents}</div>
-						</div>
+						<StudentCounter total={totalStudents} attendanceCode={data.code} />
 
 						<div className="stat">
 							<div className="stat-figure text-primary">
@@ -117,7 +124,10 @@ export default async function Index({
 						</div>
 					</div>
 					<div className="overflow-x-auto">
-						<StudentPresenceTable joined={joined} />
+						<StudentPresenceTable
+							initialJoined={joined}
+							attendanceCode={data.code}
+						/>
 					</div>
 				</div>
 			</div>
