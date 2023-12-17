@@ -2,7 +2,6 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Excuse from "./components/Excuse";
-import { v } from "@/utils";
 
 export default async function Page({
 	searchParams,

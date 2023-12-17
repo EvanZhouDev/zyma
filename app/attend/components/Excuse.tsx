@@ -9,7 +9,7 @@ export default function Excuse({
 	status,
 }: { code: string; user: string; status: number }) {
 	const [excuse, setExcuse] = useState(status);
-	const [availableToChoose, setAvailableToChoose] = useState(status === excuse);
+	const [availableToChoose, setAvailableToChoose] = useState(true);
 	return (
 		<div className="flex flex-col justify-stretch">
 			{availableToChoose ? (
@@ -24,7 +24,7 @@ export default function Excuse({
 							setExcuse(parseInt(event.target.value));
 						}}
 					>
-						<option disabled defaultValue={status}>
+						<option disabled defaultValue={0} value={0}>
 							Pick a reason for absence...
 						</option>
 						<option value={1}>Doctor's Appointment</option>
