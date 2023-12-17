@@ -1,3 +1,4 @@
+import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -14,12 +15,14 @@ export default async function Join({
 		return redirect("/");
 	}
 
-	const { data, error } = await client
-		.from("students")
-		.insert([{ student, class: searchParams.class }])
-		.select();
+	const data = v(
+		await client
+			.from("students")
+			.insert([{ student, class: searchParams.class }])
+			.select(),
+	);
 
-	if (error || data == null) {
+	if (data == null) {
 		return <p>An error has occured</p>;
 	}
 

@@ -5,7 +5,7 @@ import { createClass } from "../actions";
 export default function NewClass() {
 	const [className, setClassName] = useState<string>("");
 	const handle = async () => {
-		const { data, error } = await createClass(className);
+		const { error } = await createClass(className);
 		if (error == null) {
 			modal.current!.close();
 		}

@@ -21,8 +21,7 @@ export async function addStudent(classId: number, form: FormData) {
 
 	const { error } = await client
 		.from("students")
-		.insert([{ class: classId, student }])
-		.select();
+		.insert([{ class: classId, student }]);
 	if (error != null) {
 		throw new Error("Student is already in your class");
 	}
@@ -30,17 +29,14 @@ export async function addStudent(classId: number, form: FormData) {
 export async function createClass(className: string) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	const res = await client
+	return await client
 		.from("classes")
 		.insert([
 			{ admin: (await client.auth.getUser()).data.user!.id, name: className },
-		])
-		.select();
-	return res;
+		]);
 }
 export async function deleteClass(classId: number) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	const res = await client.from("classes").delete().eq("id", classId);
-	return res;
+	v(await client.from("classes").delete().eq("id", classId));
 }

@@ -7,13 +7,11 @@ import { cookies } from "next/headers";
 export async function updateExcuse(code: string, user: string, status: number) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	const res = v(
+	v(
 		await client
 			.from("attendance")
 			.update({ status })
 			.eq("code_used", code)
-			.eq("student", user)
-			.select(),
+			.eq("student", user),
 	);
-	return res;
 }

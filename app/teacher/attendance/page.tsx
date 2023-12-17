@@ -34,8 +34,7 @@ export default async function Index({
 				.from("codes")
 				// XXX: Perhaps we should just delete it
 				.update({ expired: true })
-				.eq("id", id)
-				.select(),
+				.eq("id", id),
 		);
 		return redirect("/teacher/dashboard");
 	}
