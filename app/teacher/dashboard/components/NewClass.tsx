@@ -3,21 +3,21 @@ import Icon from "@/components/Icon";
 import { useRef, useState } from "react";
 import { createClass } from "../actions";
 export default function NewClass() {
-	const [className, setClassName] = useState("");
+	const [className, setClassName] = useState<string>("");
 	const handle = async () => {
-		const { data, error } = await createClass(className);
+		const { error } = await createClass(className);
 		if (error == null) {
-			modal.current.close();
+			modal.current!.close();
 		}
 	};
-	const modal = useRef();
+	const modal = useRef<HTMLDialogElement>(null);
 	return (
 		<>
 			<button
 				className="btn btn-ghost"
-				onClick={() => document.getElementById("my_modal_3").showModal()}
+				onClick={() => modal.current!.showModal()}
 			>
-				<Icon.Outlined name="User" onclick="my_modal_3.showModal()" />
+				<Icon.Outlined name="User" />
 				Create Class
 			</button>
 			<dialog ref={modal} id="my_modal_3" className="modal">
@@ -34,6 +34,7 @@ export default function NewClass() {
 						<input
 							type="text"
 							name="className"
+							required
 							value={className}
 							onChange={(event) => {
 								setClassName(event.target.value);

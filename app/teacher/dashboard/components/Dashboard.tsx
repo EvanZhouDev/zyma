@@ -1,6 +1,6 @@
 "use client";
 import Icon from "@/components/Icon";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ClassTable from "./ClassTable";
 import RegisterStudent from "./RegisterStudent";
 import StudentTable from "./StudentTable";

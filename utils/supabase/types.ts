@@ -43,7 +43,7 @@ export interface Database {
             foreignKeyName: "attendance_student_fkey"
             columns: ["student"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]
@@ -75,7 +75,7 @@ export interface Database {
             foreignKeyName: "classes_admin_fkey"
             columns: ["admin"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]
@@ -117,20 +117,17 @@ export interface Database {
       }
       profiles: {
         Row: {
-          created_at: string
-          email: string | null
+          email: string
           id: string
           username: string
         }
         Insert: {
-          created_at?: string
-          email?: string | null
+          email: string
           id: string
           username: string
         }
         Update: {
-          created_at?: string
-          email?: string | null
+          email?: string
           id?: string
           username?: string
         }
@@ -272,3 +269,4 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
   ? Database["public"]["Enums"][PublicEnumNameOrOptions]
   : never
+

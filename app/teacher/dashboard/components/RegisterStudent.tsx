@@ -1,20 +1,22 @@
 "use client";
 import Icon from "@/components/Icon";
 import { QRCodeSVG } from "qrcode.react";
+import { useRef } from "react";
 import { addStudent } from "../actions";
 import StudentTable from "./StudentTable";
 
-export default function RegisterStudent({ classId }) {
+export default function RegisterStudent({ classId }: { classId: number }) {
+	const myModal = useRef<HTMLDialogElement>(null);
 	return (
 		<>
 			<button
 				className="ml-2 btn btn-ghost"
-				onClick={() => document.getElementById("my_modal_1").showModal()}
+				onClick={() => myModal.current!.showModal()}
 			>
 				<Icon.Outlined name="User" />
 				Register Students
 			</button>
-			<dialog id="my_modal_1" className="modal">
+			<dialog ref={myModal} className="modal">
 				<div className="modal-box bg-secondary min-w-[90vw]">
 					<div className="flex w-full">
 						<div className="flex h-[75vh] w-[30vw] flex-grow card bg-neutral rounded-box place-items-center flex-col items-center justify-center">
@@ -43,6 +45,7 @@ export default function RegisterStudent({ classId }) {
 								<input
 									name="email"
 									type="email"
+									required
 									className="w-full input input-bordered border-primary form-input"
 								/>
 								<button className="btn ml-3 btn-filled">Add Student</button>
