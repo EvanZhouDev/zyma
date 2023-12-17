@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import TimeElapsed from "./TimeElapsed";
 import { v } from "@/utils";
 function convertStatus(status: number) {
+	console.log("SS", status);
 	if (status === 0) return "Present";
+	if (status === 3) return "Busy With Other Clubs";
 	return "Absent";
 }
 type StudentInAttendance = {
@@ -32,8 +34,10 @@ export default function StudentPresenceTable({
 	attendanceCode: string;
 }) {
 	const [joined, setJoined] = useState(initialJoined);
-	const [statuses, setStatuses] = useState<{ [key: string]: number }>(
-		Object.fromEntries(joined.map(({ student, status }) => [student, status])),
+	const [statuses, setStatuses] = useState<{ [key: string]: string }>(
+		Object.fromEntries(
+			joined.map(({ student, status }) => [student, convertStatus(status)]),
+		),
 	);
 	useEffect(() => {
 		(async () => {
@@ -55,7 +59,10 @@ export default function StudentPresenceTable({
 							setJoined((x) => [...x, student!]);
 						});
 						setStatuses((x) => {
-							return { ...x, [payload.new.student]: payload.new.status };
+							return {
+								...x,
+								[payload.new.student]: convertStatus(payload.new.status),
+							};
 						});
 					},
 				)
@@ -69,18 +76,17 @@ export default function StudentPresenceTable({
 					},
 					(payload) => {
 						console.log("update", payload);
-						getStudent(payload.new.student, attendanceCode).then((student) => {
-							setJoined((x) => [...x, student!]);
-						});
-
 						setStatuses((x) => {
-							return { ...x, [payload.new.student]: payload.new.status };
+							return {
+								...x,
+								[payload.new.student]: convertStatus(payload.new.status),
+							};
 						});
 					},
 				)
 				.subscribe();
 		})();
-	});
+	}, [attendanceCode]);
 	return (
 		<table className="table">
 			{/* head */}
@@ -100,7 +106,7 @@ export default function StudentPresenceTable({
 						<td>
 							<TimeElapsed time={student.created_at} />
 						</td>
-						<td>{convertStatus(statuses[student.student])}</td>
+						<td>{statuses[student.student]}</td>
 					</tr>
 				))}
 			</tbody>

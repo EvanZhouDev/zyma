@@ -9,7 +9,7 @@ export default function Excuse({
 	status,
 }: { code: string; user: string; status: number }) {
 	const [excuse, setExcuse] = useState(status);
-	const [availableToChoose, setAvailableToChoose] = useState(true);
+	const [availableToChoose, setAvailableToChoose] = useState(excuse === 0);
 	return (
 		<div className="flex flex-col justify-stretch">
 			{availableToChoose ? (
@@ -33,32 +33,44 @@ export default function Excuse({
 						<option value={4}>Homework</option>
 						<option value={5}>Other</option>
 					</select>
-					<form action={updateExcuse.bind(null, code, user, excuse)}>
-						<button
-							onClick={() => {
-								setAvailableToChoose(false);
-							}}
-							className="ml-2 mt-5 btn btn-filled"
-							disabled={excuse === status}
-						>
-							<Icon.Outlined name="ArrowRightOnRectangle" />
-							Mark me as absent
-						</button>
-					</form>
+					<button
+						className="ml-2 mt-5 btn btn-filled"
+						disabled={excuse === status}
+						onClick={async () => {
+							await updateExcuse(code, user, excuse);
+							status = excuse;
+							setAvailableToChoose(false);
+						}}
+					>
+						<Icon.Outlined name="ArrowRightOnRectangle" />
+						Mark me as absent
+					</button>
 				</>
 			) : (
 				<>
 					<div className="mt-10 bg-secondary py-5 rounded">
 						Successfully marked your absence.
 					</div>
-					<button
-						onClick={() => {
-							setAvailableToChoose(true);
-						}}
-						className="btn btn-primary mt-3"
-					>
-						Select a different absense
-					</button>
+					<div className="w-full flex flex-row space-x-2">
+						<button
+							className="btn btn-primary mt-3"
+							onClick={() => {
+								setAvailableToChoose(true);
+							}}
+						>
+							Select a different absense
+						</button>
+						<button
+							className="btn btn-primary mt-3"
+							onClick={async () => {
+								await updateExcuse(code, user, 0);
+								status = 0;
+								setAvailableToChoose(true);
+							}}
+						>
+							Mark me present
+						</button>
+					</div>
 				</>
 			)}
 			<p className="py-6 max-w opacity-50">It is safe to close this tab.</p>
