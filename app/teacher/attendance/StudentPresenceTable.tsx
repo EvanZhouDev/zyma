@@ -1,10 +1,10 @@
 "use client";
 
+import { convertStatus } from "@/components/constants";
+import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import TimeElapsed from "./TimeElapsed";
-import { v } from "@/utils";
-import { convertStatus } from "@/components/constants";
 
 type StudentInAttendance = {
 	profiles: { username: string } | null;

@@ -4,10 +4,10 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
+import StudentCounter from "./StudentCounter";
 import StudentPresenceTable from "./StudentPresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
-import StudentCounter from "./StudentCounter";
 
 export default async function Index({
 	searchParams,

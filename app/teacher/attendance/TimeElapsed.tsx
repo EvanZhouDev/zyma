@@ -9,7 +9,6 @@ export default function TimeElapsed({
 	time?: string;
 	getRelativeTime?: (time1: string, time2: string) => string;
 }) {
-	// console.log(time);
 	const getRelativeTime =
 		getR ??
 		((time1: string, time2: string) => {
@@ -36,6 +35,7 @@ export default function TimeElapsed({
 
 	const [relativeTime, setRelativeTime] = useState<string>("-- --");
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: We need to run this effect only once
 	useEffect(() => {
 		setRelativeTime(getRelativeTime(time, new Date().toISOString()));
 
