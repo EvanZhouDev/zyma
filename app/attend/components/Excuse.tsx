@@ -2,6 +2,7 @@
 import Icon from "@/components/Icon";
 import { useState } from "react";
 import { updateExcuse } from "../actions";
+import { convertStatus } from "@/components/constants";
 
 export default function Excuse({
 	code,
@@ -49,7 +50,7 @@ export default function Excuse({
 			) : (
 				<>
 					<div className="mt-10 bg-secondary py-5 rounded">
-						Successfully marked your absence.
+						Successfully marked you as "{convertStatus(excuse)}"
 					</div>
 					<div className="w-full flex flex-row space-x-2">
 						<button

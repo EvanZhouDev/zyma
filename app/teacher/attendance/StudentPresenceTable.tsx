@@ -4,12 +4,8 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import TimeElapsed from "./TimeElapsed";
 import { v } from "@/utils";
-function convertStatus(status: number) {
-	console.log("SS", status);
-	if (status === 0) return "Present";
-	if (status === 3) return "Busy With Other Clubs";
-	return "Absent";
-}
+import { convertStatus } from "@/components/constants";
+
 type StudentInAttendance = {
 	profiles: { username: string } | null;
 	student: string;
