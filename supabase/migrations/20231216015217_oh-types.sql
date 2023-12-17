@@ -1,1 +1,0 @@
-alter table "public"."profiles" alter column "username" set not null;
