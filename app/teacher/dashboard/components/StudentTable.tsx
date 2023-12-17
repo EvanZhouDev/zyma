@@ -15,10 +15,14 @@ export default function StudentTable({ classId }: { classId: number }) {
 				const students = v(
 					await client
 						.from("students")
-						.select("student (username, email), metadata")
+						.select("profiles (username, email), metadata")
 						.eq("class", classId),
 				);
-				setData((students ?? []).flatMap((x) => x.student));
+				setData(
+					(students ?? []).map((x) => {
+						return { ...x.profiles!, metadata: x.metadata } as Student;
+					}),
+				);
 			}
 		})();
 	}, [classId]);

@@ -29,13 +29,15 @@ export default function Navbar() {
 	return (
 		<div className="w-full navbar absolute bg-base-100 flex flex-row justify-between h-[5%]">
 			<div className="website-title !m-0 w-[20%]">CH20</div>
-			<div className="bg-secondary p-3 rounded-full">
-				<Icon.Outlined
-					className="!w-5 !h-5 !stroke-[2px] mx-2"
-					name={pathToData[pathname].icon}
-				/>
-				{pathToData[pathname].name}
-			</div>
+			{pathToData[pathname] !== undefined ? (
+				<div className="bg-secondary p-3 rounded-full">
+					<Icon.Outlined
+						className="!w-5 !h-5 !stroke-[2px] mx-2"
+						name={pathToData[pathname].icon}
+					/>
+					{pathToData[pathname].name}
+				</div>
+			) : undefined}
 			<div className="w-[20%] flex justify-end">
 				<label className="swap swap-rotate">
 					{/* this hidden checkbox controls the state */}
