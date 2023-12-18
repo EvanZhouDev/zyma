@@ -18,6 +18,6 @@ export function convertStatus(status: number) {
 			return "Absent";
 	}
 }
-export const ROOT_URL = process.env.VERCEL_URL
-	? `https://${process.env.VERCEL_URL}`
+export const ROOT_URL = process.env.NEXT_PUBLIC_SITE_URL
+	? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
 	: "http://localhost:3000";
