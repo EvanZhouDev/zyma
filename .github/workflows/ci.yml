@@ -33,9 +33,6 @@ jobs:
         run: bun run lint
   check-database-types:
     runs-on: ubuntu-latest
-    env:
-      # Setting an environment variable with the value of a configuration variable
-      DB_URL: ${{ secrets.DB_URL }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup Bun
