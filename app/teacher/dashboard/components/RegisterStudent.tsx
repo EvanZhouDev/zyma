@@ -1,13 +1,21 @@
 "use client";
 import Icon from "@/components/Icon";
+import { ROOT_URL } from "@/components/constants";
 import { QRCodeSVG } from "qrcode.react";
 import { useRef } from "react";
 import { addStudent } from "../actions";
 import StudentTable from "./StudentTable";
-import { ROOT_URL } from "@/components/constants";
 
-export default function RegisterStudent({ classId }: { classId: number }) {
+export default function RegisterStudent({ classId }: { classId?: number }) {
 	const myModal = useRef<HTMLDialogElement>(null);
+	if (classId === undefined) {
+		return (
+			<button className="ml-2 btn btn-ghost" disabled>
+				<Icon.Outlined name="User" />
+				Register Students
+			</button>
+		);
+	}
 	return (
 		<>
 			<button
