@@ -8,6 +8,8 @@ export default function NewClass() {
 		const { error } = await createClass(className);
 		if (error == null) {
 			modal.current!.close();
+		} else {
+			console.error(error);
 		}
 	};
 	const modal = useRef<HTMLDialogElement>(null);
