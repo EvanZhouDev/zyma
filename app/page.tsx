@@ -53,7 +53,7 @@ export default async function Index({
 				data: {
 					name: name,
 				},
-				emailRedirectTo: `${origin}/auth/callback`,
+				emailRedirectTo: `${origin}/teacher/dashboard`,
 			},
 		});
 
