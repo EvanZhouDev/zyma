@@ -1,9 +1,9 @@
 import Navbar from "@/components/Navbar.jsx";
+import { ROOT_URL } from "@/components/constants";
 import { GeistSans } from "geist/font/sans";
 import type React from "react";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import { ROOT_URL } from "@/components/constants";
 
 export const metadata = {
 	metadataBase: new URL(ROOT_URL),

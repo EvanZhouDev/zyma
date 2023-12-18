@@ -1,4 +1,5 @@
 import Icon from "@/components/Icon";
+import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
@@ -8,7 +9,6 @@ import StudentCounter from "./StudentCounter";
 import StudentPresenceTable from "./StudentPresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
-import { ROOT_URL } from "@/components/constants";
 
 export default async function Index({
 	searchParams,
