@@ -30,6 +30,15 @@ module.exports = {
 		darkTheme: "materialYouDark",
 		themes: [
 			{
+				github: {
+					primary: "#4f6630",
+					"primary-content": "#ffffff",
+					secondary: "#F6F8FA",
+					"secondary-content": "#1F2329",
+					neutral: "#f5f4ec",
+					"base-100": "#FFFFFF",
+					"base-300": "#D0D7DE",
+				},
 				materialYou: {
 					primary: "#4f6630",
 					"primary-content": "#ffffff",

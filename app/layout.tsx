@@ -20,8 +20,8 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en" className={GeistSans.className}>
-			<body>
+		<html lang="en" className={GeistSans.className + " w-full h-full"}>
+			<body className="w-full h-full">
 				<Navbar />
 				{children}
 				<Toaster />

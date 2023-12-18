@@ -110,3 +110,7 @@
 .navbar {
   border-bottom: 1px solid lightgray;
 }
+
+.zyma-code-bg {
+  background: conic-gradient(#9F71C3, #3B93DD, #EF8357, #D1657F, #9673CE)
+}
