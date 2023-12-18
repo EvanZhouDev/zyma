@@ -8,6 +8,7 @@ import StudentCounter from "./StudentCounter";
 import StudentPresenceTable from "./StudentPresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
+import { ROOT_URL } from "@/components/constants";
 
 export default async function Index({
 	searchParams,
@@ -85,7 +86,7 @@ export default async function Index({
 							Scan code to mark attendance.
 						</p>
 						<QRCodeSVG
-							value={`http://localhost:3000/attend?code=${data.code}`}
+							value={`${ROOT_URL}/attend?code=${data.code}`}
 							size={1000}
 							className="w-3/5 h-min bg-black mb-5"
 						/>
