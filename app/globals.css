@@ -3,42 +3,42 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 200 20% 98%;
-    --btn-background: 200 10% 91%;
-    --btn-background-hover: 200 10% 89%;
-    --foreground: 200 50% 3%;
-  }
+	:root {
+		--background: 200 20% 98%;
+		--btn-background: 200 10% 91%;
+		--btn-background-hover: 200 10% 89%;
+		--foreground: 200 50% 3%;
+	}
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: 200 50% 3%;
-      --btn-background: 200 10% 9%;
-      --btn-background-hover: 200 10% 12%;
-      --foreground: 200 20% 96%;
-    }
-  }
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--background: 200 50% 3%;
+			--btn-background: 200 10% 9%;
+			--btn-background-hover: 200 10% 12%;
+			--foreground: 200 20% 96%;
+		}
+	}
 }
 
 @layer base {
-  * {
-    @apply border-foreground/20;
-  }
+	* {
+		@apply border-foreground/20;
+	}
 }
 
 .animate-in {
-  animation: animateIn 0.3s ease 0.15s both;
+	animation: animateIn 0.3s ease 0.15s both;
 }
 
 @keyframes animateIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 /* BUTTON STYLING CODE */
@@ -87,13 +87,44 @@
 	@apply text-secondary-content text-xl;
 }
 
+.btn {
+  @apply !border-none rounded-lg;
+}
+
+.btn-standard {
+	@apply text-lg outline outline-base-300 outline-1 bg-neutral hover:bg-[#F3F4F6] text-[#24292F] no-animation;
+}
+
+.input-standard {
+	@apply text-lg outline outline-base-300 outline-1 bg-neutral hover:bg-[#F3F4F6] text-[#24292F] no-animation rounded-lg;
+}
+
+.btn-standard:active {
+	background-color: #ebecef !important;
+}
+
+.btn-dangerous {
+	@apply text-lg btn-standard !text-[#CF212E];
+}
+
+.btn-dangerous:hover {
+	@apply !bg-[#CF212E] !text-white !outline-[#901626];
+}
+.btn-dangerous:active {
+	@apply !bg-[#C11F2B] !outline-[#A9222B] !text-white;
+}
+
+.btn-standard:active {
+	background-color: #ebecef !important;
+}
+
 .website-title {
 	@apply !ml-1 !my-5 !mt-2 !mb-2 font-bold text-primary text-2xl;
 }
 
 .main-menu {
 	@apply menu bg-neutral rounded-l h-screen w-[18%] px-5 rounded-box;
-	
+
 	* {
 		@apply my-0.5;
 	}
@@ -108,9 +139,9 @@
 }
 
 .navbar {
-  border-bottom: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .zyma-code-bg {
-  background: conic-gradient(#9F71C3, #3B93DD, #EF8357, #D1657F, #9673CE)
+	background: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
 }

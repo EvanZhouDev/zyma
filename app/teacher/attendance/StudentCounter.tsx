@@ -5,10 +5,12 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 
 export default function StudentCounter({
-	total,
 	attendanceCode,
 	initialJoined,
-}: { total: number; attendanceCode: string; initialJoined: number }) {
+}: {
+	attendanceCode: string;
+	initialJoined: number;
+}) {
 	const [studentCount, setStudentCount] = useState(initialJoined);
 	useEffect(() => {
 		(async () => {
@@ -27,7 +29,7 @@ export default function StudentCounter({
 					(payload) => {
 						console.log("insert", payload);
 						setStudentCount((x) => x + 1);
-					},
+					}
 				)
 				.on(
 					"postgres_changes",
@@ -40,22 +42,10 @@ export default function StudentCounter({
 					(payload) => {
 						console.log("update", payload);
 						setStudentCount((x) => x + 1);
-					},
+					}
 				)
 				.subscribe();
 		})();
 	});
-	return (
-		<div className="stat">
-			<div className="stat-figure text-primary">
-				<Icon.Outlined className="w-10" name="UserGroup" />
-			</div>
-			<div className="stat-title">Count</div>
-			{/* TODO */}
-			<div className="stat-value text-primary">
-				{studentCount} student{studentCount === 1 ? "" : "s"}
-			</div>
-			<div className="stat-desc">out of {total}</div>
-		</div>
-	);
+	return <>{studentCount}</>;
 }

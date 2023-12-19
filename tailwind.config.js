@@ -35,7 +35,7 @@ module.exports = {
 					"primary-content": "#ffffff",
 					secondary: "#F6F8FA",
 					"secondary-content": "#1F2329",
-					neutral: "#f5f4ec",
+					neutral: "#F6F8FA",
 					"base-100": "#FFFFFF",
 					"base-300": "#D0D7DE",
 				},
