@@ -45,7 +45,7 @@ export default async function Index({
 			.select()
 			.eq("class", searchParams.classId)
 			.eq("expired", false),
-	)!;
+	);
 	let data;
 	if (existingCode.length === 1) {
 		data = existingCode[0];
