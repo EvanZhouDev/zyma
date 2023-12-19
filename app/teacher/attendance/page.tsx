@@ -102,7 +102,7 @@ export default async function Index({
 						</div>
 						<div className="absolute z-30">
 							<QRCodeSVG
-								value={`http://localhost:3000/attend?code=${data.code}`}
+								value={`${ROOT_URL}/attend?code=${data.code}`}
 								size={400}
 								className="w-[25vw] h-[25vw]"
 							/>
