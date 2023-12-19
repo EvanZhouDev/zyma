@@ -55,7 +55,7 @@ export default async function Index({
 				.from("codes")
 				.insert([{ class: searchParams.classId }])
 				.select(),
-		)![0];
+		)[0];
 	}
 
 	const joined =

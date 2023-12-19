@@ -20,7 +20,7 @@ async function getStudent(uuid: string, code: string) {
 			.select("profiles (username), student, status, created_at")
 			.eq("code_used", code)
 			.eq("student", uuid),
-	)![0];
+	)[0];
 }
 export default function StudentPresenceTable({
 	initialJoined,
