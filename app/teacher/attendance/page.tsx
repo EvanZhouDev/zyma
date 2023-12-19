@@ -1,4 +1,5 @@
 import Icon from "@/components/Icon";
+import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
@@ -35,7 +36,7 @@ export default async function Index({
 				.from("codes")
 				// XXX: Perhaps we should just delete it
 				.update({ expired: true })
-				.eq("id", id)
+				.eq("id", id),
 		);
 		return redirect("/teacher/dashboard");
 	}
@@ -44,7 +45,7 @@ export default async function Index({
 			.from("codes")
 			.select()
 			.eq("class", searchParams.classId)
-			.eq("expired", false)
+			.eq("expired", false),
 	)!;
 	let data;
 	if (existingCode.length === 1) {
@@ -54,7 +55,7 @@ export default async function Index({
 			await client
 				.from("codes")
 				.insert([{ class: searchParams.classId }])
-				.select()
+				.select(),
 		)![0];
 	}
 
@@ -63,14 +64,14 @@ export default async function Index({
 			await client
 				.from("attendance")
 				.select("profiles (username), student, status, created_at")
-				.eq("code_used", data.code)
+				.eq("code_used", data.code),
 		) ?? [];
 	const totalStudents = (
 		v(
 			await client
 				.from("students")
 				.select("*")
-				.eq("class", searchParams.classId)
+				.eq("class", searchParams.classId),
 		) ?? []
 	).length;
 	return (

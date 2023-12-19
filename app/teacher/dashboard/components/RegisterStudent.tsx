@@ -1,12 +1,21 @@
 "use client";
 import Icon from "@/components/Icon";
+import { ROOT_URL } from "@/components/constants";
 import { QRCodeSVG } from "qrcode.react";
 import { useRef } from "react";
 import { addStudent } from "../actions";
 import StudentTable from "./StudentTable";
 
-export default function RegisterStudent({ classId }: { classId: number }) {
+export default function RegisterStudent({ classId }: { classId?: number }) {
 	const myModal = useRef<HTMLDialogElement>(null);
+	if (classId === undefined) {
+		return (
+			<button className="ml-2 btn btn-ghost" disabled>
+				<Icon.Outlined name="User" />
+				Register Students
+			</button>
+		);
+	}
 	return (
 		<>
 			<button
@@ -24,7 +33,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 								Scan code to join the class.
 							</p>
 							<QRCodeSVG
-								value={`http://localhost:3000/join?class=${classId}`}
+								value={`${ROOT_URL}/join?class=${classId}`}
 								size={1000}
 								className="w-3/5 h-min bg-black mb-5"
 							/>
