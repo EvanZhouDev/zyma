@@ -1,65 +1,9 @@
 import Icon from "@/components/Icon";
-import { v } from "@/utils";
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useRef, useState } from "react";
+import { Student, StudentsInClassContext } from "@/components/contexts";
+import { useContext, useRef } from "react";
 
-type Metadata = { attendence?: [number, number] };
-type Student = { email: string; username: string; metadata?: Metadata };
-async function getStudent(uuid: string) {
-	const client = await createClient();
-	return v(
-		await client
-			.from("students")
-			.select("profiles (username, email), metadata")
-			.eq("student", uuid),
-	)[0];
-}
-export default function StudentTable({ classId }: { classId: number }) {
-	const [data, setData] = useState<Student[]>([]);
-	useEffect(() => {
-		(async () => {
-			if (classId) {
-				const client = await createClient();
-				const students = v(
-					await client
-						.from("students")
-						.select("profiles (username, email), metadata")
-						.eq("class", classId),
-				);
-				setData(
-					(students ?? []).map((x) => {
-						return { ...x.profiles!, metadata: x.metadata } as Student;
-					}),
-				);
-				client
-					.channel("students-in-class")
-					.on(
-						"postgres_changes",
-						{
-							event: "INSERT",
-							schema: "public",
-							table: "students",
-							// I hope this doesn't introduce security errors
-							filter: `class=eq.${classId}`,
-						},
-						(payload) => {
-							console.log("insert", payload);
-							getStudent(payload.new.student).then((student) => {
-								console.assert(student.metadata === payload.new.metadata);
-								setData((x) => [
-									...x,
-									{
-										...student.profiles!,
-										metadata: student.metadata,
-									} as Student,
-								]);
-							});
-						},
-					)
-					.subscribe();
-			}
-		})();
-	}, [classId]);
+export default function StudentTable() {
+	const students = useContext(StudentsInClassContext);
 	return (
 		<div className="overflow-x-auto">
 			<table className="table mt-5">
@@ -73,7 +17,7 @@ export default function StudentTable({ classId }: { classId: number }) {
 					</tr>
 				</thead>
 				<tbody>
-					{data.map((student) => (
+					{students.map((student) => (
 						<tr key={student.email}>
 							<td>
 								<div className="flex items-center gap-3">

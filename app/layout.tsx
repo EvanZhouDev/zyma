@@ -8,7 +8,8 @@ import "./globals.css";
 export const metadata = {
 	metadataBase: new URL(ROOT_URL),
 	title: "Zyma",
-	description: "Zyma is a simple attendance tracker, enabling easy check-in for anyone from clubs to corporation meetings.",
+	description:
+		"Zyma is a simple attendance tracker, enabling easy check-in for anyone from clubs to corporation meetings.",
 };
 
 export default function RootLayout({
