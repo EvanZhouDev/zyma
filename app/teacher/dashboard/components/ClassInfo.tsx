@@ -1,7 +1,7 @@
 import Icon from "@/components/Icon";
-import { deleteClass } from "../actions";
-import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
+import { deleteClass } from "../actions";
 
 export default function ClassInfo({
 	klass,

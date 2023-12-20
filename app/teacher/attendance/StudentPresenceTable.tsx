@@ -19,8 +19,8 @@ async function getStudent(uuid: string, code: string) {
 			.from("attendance")
 			.select("profiles (username), student, status, created_at")
 			.eq("code_used", code)
-			.eq("student", uuid)
-	)![0];
+			.eq("student", uuid),
+	)[0];
 }
 export default function StudentPresenceTable({
 	initialJoined,
@@ -32,8 +32,8 @@ export default function StudentPresenceTable({
 	const [joined, setJoined] = useState(initialJoined);
 	const [statuses, setStatuses] = useState<{ [key: string]: string }>(
 		Object.fromEntries(
-			joined.map(({ student, status }) => [student, convertStatus(status)])
-		)
+			joined.map(({ student, status }) => [student, convertStatus(status)]),
+		),
 	);
 	useEffect(() => {
 		(async () => {
@@ -60,7 +60,7 @@ export default function StudentPresenceTable({
 								[payload.new.student]: convertStatus(payload.new.status),
 							};
 						});
-					}
+					},
 				)
 				.on(
 					"postgres_changes",
@@ -78,7 +78,7 @@ export default function StudentPresenceTable({
 								[payload.new.student]: convertStatus(payload.new.status),
 							};
 						});
-					}
+					},
 				)
 				.subscribe();
 		})();
@@ -108,7 +108,13 @@ export default function StudentPresenceTable({
 					))}
 				</tbody>
 			</table>
-			{joined.length === 0 ? <h1 className="text-center font-bold mt-5 text-xl opacity-50">Waiting for students to join...</h1> : ""}
+			{joined.length === 0 ? (
+				<h1 className="text-center font-bold mt-5 text-xl opacity-50">
+					Waiting for students to join...
+				</h1>
+			) : (
+				""
+			)}
 		</>
 	);
 }

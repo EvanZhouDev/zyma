@@ -6,16 +6,19 @@ import { useRef } from "react";
 import { addStudent } from "../actions";
 import StudentTable from "./StudentTable";
 
-export default function RegisterStudent({ classId }: { classId?: number }) {
+// async function getStudent(uuid: string) {
+// 	const client = await createClient();
+// 	return v(
+// 		await client
+// 			.from("students")
+// 			.select("profiles (username, email), metadata")
+// 			.eq("student", uuid),
+// 	)[0];
+// }
+export default function RegisterStudent({ classId }: { classId: number }) {
 	const myModal = useRef<HTMLDialogElement>(null);
-	if (classId === undefined) {
-		return (
-			<button className="ml-2 btn btn-ghost" disabled>
-				<Icon.Outlined name="User" />
-				Register Students
-			</button>
-		);
-	}
+	// const [students, setStudents] = useState<Student[]>([]);
+
 	return (
 		<>
 			<button
@@ -59,7 +62,7 @@ export default function RegisterStudent({ classId }: { classId?: number }) {
 								/>
 								<button className="btn ml-3 btn-filled">Add Student</button>
 							</form>
-							<StudentTable classId={classId} />
+							<StudentTable />
 						</div>
 					</div>
 					<div className="modal-action">

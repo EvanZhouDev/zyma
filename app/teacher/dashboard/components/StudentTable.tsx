@@ -1,31 +1,9 @@
 import Icon from "@/components/Icon";
-import { v } from "@/utils";
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useRef, useState } from "react";
+import { Student, StudentsInClassContext } from "@/components/contexts";
+import { useContext, useRef } from "react";
 
-// import { getStudentData } from "../actions";
-type Metadata = { attendence?: [number, number] };
-type Student = { email: string; username: string; metadata?: Metadata };
-export default function StudentTable({ classId }: { classId: number }) {
-	const [data, setData] = useState<Student[]>([]);
-	useEffect(() => {
-		(async () => {
-			if (classId) {
-				const client = await createClient();
-				const students = v(
-					await client
-						.from("students")
-						.select("profiles (username, email), metadata")
-						.eq("class", classId),
-				);
-				setData(
-					(students ?? []).map((x) => {
-						return { ...x.profiles!, metadata: x.metadata } as Student;
-					}),
-				);
-			}
-		})();
-	}, [classId]);
+export default function StudentTable() {
+	const students = useContext(StudentsInClassContext);
 	return (
 		<div className="overflow-x-auto">
 			<table className="table mt-5">
@@ -39,8 +17,8 @@ export default function StudentTable({ classId }: { classId: number }) {
 					</tr>
 				</thead>
 				<tbody>
-					{data.map((student) => (
-						<tr>
+					{students.map((student) => (
+						<tr key={student.email}>
 							<td>
 								<div className="flex items-center gap-3">
 									<div>

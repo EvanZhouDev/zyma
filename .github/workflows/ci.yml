@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install
+      - name: Build
+        run: bun run build
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install
+      - name: Lint
+        run: bun run lint
+  check-database-types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Setup Supabase v1.123.4
+        uses: supabase/setup-cli@v1
+        with:
+          version: 1.123.4
+      - name: Install dependencies
+        run: bun install
+      - name: Start database
+        run: |
+          supabase db start
+          supabase db reset
+      - name: Verify generated types match Postgres schema
+        run: |
+          bun run update-types
+          if ! git diff --ignore-space-at-eol --exit-code --quiet utils/supabase/types.ts; then
+              echo "Detected uncommitted changes after build. See status below:\n" >> $GITHUB_STEP_SUMMARY
+              echo '```diff' >> $GITHUB_STEP_SUMMARY
+              echo $(git diff) >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
+              exit 1
+          fi
+      - name: (main only) Ensure there are no unpushed migrations
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if supabase migration list --db-url $DB_URL | grep -E '\s*(\d+) │ \s+ │ .+$'; then
+            echo "Unpushed migrations detected:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "$(supabase migration list --db-url $DB_URL | grep -E '\s*(\d+) │ \s+ │ .+$' --color=never)" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi

@@ -85,7 +85,6 @@ export interface Database {
           class: number
           code: string
           created_at: string
-          expired: boolean
           expires_at: string | null
           id: number
         }
@@ -93,7 +92,6 @@ export interface Database {
           class: number
           code?: string
           created_at?: string
-          expired?: boolean
           expires_at?: string | null
           id?: number
         }
@@ -101,7 +99,6 @@ export interface Database {
           class?: number
           code?: string
           created_at?: string
-          expired?: boolean
           expires_at?: string | null
           id?: number
         }

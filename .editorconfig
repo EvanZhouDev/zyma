@@ -1,0 +1,5 @@
+root = true
+# Biome doesn't support Markdown yet
+[*.md]
+indent_style = space
+indent_size = 2

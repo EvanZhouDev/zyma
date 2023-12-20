@@ -10,10 +10,7 @@ import Image from "next/image";
 import StudentPresenceTable from "./StudentPresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
-import {
-	FilterIcon,
-	SearchIcon,
-} from "@primer/octicons-react";
+import { FilterIcon, SearchIcon } from "@primer/octicons-react";
 
 export default async function Index({
 	searchParams,
@@ -35,31 +32,17 @@ export default async function Index({
 		if ((await client.auth.getUser()).data?.user?.id == null) {
 			return redirect("/");
 		}
-		v(
-			await client
-				.from("codes")
-				// XXX: Perhaps we should just delete it
-				.update({ expired: true })
-				.eq("id", id),
-		);
+		v(await client.from("codes").delete().eq("id", id));
 		return redirect("/teacher/dashboard");
 	}
+	const CODE_SELECT = "classes (name), code, created_at, id";
 	const existingCode = v(
 		await client
 			.from("codes")
-			.select()
-			.eq("class", searchParams.classId)
-			.eq("expired", false),
-	)!;
-
-	const className = v(
-		await client
-			.from("classes")
-			.select()
-			.eq("id", searchParams.classId)
-	)![0].name;
-
-	let data;
+			.select(CODE_SELECT)
+			.eq("class", searchParams.classId),
+	);
+	let data: (typeof existingCode)[0];
 	if (existingCode.length === 1) {
 		data = existingCode[0];
 	} else {
@@ -67,8 +50,8 @@ export default async function Index({
 			await client
 				.from("codes")
 				.insert([{ class: searchParams.classId }])
-				.select(),
-		)![0];
+				.select(CODE_SELECT),
+		)[0];
 	}
 
 	const joined =
@@ -100,7 +83,7 @@ export default async function Index({
 					<div className="text-right mr-5">
 						Attendance session for
 						<br />
-						<b className="text-xl">{className}</b>
+						<b className="text-xl">{data.classes!.name}</b>
 					</div>
 				</div>
 				<div className="flex flex-col items-center">
@@ -125,9 +108,7 @@ export default async function Index({
 				<div className="flex flex-col items-center">
 					<div className="text-2xl mb-2">Alternatively, enter the Passcode</div>
 					<div className="flex flex-row items-center">
-						<div className="text-3xl font-bold">
-							{data.code}
-						</div>
+						<div className="text-3xl font-bold">{data.code}</div>
 					</div>
 				</div>
 
