@@ -183,7 +183,11 @@ export default function StudentPresenceTable({
 
 												return (
 													<span
-														className={`border border-3 border-[${colorMap[parsedStatus]}] text-[${colorMap[parsedStatus]}] p-2 rounded-full`}
+														style={{
+															borderColor: colorMap[parsedStatus],
+															color: colorMap[parsedStatus],
+														}}
+														className={`border border-3 p-2 rounded-full`}
 													>
 														{parsedStatus}
 													</span>
