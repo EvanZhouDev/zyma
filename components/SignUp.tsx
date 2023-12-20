@@ -63,8 +63,8 @@ export default function SignUp({
 						type="submit"
 						className="btn"
 						formAction={async (formData: FormData) => {
-							nameDialog.current!.close();
 							await signUp(formData);
+							nameDialog.current!.close();
 						}}
 					>
 						Submit
