@@ -6,7 +6,11 @@ Zyma is a simple attendance tracker for anyone to use, built specifically for hi
 
 ## Usage and how to host
 
-TK.
+We have a deployment at [https://zyma.vercel.app](https://zyma.vercel.app).
+
+## Contributing
+
+See our [contributing guide](./CONTRIBUTING.md).
 
 ## FAQ
 
