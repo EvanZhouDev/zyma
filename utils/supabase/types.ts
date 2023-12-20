@@ -85,22 +85,22 @@ export interface Database {
           class: number
           code: string
           created_at: string
-          expires_at: string | null
           id: number
+          metadata: Json
         }
         Insert: {
           class: number
           code?: string
           created_at?: string
-          expires_at?: string | null
           id?: number
+          metadata?: Json
         }
         Update: {
           class?: number
           code?: string
           created_at?: string
-          expires_at?: string | null
           id?: number
+          metadata?: Json
         }
         Relationships: [
           {
@@ -176,7 +176,10 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_expired_codes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
