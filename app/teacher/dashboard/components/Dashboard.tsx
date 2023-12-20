@@ -1,18 +1,74 @@
 "use client";
 import Icon from "@/components/Icon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ClassTable from "./ClassTable";
 import RegisterStudent from "./RegisterStudent";
 import StudentTable from "./StudentTable";
 
-// import { createClass, getStudentData } from "../actions";
+import { Student, StudentsInClassContext } from "@/components/contexts";
+import { v } from "@/utils";
+import { createClient } from "@/utils/supabase/client";
 import NewClass from "./NewClass";
+async function getStudent(uuid: string) {
+	const client = await createClient();
+	return v(
+		await client
+			.from("students")
+			.select("profiles (username, email), metadata")
+			.eq("student", uuid),
+	)[0];
+}
 export default function Dashboard({
 	classes,
 }: { classes: { name: string; id: number }[] }) {
 	const [selectedClass, setSelectedClass] = useState(0);
 	const classId = classes[selectedClass]?.id;
 	const className = classes[selectedClass]?.name;
+	const [students, setStudents] = useState<Student[]>([]);
+	useEffect(() => {
+		(async () => {
+			if (classId) {
+				const client = await createClient();
+				const students = v(
+					await client
+						.from("students")
+						.select("profiles (username, email), metadata")
+						.eq("class", classId),
+				);
+				setStudents(
+					(students ?? []).map((x) => {
+						return { ...x.profiles!, metadata: x.metadata } as Student;
+					}),
+				);
+				client
+					.channel("students-in-class")
+					.on(
+						"postgres_changes",
+						{
+							event: "INSERT",
+							schema: "public",
+							table: "students",
+							// I hope this doesn't introduce security errors
+							filter: `class=eq.${classId}`,
+						},
+						(payload) => {
+							console.log("insert", payload);
+							getStudent(payload.new.student).then((student) => {
+								console.assert(student.metadata === payload.new.metadata);
+								setStudents((x) => [
+									...x,
+									{
+										...student.profiles!,
+										metadata: student.metadata,
+									} as Student,
+								]);
+							});
+						},
+					)
+					.subscribe();
+			}
+		})();
+	}, [classId]);
 	return (
 		<div className="w-fill h-screen bg-secondary overflow-hidden">
 			{/* class list and management */}
@@ -33,53 +89,62 @@ export default function Dashboard({
 							role="tabpanel"
 							className="tab-content bg-base-100 border-base-300 rounded-box p-6"
 						>
-							<div className="min-h-[calc(90vh-78px)]">
-								<div className="flex justify-stretch">
-									<select
-										className="select select-bordered w-full"
-										value={selectedClass}
-										onChange={async (event) => {
-											const newClassIndex = parseInt(event.target.value);
-											setSelectedClass(newClassIndex);
-										}}
-									>
-										<option disabled defaultValue={""}>
-											Pick a class...
-										</option>
-										{classes.map((x, i) => (
-											<option value={i} key={x.id}>
-												{x.name}
-											</option>
-										))}
-									</select>
-									<RegisterStudent classId={classId} />
-								</div>
-								{classId === undefined && className === undefined ? (
-									<div role="alert" className="alert alert-error my-2">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											className="stroke-current shrink-0 h-6 w-6"
-											fill="none"
-											viewBox="0 0 24 24"
+							<StudentsInClassContext.Provider value={students}>
+								<div className="min-h-[calc(90vh-78px)]">
+									<div className="flex justify-stretch">
+										<select
+											className="select select-bordered w-full"
+											value={selectedClass}
+											onChange={async (event) => {
+												const newClassIndex = parseInt(event.target.value);
+												setSelectedClass(newClassIndex);
+											}}
 										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth="2"
-												d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-											/>
-										</svg>
-										<span>Please select a class</span>
+											<option disabled defaultValue={""}>
+												Pick a class...
+											</option>
+											{classes.map((x, i) => (
+												<option value={i} key={x.id}>
+													{x.name}
+												</option>
+											))}
+										</select>
+										{classId === undefined ? (
+											<button className="ml-2 btn btn-ghost" disabled>
+												<Icon.Outlined name="User" />
+												Register Students
+											</button>
+										) : (
+											<RegisterStudent classId={classId} />
+										)}
 									</div>
-								) : (
-									<>
-										<h1 className="website-title pt-5 !-pt-2">
-											Students Registered in {className}
-										</h1>
-										<StudentTable classId={classId} />
-									</>
-								)}
-							</div>
+									{classId === undefined && className === undefined ? (
+										<div role="alert" className="alert alert-error my-2">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="stroke-current shrink-0 h-6 w-6"
+												fill="none"
+												viewBox="0 0 24 24"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth="2"
+													d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+												/>
+											</svg>
+											<span>Please select a class</span>
+										</div>
+									) : (
+										<>
+											<h1 className="website-title pt-5 !-pt-2">
+												Students Registered in {className}
+											</h1>
+											<StudentTable />
+										</>
+									)}
+								</div>
+							</StudentsInClassContext.Provider>
 						</div>
 						<input
 							type="radio"
