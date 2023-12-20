@@ -3,9 +3,17 @@ import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useRef, useState } from "react";
 
-// import { getStudentData } from "../actions";
 type Metadata = { attendence?: [number, number] };
 type Student = { email: string; username: string; metadata?: Metadata };
+async function getStudent(uuid: string) {
+	const client = await createClient();
+	return v(
+		await client
+			.from("students")
+			.select("profiles (username, email), metadata")
+			.eq("student", uuid),
+	)[0];
+}
 export default function StudentTable({ classId }: { classId: number }) {
 	const [data, setData] = useState<Student[]>([]);
 	useEffect(() => {
@@ -23,6 +31,34 @@ export default function StudentTable({ classId }: { classId: number }) {
 						return { ...x.profiles!, metadata: x.metadata } as Student;
 					}),
 				);
+				client
+					.channel("students-in-class")
+					.on(
+						"postgres_changes",
+						{
+							event: "INSERT",
+							schema: "public",
+							table: "students",
+							// I hope this doesn't introduce security errors
+							filter: `class=eq.${classId}`,
+						},
+						(payload) => {
+							console.log("insert", payload);
+							getStudent(payload.new.student).then((student) => {
+								console.assert(
+									student.metadata === payload.new.student.metadata,
+								);
+								setData((x) => [
+									...x,
+									{
+										...student.profiles!,
+										metadata: student.metadata,
+									} as Student,
+								]);
+							});
+						},
+					)
+					.subscribe();
 			}
 		})();
 	}, [classId]);
