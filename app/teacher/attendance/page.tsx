@@ -10,7 +10,7 @@ import Image from "next/image";
 import StudentPresenceTable from "./StudentPresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
-import { FilterIcon, SearchIcon } from "@primer/octicons-react";
+import { AlertIcon, ZapIcon } from "@primer/octicons-react";
 
 export default async function Index({
 	searchParams,
@@ -40,9 +40,14 @@ export default async function Index({
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("class", searchParams.classId),
+			.eq("class", searchParams.classId)
 	);
 	let data: (typeof existingCode)[0];
+
+	const className = v(
+		await client.from("classes").select().eq("id", searchParams.classId)
+	)![0].name;
+
 	if (existingCode.length === 1) {
 		data = existingCode[0];
 	} else {
@@ -50,7 +55,7 @@ export default async function Index({
 			await client
 				.from("codes")
 				.insert([{ class: searchParams.classId }])
-				.select(CODE_SELECT),
+				.select(CODE_SELECT)
 		)[0];
 	}
 
@@ -59,34 +64,48 @@ export default async function Index({
 			await client
 				.from("attendance")
 				.select("profiles (username), student, status, created_at")
-				.eq("code_used", data.code),
+				.eq("code_used", data.code)
 		) ?? [];
 	const totalStudents = (
 		v(
 			await client
 				.from("students")
 				.select("*")
-				.eq("class", searchParams.classId),
+				.eq("class", searchParams.classId)
 		) ?? []
 	).length;
+
+	const RTworking = true;
+
 	return (
 		<div className="w-full h-full bg-secondary justify-around flex">
 			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-300 outline-1 basis-1/2 flex flex-col justify-between items-center">
 				<div className="flex justify-between items-center w-full mt-4">
-					<Image
-						src="/zyma.svg"
-						width={500}
-						height={500}
-						alt="Zyma Logo"
-						className="w-[10vw] ml-5"
-					></Image>
+					<div>
+						<Image
+							src="/zyma.svg"
+							width={500}
+							height={500}
+							alt="Zyma Logo"
+							className="w-[8.7vw] ml-5 mb-1"
+						></Image>
+						{RTworking ? (
+							<span className="text-[#1E883E] ml-5">
+								<ZapIcon /> RT Connected
+							</span>
+						) : (
+							<span className="text-red-600 ml-5">
+								<AlertIcon /> RT Failed
+							</span>
+						)}
+					</div>
 					<div className="text-right mr-5">
 						Attendance session for
 						<br />
 						<b className="text-xl">{data.classes!.name}</b>
 					</div>
 				</div>
-				<div className="flex flex-col items-center">
+				<div className="flex flex-col items-center -mt-5">
 					<div className="text-3xl mb-4">Scan the code to attend.</div>
 					<div className="flex items-center justify-center w-[27vw] h-[27vw]">
 						<div className="absolute z-10">
@@ -137,28 +156,11 @@ export default async function Index({
 							<button className="btn btn-dangerous">End Session</button>{" "}
 						</form>
 					</div>
-					<div className="flex flex-row items-center w-full justify-between mt-4">
-						<FilterIcon size="medium" verticalAlign="middle" className="mr-2" />
-						<select className="select input-standard mr-2">
-							<option defaultChecked>All Statuses</option>
-							<option>Present</option>
-							<option>Late</option>
-							<option>Absent</option>
-						</select>
-						<SearchIcon size="medium" verticalAlign="middle" className="mr-2" />
-						<input
-							type="text"
-							placeholder="Search Students..."
-							className="input input-standard ml-1 flex-grow"
-						/>
-					</div>
 				</div>
-				<div className="flex-grow w-full">
-					<StudentPresenceTable
-						initialJoined={joined}
-						attendanceCode={data.code}
-					/>
-				</div>
+				<StudentPresenceTable
+					initialJoined={joined}
+					attendanceCode={data.code}
+				/>
 			</div>
 		</div>
 		// <div className="w-fill h-screen bg-secondary overflow-hidden">
