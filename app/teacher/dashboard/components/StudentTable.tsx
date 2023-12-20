@@ -45,9 +45,7 @@ export default function StudentTable({ classId }: { classId: number }) {
 						(payload) => {
 							console.log("insert", payload);
 							getStudent(payload.new.student).then((student) => {
-								console.assert(
-									student.metadata === payload.new.student.metadata,
-								);
+								console.assert(student.metadata === payload.new.metadata);
 								setData((x) => [
 									...x,
 									{
@@ -76,7 +74,7 @@ export default function StudentTable({ classId }: { classId: number }) {
 				</thead>
 				<tbody>
 					{data.map((student) => (
-						<tr>
+						<tr key={student.email}>
 							<td>
 								<div className="flex items-center gap-3">
 									<div>
