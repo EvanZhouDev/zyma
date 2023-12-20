@@ -30,21 +30,11 @@ export default async function Index({
 		if ((await client.auth.getUser()).data?.user?.id == null) {
 			return redirect("/");
 		}
-		v(
-			await client
-				.from("codes")
-				// XXX: Perhaps we should just delete it
-				.update({ expired: true })
-				.eq("id", id),
-		);
+		v(await client.from("codes").delete().eq("id", id));
 		return redirect("/teacher/dashboard");
 	}
 	const existingCode = v(
-		await client
-			.from("codes")
-			.select()
-			.eq("class", searchParams.classId)
-			.eq("expired", false),
+		await client.from("codes").select().eq("class", searchParams.classId),
 	);
 	let data;
 	if (existingCode.length === 1) {
