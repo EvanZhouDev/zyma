@@ -35,6 +35,7 @@ export default async function Index({
 		v(await client.from("codes").delete().eq("id", id));
 		return redirect("/teacher/dashboard");
 	}
+
 	const CODE_SELECT = "classes (name), code, created_at, id";
 	const existingCode = v(
 		await client
@@ -159,53 +160,5 @@ export default async function Index({
 				/>
 			</div>
 		</div>
-		// <div className="w-fill h-screen bg-secondary overflow-hidden">
-		// 	{/* class list and management */}
-		// 	{/* button to start the attendance page */}
-		// 	{/* class */}
-		// 	{/* <h1 className="website-title !text-3xl">Attendance for Class 1</h1> */}
-		// 	<div className="w-full flex flex-row justify-center h-full mt-[8.5vh]">
-		// 		<div className="bg-base-100 outline outline-1 outline-[#CAC8C5] w-[48.5%] mr-[0.5%] h-[90vh] rounded-xl flex flex-col justify-around items-center">
-		// 			<div className="flex flex-col items-center">
-		// 				<p className="text-3xl mt-2 font text-primary mb-10">
-		// 					Scan code to mark attendance.
-		// 				</p>
-		// 				<QRCodeSVG
-		// 					value={`http://localhost:3000/attend?code=${data.code}`}
-		// 					size={1000}
-		// 					className="w-3/5 h-min bg-black mb-5"
-		// 				/>
-		// 			</div>
-
-		// 			<div className="flex flex-col items-center mb-5">
-		// 				<p className="text-l text-secondary-content">
-		// 					Alternatively, join the class with the code:
-		// 				</p>
-		// 				<h1 className="text-xl mt-3 font-bold text-primary">{data.code}</h1>
-		// 			</div>
-		// 		</div>
-		// 		<div className="bg-base-100 outline outline-1 outline-[#CAC8C5] w-[48.5%] ml-[0.5%] h-[90vh] rounded-xl">
-		// 			<div className="flex flex-row justify-between px-4 mt-4">
-		// 				<h1 className="website-title !text-5xl">Students</h1>
-		// 				<form action={handle.bind(null, data.id)}>
-		// 					<button className="btn btn-primary">End Session</button>
-		// 				</form>
-		// 			</div>
-		// 			<div className="ml-[5%] stats w-[90%] shadow my-5">
-		// 				<StudentCounter
-		// 					total={totalStudents}
-		// 					attendanceCode={data.code}
-		// 					initialJoined={joined.length}
-		// 				/>
-		// 			</div>
-		// 			<div className="overflow-x-auto">
-		// 				<StudentPresenceTable
-		// 					initialJoined={joined}
-		// 					attendanceCode={data.code}
-		// 				/>
-		// 			</div>
-		// 		</div>
-		// 	</div>
-		// </div>
 	);
 }
