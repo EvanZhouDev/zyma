@@ -44,10 +44,6 @@ export default async function Index({
 	);
 	let data: (typeof existingCode)[0];
 
-	const className = v(
-		await client.from("classes").select().eq("id", searchParams.classId)
-	)![0].name;
-
 	if (existingCode.length === 1) {
 		data = existingCode[0];
 	} else {
