@@ -1,6 +1,5 @@
 "use client";
 
-import Icon from "@/components/Icon";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 
@@ -29,7 +28,7 @@ export default function StudentCounter({
 					(payload) => {
 						console.log("insert", payload);
 						setStudentCount((x) => x + 1);
-					}
+					},
 				)
 				.on(
 					"postgres_changes",
@@ -42,7 +41,7 @@ export default function StudentCounter({
 					(payload) => {
 						console.log("update", payload);
 						setStudentCount((x) => x + 1);
-					}
+					},
 				)
 				.subscribe();
 		})();

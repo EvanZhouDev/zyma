@@ -1,16 +1,15 @@
-import Icon from "@/components/Icon";
 import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
+import { AlertIcon, ZapIcon } from "@primer/octicons-react";
 import { cookies } from "next/headers";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import StudentCounter from "./StudentCounter";
-import Image from "next/image";
 import StudentPresenceTable from "./StudentPresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
-import { AlertIcon, ZapIcon } from "@primer/octicons-react";
 
 export default async function Index({
 	searchParams,
@@ -41,7 +40,7 @@ export default async function Index({
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("class", searchParams.classId)
+			.eq("class", searchParams.classId),
 	);
 	let data: (typeof existingCode)[0];
 
@@ -52,7 +51,7 @@ export default async function Index({
 			await client
 				.from("codes")
 				.insert([{ class: searchParams.classId }])
-				.select(CODE_SELECT)
+				.select(CODE_SELECT),
 		)[0];
 	}
 
@@ -61,14 +60,14 @@ export default async function Index({
 			await client
 				.from("attendance")
 				.select("profiles (username), student, status, created_at")
-				.eq("code_used", data.code)
+				.eq("code_used", data.code),
 		) ?? [];
 	const totalStudents = (
 		v(
 			await client
 				.from("students")
 				.select("*")
-				.eq("class", searchParams.classId)
+				.eq("class", searchParams.classId),
 		) ?? []
 	).length;
 
@@ -85,7 +84,7 @@ export default async function Index({
 							height={500}
 							alt="Zyma Logo"
 							className="w-[8.7vw] ml-5 mb-1"
-						></Image>
+						/>
 						{RTworking ? (
 							<span className="text-[#1E883E] ml-5">
 								<ZapIcon /> RT Connected
@@ -106,10 +105,10 @@ export default async function Index({
 					<div className="text-3xl mb-4">Scan the code to attend.</div>
 					<div className="flex items-center justify-center w-[27vw] h-[27vw]">
 						<div className="absolute z-10">
-							<div className="w-[27vw] h-[27vw] rounded-3xl zyma-code-bg"></div>
+							<div className="w-[27vw] h-[27vw] rounded-3xl zyma-code-bg" />
 						</div>
 						<div className="absolute z-20">
-							<div className="w-[25vw] h-[25vw] rounded-2xl bg-base-100"></div>
+							<div className="w-[25vw] h-[25vw] rounded-2xl bg-base-100" />
 						</div>
 						<div className="absolute z-30">
 							<QRCodeSVG

@@ -3,9 +3,8 @@
 import { convertStatus } from "@/components/constants";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState, ChangeEvent } from "react";
-import TimeElapsed from "./TimeElapsed";
 import { FilterIcon, SearchIcon } from "@primer/octicons-react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 type StudentInAttendance = {
 	profiles: { username: string } | null;
@@ -20,7 +19,7 @@ async function getStudent(uuid: string, code: string) {
 			.from("attendance")
 			.select("profiles (username), student, status, created_at")
 			.eq("code_used", code)
-			.eq("student", uuid)
+			.eq("student", uuid),
 	)[0];
 }
 export default function StudentPresenceTable({
@@ -43,8 +42,8 @@ export default function StudentPresenceTable({
 	const [joined, setJoined] = useState(initialJoined);
 	const [statuses, setStatuses] = useState<{ [key: string]: string }>(
 		Object.fromEntries(
-			joined.map(({ student, status }) => [student, convertStatus(status)])
-		)
+			joined.map(({ student, status }) => [student, convertStatus(status)]),
+		),
 	);
 	useEffect(() => {
 		(async () => {
@@ -71,7 +70,7 @@ export default function StudentPresenceTable({
 								[payload.new.student]: convertStatus(payload.new.status),
 							};
 						});
-					}
+					},
 				)
 				.on(
 					"postgres_changes",
@@ -89,7 +88,7 @@ export default function StudentPresenceTable({
 								[payload.new.student]: convertStatus(payload.new.status),
 							};
 						});
-					}
+					},
 				)
 				.subscribe();
 		})();
@@ -128,7 +127,7 @@ export default function StudentPresenceTable({
 					</thead>
 					<tbody>
 						{joined
-							.filter((student, i) => {
+							.filter((student, _i) => {
 								let show = true;
 								if (
 									selectedFilter === "Absent" &&
@@ -166,17 +165,17 @@ export default function StudentPresenceTable({
 												{
 													hour: "2-digit",
 													minute: "2-digit",
-												}
+												},
 											)}
 										</td>
 										<td>
 											{(() => {
-												let parsedStatus =
-													statuses[student.student] == "Present"
+												const parsedStatus =
+													statuses[student.student] === "Present"
 														? "Present"
 														: "Absent";
 
-												let colorMap: { [key: string]: string } = {
+												const colorMap: { [key: string]: string } = {
 													Present: "#1E883E",
 													Absent: "#881E1E",
 												};
@@ -187,7 +186,7 @@ export default function StudentPresenceTable({
 															borderColor: colorMap[parsedStatus],
 															color: colorMap[parsedStatus],
 														}}
-														className={`border border-3 p-2 rounded-full`}
+														className={"border border-3 p-2 rounded-full"}
 													>
 														{parsedStatus}
 													</span>
@@ -198,7 +197,7 @@ export default function StudentPresenceTable({
 								);
 							})}
 					</tbody>
-					<tfoot className="border-none outline-none"></tfoot>
+					<tfoot className="border-none outline-none" />
 				</table>
 				{joined.length === 0 ? (
 					<h1 className="text-center font-bold mt-5 text-xl opacity-50">
