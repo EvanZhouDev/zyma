@@ -76,7 +76,7 @@ export default async function Index({
 	return (
 		<div className="w-full h-full bg-secondary justify-around flex">
 			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-300 outline-1 basis-1/2 flex flex-col justify-between items-center">
-				<div className="flex justify-between items-center w-full mt-4">
+				<div className="flex justify-between items-center w-full">
 					<div>
 						<Image
 							src="/zyma.svg"
@@ -95,7 +95,7 @@ export default async function Index({
 							</span>
 						)}
 					</div>
-					<div className="text-right mr-5">
+					<div className="text-right mr-5 mt-5">
 						Attendance session for
 						<br />
 						<b className="text-xl">{data.classes!.name}</b>
