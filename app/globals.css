@@ -39,6 +39,7 @@
 		opacity: 0;
 		transform: translateY(10px);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0);
@@ -103,10 +104,8 @@
 	padding: 10px;
 	border: double 5px transparent;
 	--bg-hover-color: white;
-	background-image: linear-gradient(
-			var(--bg-hover-color),
-			var(--bg-hover-color)
-		),
+	background-image: linear-gradient(var(--bg-hover-color),
+			var(--bg-hover-color)),
 		conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
 	background-clip: padding-box, border-box;
 	background-origin: padding-box, border-box;
@@ -114,13 +113,17 @@
 	border-radius: 20px;
 	transition:
 		border 0.25s,
-		background-image 0.25s;
+		background-image 0.25s, scale 0.5s;
 	color: #24292f;
 }
 
 .btn-start-attendance:hover {
-	--bg-hover-color: #f3f4f6;
-	border: double 3px transparent;
+	padding: 20px;
+	scale: 1.05;
+	border: double 0px transparent;
+	/* --bg-hover-color: #f3f4f6; */
+	/* background-image: linear-gradient(green, green); */
+	background-image: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
 }
 
 .btn-start-attendance:active {
