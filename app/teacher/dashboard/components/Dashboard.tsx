@@ -15,7 +15,7 @@ async function getStudent(uuid: string) {
 		await client
 			.from("students")
 			.select("profiles (username, email), metadata")
-			.eq("student", uuid)
+			.eq("student", uuid),
 	)[0];
 }
 export default function Dashboard({
@@ -35,12 +35,12 @@ export default function Dashboard({
 					await client
 						.from("students")
 						.select("profiles (username, email), metadata")
-						.eq("class", classId)
+						.eq("class", classId),
 				);
 				setStudents(
 					(students ?? []).map((x) => {
 						return { ...x.profiles!, metadata: x.metadata } as Student;
-					})
+					}),
 				);
 				client
 					.channel("students-in-class")
@@ -65,7 +65,7 @@ export default function Dashboard({
 									} as Student,
 								]);
 							});
-						}
+						},
 					)
 					.subscribe();
 			}
