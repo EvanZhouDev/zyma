@@ -15,7 +15,7 @@ async function getStudent(uuid: string) {
 		await client
 			.from("students")
 			.select("profiles (username, email), metadata")
-			.eq("student", uuid),
+			.eq("student", uuid)
 	)[0];
 }
 export default function Dashboard({
@@ -35,12 +35,12 @@ export default function Dashboard({
 					await client
 						.from("students")
 						.select("profiles (username, email), metadata")
-						.eq("class", classId),
+						.eq("class", classId)
 				);
 				setStudents(
 					(students ?? []).map((x) => {
 						return { ...x.profiles!, metadata: x.metadata } as Student;
-					}),
+					})
 				);
 				client
 					.channel("students-in-class")
@@ -65,7 +65,7 @@ export default function Dashboard({
 									} as Student,
 								]);
 							});
-						},
+						}
 					)
 					.subscribe();
 			}
@@ -192,11 +192,11 @@ export default function Dashboard({
 						Cannot start attendance session without a class.
 					</p>
 				)}
-				<div>
+				<div className="w-full px-5">
 					<h1 className="website-title !text-secondary-content !text-2xl">
 						Configure Your Attendance Session:
 					</h1>
-					<label className="form-control my-2 w-full max-w-xs">
+					<label className="form-control my-2 w-full">
 						<div className="label">
 							<span className="label-text">
 								Session Length (Leave empty for indefinite)
@@ -204,11 +204,11 @@ export default function Dashboard({
 						</div>
 						<input
 							type="text"
-							placeholder="Type here"
-							className="input input-bordered w-full max-w-xs"
+							placeholder="Length in seconds..."
+							className="input input-standard w-full"
 						/>
 					</label>
-					<label className="form-control my-2 w-full max-w-xs">
+					<label className="form-control my-2 w-full">
 						<div className="label">
 							<span className="label-text">
 								Session Timeout (Leave empty for indefinite)
@@ -216,8 +216,8 @@ export default function Dashboard({
 						</div>
 						<input
 							type="text"
-							placeholder="Type here"
-							className="input input-bordered w-full max-w-xs"
+							placeholder="Timeout in seconds..."
+							className="input input-standard w-full"
 						/>
 					</label>
 					<label className="form-control my-2 flex w-full max-w-xs flex-row items-center">

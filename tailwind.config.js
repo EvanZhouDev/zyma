@@ -27,17 +27,20 @@ module.exports = {
 	},
 	plugins: [tailwindNesting(), autoprefixer(), require("daisyui")],
 	daisyui: {
-		darkTheme: "materialYouDark",
+		darkTheme: "githubDark",
 		themes: [
 			{
 				github: {
-					primary: "#4f6630",
-					"primary-content": "#ffffff",
-					secondary: "#F6F8FA",
-					"secondary-content": "#1F2329",
-					neutral: "#F6F8FA",
-					"base-100": "#FFFFFF",
-					"base-300": "#D0D7DE",
+					primary: "#0A69DA", // Blue Color on GitHub
+					neutral: "#F6F8FA", // Titlebar on GitHub
+					"base-100": "#FFFFFF", // Main background on GitHub
+					"base-300": "#D0D7DE", // Border Color on GitHub
+				},
+				githubDark: {
+					primary: "#3081F7",
+					neutral: "#02040A",
+					"base-100": "#0D1116",
+					"base-300": "#21262D",
 				},
 				materialYou: {
 					primary: "#4f6630",
