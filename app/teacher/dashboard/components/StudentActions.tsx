@@ -10,7 +10,7 @@ export default function StudentActions({ student }: { student: Student }) {
 				onClick={() => modal.current!.showModal()}
 				className="ml-2 btn btn-secondary"
 			>
-				<InfoIcon size="medium"/>
+				<InfoIcon size="medium" />
 			</button>
 			<dialog ref={modal} className="modal">
 				<div className="modal-box">
@@ -31,7 +31,7 @@ export default function StudentActions({ student }: { student: Student }) {
 				</div>
 			</dialog>
 			<button className="ml-2 btn btn-secondary">
-			  <TrashIcon size="medium"/>
+				<TrashIcon size="medium" />
 			</button>
 		</div>
 	);

@@ -1,6 +1,6 @@
 import { StudentsInClassContext } from "@/components/contexts";
-import { useContext} from "react";
-import StudentActions from './StudentActions';
+import { useContext } from "react";
+import StudentActions from "./StudentActions";
 export default function StudentTable() {
 	const students = useContext(StudentsInClassContext);
 	return (
@@ -36,4 +36,3 @@ export default function StudentTable() {
 		</table>
 	);
 }
-
