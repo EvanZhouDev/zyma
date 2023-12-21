@@ -9,13 +9,15 @@ import { Student, StudentsInClassContext } from "@/components/contexts";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import NewClass from "./NewClass";
+import { RepoIcon } from "@primer/octicons-react";
+
 async function getStudent(uuid: string) {
 	const client = await createClient();
 	return v(
 		await client
 			.from("students")
 			.select("profiles (username, email), metadata")
-			.eq("student", uuid),
+			.eq("student", uuid)
 	)[0];
 }
 export default function Dashboard({
@@ -35,12 +37,12 @@ export default function Dashboard({
 					await client
 						.from("students")
 						.select("profiles (username, email), metadata")
-						.eq("class", classId),
+						.eq("class", classId)
 				);
 				setStudents(
 					(students ?? []).map((x) => {
 						return { ...x.profiles!, metadata: x.metadata } as Student;
-					}),
+					})
 				);
 				client
 					.channel("students-in-class")
@@ -65,7 +67,7 @@ export default function Dashboard({
 									} as Student,
 								]);
 							});
-						},
+						}
 					)
 					.subscribe();
 			}
@@ -181,10 +183,10 @@ export default function Dashboard({
 				<a
 					className={`btn-start-attendance p-3 m-2 h-[10%] w-[90%] flex items-center justify-center text-2xl font-semibold ${
 						classes[0] === undefined ? " btn-disabled" : ""
-					} mt-5`}
+					} mt-5 flex items-center justify-center`}
 					href={`/teacher/attendance?classId=${classId}`}
 				>
-					<Icon.Outlined className="!h-10 !w-10 mr-3" name="UserGroup" />
+					<RepoIcon size="medium" verticalAlign="middle" className="mr-2" />
 					Start Attendance
 				</a>
 				{classes[0] === undefined && (
@@ -221,7 +223,15 @@ export default function Dashboard({
 						/>
 					</label>
 					<label className="form-control my-2 flex w-full max-w-xs flex-row items-center">
-						<input type="checkbox" className="toggle" defaultChecked={false} />
+						<div className="form-control">
+							<label className="label cursor-pointer">
+								<input
+									type="checkbox"
+									defaultChecked={true}
+									className="checkbox checkbox-primary [--chkfg:white] rounded-md"
+								/>
+							</label>
+						</div>
 						<div className="label">
 							<span className="label-text">
 								Allow People Not in Class

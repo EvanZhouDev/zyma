@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+		Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
 @layer base {
 	:root {
 		--background: 200 20% 98%;
@@ -104,8 +109,10 @@
 	padding: 10px;
 	border: double 5px transparent;
 	--bg-hover-color: white;
-	background-image: linear-gradient(var(--bg-hover-color),
-			var(--bg-hover-color)),
+	background-image: linear-gradient(
+			var(--bg-hover-color),
+			var(--bg-hover-color)
+		),
 		conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
 	background-clip: padding-box, border-box;
 	background-origin: padding-box, border-box;
@@ -113,22 +120,48 @@
 	border-radius: 20px;
 	transition:
 		border 0.25s,
-		background-image 0.25s, scale 0.5s;
+		transform 0.25s;
 	color: #24292f;
 }
 
 .btn-start-attendance:hover {
-	padding: 20px;
-	scale: 1.05;
-	border: double 0px transparent;
-	/* --bg-hover-color: #f3f4f6; */
-	/* background-image: linear-gradient(green, green); */
-	background-image: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
+	border: double 4px transparent;
+	transform: scale(1.01);
 }
 
-.btn-start-attendance:active {
-	--bg-hover-color: #ebecef;
-	border: double 4px transparent;
+.btn-start-attendance::before {
+	content: "";
+	z-index: -1;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
+	transform: translate3d(0px, 0px, 0) scale(0.95);
+	filter: blur(20px);
+	opacity: 0;
+	transition: opacity 0.2s;
+	border-radius: inherit;
+}
+.btn-start-attendance::after {
+	content: "";
+	z-index: -1;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: inherit;
+	border-radius: inherit;
+}
+
+.btn-start-attendance:hover::before {
+	opacity: 1;
+}
+
+.btn-start-attendance:active::before {
+	opacity: 0.2;
 }
 
 .btn-standard {
