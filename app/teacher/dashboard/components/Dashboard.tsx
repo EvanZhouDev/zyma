@@ -1,5 +1,4 @@
 "use client";
-import Icon from "@/components/Icon";
 import { useEffect, useState } from "react";
 import ClassTable from "./ClassTable";
 import RegisterStudent from "./RegisterStudent";
@@ -9,7 +8,15 @@ import { Student, StudentsInClassContext } from "@/components/contexts";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import NewClass from "./NewClass";
-import { RepoIcon, AlertIcon } from "@primer/octicons-react";
+import {
+	RepoIcon,
+	AlertIcon,
+	MoonIcon,
+	SignOutIcon,
+	ReportIcon,
+	SunIcon,
+} from "@primer/octicons-react";
+import Image from "next/image";
 
 async function getStudent(uuid: string) {
 	const client = await createClient();
@@ -95,8 +102,8 @@ export default function Dashboard({
 									<div role="alert" className="alert alert-error my-2">
 										<AlertIcon size="medium" />
 										<span className="text-lg">
-											Please start by creating a Group in the Manage Your
-											Groups tab.
+											Please start by creating a Group in the Manage Your Groups
+											tab.
 										</span>
 									</div>
 								) : (
@@ -172,66 +179,106 @@ export default function Dashboard({
 					</div>
 				</div>
 			</div>
-			<div className="bg-base-100 rounded-box outline-base-300 m-3 ml-1.5 flex basis-2/5 flex-col items-center outline outline-1">
-				<a
-					className={`btn-start-attendance p-3 m-2 h-[10%] w-[90%] flex items-center justify-center text-2xl font-semibold ${
-						classes[0] === undefined ? "btn-disabled btn-start-disabled" : ""
-					} mt-5 flex items-center justify-center`}
-					href={`/teacher/attendance?classId=${classId}`}
-				>
-					<RepoIcon size="medium" verticalAlign="middle" className="mr-2" />
-					Start Attendance
-				</a>
-				{classes[0] === undefined && (
-					<p className="ml-10 opacity-50">
-						Cannot start attendance session without a class.
-					</p>
-				)}
-				<div className="w-full px-5">
-					<h1 className="website-title !text-secondary-content !text-2xl">
-						Configure Your Attendance Session:
-					</h1>
-					<label className="form-control my-2 w-full">
-						<div className="label">
-							<span className="label-text">
-								Session Length (Leave empty for indefinite)
-							</span>
-						</div>
-						<input
-							type="text"
-							placeholder="Length in seconds..."
-							className="input input-standard w-full"
+			<div className="bg-base-100 rounded-box outline-base-300 m-3 ml-1.5 flex basis-2/5 flex-col items-center outline outline-1 justify-between">
+				<div className="flex flex-col items-center w-full">
+					<a
+						className={`btn-start-attendance p-3 m-2 h-[10vh] w-[90%] flex items-center justify-center text-2xl font-semibold ${
+							classes[0] === undefined ? "btn-disabled btn-start-disabled" : ""
+						} mt-5 flex items-center justify-center`}
+						href={`/teacher/attendance?classId=${classId}`}
+					>
+						<RepoIcon
+							size="small"
+							verticalAlign="middle"
+							className="mr-2 w-8 h-8"
 						/>
-					</label>
-					<label className="form-control my-2 w-full">
-						<div className="label">
-							<span className="label-text">
-								Session Timeout (Leave empty for indefinite)
-							</span>
-						</div>
-						<input
-							type="text"
-							placeholder="Timeout in seconds..."
-							className="input input-standard w-full"
-						/>
-					</label>
-					<label className="form-control my-2 flex w-full max-w-xs flex-row items-center">
-						<div className="form-control">
-							<label className="label cursor-pointer">
-								<input
-									type="checkbox"
-									defaultChecked={true}
-									className="checkbox checkbox-primary [--chkfg:white] rounded-md"
-								/>
-							</label>
-						</div>
-						<div className="label">
-							<span className="label-text">
-								Allow People Not in Class
-								<br />
-							</span>
-						</div>
-					</label>
+						Start Attendance
+					</a>
+					{classes[0] === undefined && (
+						<p className="ml-10 opacity-50">
+							Cannot start attendance session without a class.
+						</p>
+					)}
+					<div className="w-full px-5">
+						<h1 className="website-title !text-secondary-content !text-2xl">
+							Configure Your Attendance Session:
+						</h1>
+						<label className="form-control my-2 w-full">
+							<div className="label">
+								<span className="label-text">
+									Session Length (Leave empty for indefinite)
+								</span>
+							</div>
+							<input
+								type="text"
+								placeholder="Length in seconds..."
+								className="input input-standard w-full"
+							/>
+						</label>
+						<label className="form-control my-2 w-full">
+							<div className="label">
+								<span className="label-text">
+									Session Timeout (Leave empty for indefinite)
+								</span>
+							</div>
+							<input
+								type="text"
+								placeholder="Timeout in seconds..."
+								className="input input-standard w-full"
+							/>
+						</label>
+						<label className="form-control my-2 flex w-full max-w-xs flex-row items-center">
+							<div className="form-control">
+								<label className="label cursor-pointer">
+									<input
+										type="checkbox"
+										defaultChecked={true}
+										className="checkbox checkbox-primary [--chkfg:white] rounded-md"
+									/>
+								</label>
+							</div>
+							<div className="label">
+								<span className="label-text">
+									Allow People Not in Class
+									<br />
+								</span>
+							</div>
+						</label>
+					</div>
+				</div>
+				<div className="flex flex-row items-center justify-between w-full mb-5 px-5">
+					<Image
+						src="/zyma.svg"
+						width={125}
+						height={1200}
+						className="ml-2"
+						alt="Zyma Logo"
+					/>
+					<div className="flex flex-row items-center justify-between">
+						<label className="swap swap-rotate">
+							<input
+								type="checkbox"
+								className="theme-controller"
+								value="githubDark"
+							/>
+							<SunIcon className="swap-on fill-current w-8 h-8 mx-5" />
+							<MoonIcon className="swap-off fill-current w-8 h-8 mx-5" />
+						</label>
+						<button className="mx-5">
+							<ReportIcon className="w-8 h-8" />
+						</button>
+						<button
+							className="btn btn-dangerous"
+							onClick={async () => {
+								const supabase = await createClient();
+								await supabase.auth.signOut();
+								window.location.reload();
+							}}
+						>
+							<SignOutIcon className="w-8 h-8" />
+							Log Out
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
