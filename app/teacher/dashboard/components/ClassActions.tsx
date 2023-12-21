@@ -1,5 +1,5 @@
-import { TrashIcon, InfoIcon } from "@primer/octicons-react";
 import { createClient } from "@/utils/supabase/client";
+import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { deleteClass } from "../actions";
 

@@ -1,6 +1,6 @@
 import { Student } from "@/components/contexts";
+import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useRef } from "react";
-import { TrashIcon, InfoIcon } from "@primer/octicons-react";
 
 export default function StudentActions({ student }: { student: Student }) {
 	const modal = useRef<HTMLDialogElement>(null);

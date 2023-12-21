@@ -1,7 +1,7 @@
 "use client";
+import { PlusIcon } from "@primer/octicons-react";
 import { useRef, useState } from "react";
 import { createClass } from "../actions";
-import { PlusIcon } from "@primer/octicons-react";
 export default function NewClass() {
 	const [className, setClassName] = useState<string>("");
 	const handle = async () => {
@@ -55,7 +55,7 @@ export default function NewClass() {
 							<button
 								className="btn btn-standard ml-3"
 								formAction={handle}
-								disabled={className.trim().length == 0}
+								disabled={className.trim().length === 0}
 							>
 								Create Class
 							</button>

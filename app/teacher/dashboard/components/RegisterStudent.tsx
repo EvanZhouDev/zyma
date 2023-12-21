@@ -1,6 +1,6 @@
 "use client";
-import { PlusIcon } from "@primer/octicons-react";
 import { ROOT_URL } from "@/components/constants";
+import { PlusIcon } from "@primer/octicons-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useRef } from "react";
 import { addStudent } from "../actions";
