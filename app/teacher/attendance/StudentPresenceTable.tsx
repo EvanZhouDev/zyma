@@ -3,7 +3,6 @@
 import { convertStatus } from "@/components/constants";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
-import { FilterIcon, SearchIcon } from "@primer/octicons-react";
 import { ChangeEvent, useEffect, useState } from "react";
 
 type StudentInAttendance = {
@@ -96,17 +95,17 @@ export default function StudentPresenceTable({
 	return (
 		<>
 			<div className="flex flex-row items-center w-full justify-between mt-4">
-				<FilterIcon size="medium" verticalAlign="middle" className="mr-2" />
-				<select
-					className="select input-standard mr-2"
-					onChange={handleFilterChange}
-				>
-					<option defaultChecked>All Statuses</option>
-					<option>Present</option>
-					<option>Late</option>
-					<option>Absent</option>
-				</select>
-				<SearchIcon size="medium" verticalAlign="middle" className="mr-2" />
+				<label>
+					<select
+						className="select input-standard mr-2"
+						onChange={handleFilterChange}
+					>
+						<option defaultChecked>All Statuses</option>
+						<option>Present</option>
+						<option>Late</option>
+						<option>Absent</option>
+					</select>
+				</label>
 				<input
 					type="text"
 					placeholder="Search Students..."
