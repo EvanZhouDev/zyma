@@ -19,7 +19,6 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={`${GeistSans.className} w-full h-full`}>
 			<body className="w-full h-full">
-				{/* <Navbar /> */}
 				{children}
 				<Toaster />
 			</body>

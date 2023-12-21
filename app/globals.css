@@ -39,6 +39,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -52,7 +53,7 @@
 }
 
 .btn-ghost {
-  @apply border-primary hover:border-primary no-animation rounded-full text-lg text-[#24292F]  hover:bg-[#E3E7EA];
+  @apply border-primary hover:border-primary no-animation rounded-full text-lg text-[#24292F] hover:bg-[#E3E7EA];
 }
 
 .btn-ghost:active {
@@ -103,10 +104,8 @@
   padding: 10px;
   border: double 5px transparent;
   --bg-hover-color: white;
-  background-image: linear-gradient(
-      var(--bg-hover-color),
-      var(--bg-hover-color)
-    ),
+  background-image: linear-gradient(var(--bg-hover-color),
+      var(--bg-hover-color)),
     conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
@@ -142,6 +141,7 @@
 .btn-dangerous:hover {
   @apply !bg-[#CF212E] !text-white !outline-[#901626];
 }
+
 .btn-dangerous:active {
   @apply !bg-[#C11F2B] !text-white !outline-[#A9222B];
 }
@@ -168,10 +168,6 @@
 
 .btn {
   animation: none;
-}
-
-.navbar {
-  border-bottom: 1px solid lightgray;
 }
 
 .zyma-code-bg {
