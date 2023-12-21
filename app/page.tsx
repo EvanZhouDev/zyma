@@ -1,6 +1,7 @@
 import SignUp from "@/components/SignUp";
 import { createClient } from "@/utils/supabase/server";
 import { cookies, headers } from "next/headers";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 export default async function Index({
@@ -67,7 +68,9 @@ export default async function Index({
 		<div className="hero min-h-screen bg-neutral">
 			<div className="hero-content text-center">
 				<div className="max-w-md">
-					<h1 className="text-5xl font-bold">Hello there</h1>
+					<h1 className="text-5xl font-bold">
+						<Image src="/zyma.svg" width={1200} height={1200} alt="Zyma Logo" />
+					</h1>
 					<p className="py-6">Sign in or sign up to start taking attendance.</p>
 					<div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 text-left">
 						<SignUp
