@@ -4,6 +4,8 @@ import { cookies, headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
+import { MarkGithubIcon, InfoIcon, HeartIcon } from "@primer/octicons-react";
+
 export default async function Index({
 	searchParams,
 }: {
@@ -65,14 +67,14 @@ export default async function Index({
 		return redirect("/?message=Check email to continue sign in process");
 	};
 	return (
-		<div className="hero min-h-screen bg-neutral">
-			<div className="hero-content text-center">
-				<div className="max-w-md">
+		<div className="hero min-h-screen bg-neutral flex flex-col justify-center">
+			<div className="hero-content text-center bg-base-100 p-[2.5vw] rounded-xl border border-base-300 login-page-box">
+				<div className="max-w-md flex flex-col items-center mt-10">
 					<h1 className="text-5xl font-bold">
-						<Image src="/zyma.svg" width={1200} height={1200} alt="Zyma Logo" />
+						<Image src="/zyma.svg" width={250} height={1200} alt="Zyma Logo" />
 					</h1>
-					<p className="py-6">Sign in or sign up to start taking attendance.</p>
-					<div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 text-left">
+					<p className="py-6 mb-5">Sign in to start attendance.</p>
+					<div className="flex-1 flex flex-col px-8 min-w-[450px] text-left mb-10">
 						<SignUp
 							signIn={signIn}
 							signUp={signUp}
@@ -80,6 +82,34 @@ export default async function Index({
 						/>
 					</div>
 				</div>
+			</div>
+			<div className="text-md mt-8">
+				<span>Zyma is proud to be free and open source.</span>
+			</div>
+			<div className="text-md mt-3 -mb-3">
+				<a
+					className="hover:text-primary transition-all"
+					href="https://github.com/EvanZhouDev/zyma"
+				>
+					<MarkGithubIcon className="mr-1" />
+					GitHub
+				</a>
+				<span className="mx-2">|</span>
+				<a
+					className="hover:text-primary transition-all"
+					href="https://github.com/EvanZhouDev/zyma"
+				>
+					<InfoIcon className="mr-1" />
+					About
+				</a>
+				<span className="mx-2">|</span>
+				<a
+					className="hover:text-primary transition-all"
+					href="https://github.com/EvanZhouDev/zyma"
+				>
+					<HeartIcon className="mr-1" />
+					Support
+				</a>
 			</div>
 		</div>
 	);

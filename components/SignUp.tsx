@@ -14,36 +14,36 @@ export default function SignUp({
 	const nameDialog = useRef<HTMLDialogElement>(null);
 	return (
 		<form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
-			<div>
+			<div className="w-full">
 				<label className="label">
 					<span className="text-base label-text">Email</span>
 				</label>
 				<input
 					type="email"
 					name="email"
-					className="w-full input input-bordered border-primary form-input"
+					className="w-full input input-standard form-input"
 				/>
 			</div>
-			<div>
+			<div className="w-full">
 				<label className="label">
 					<span className="text-base label-text">Password</span>
 				</label>
 				<input
 					type="password"
 					name="password"
-					className="w-full input input-bordered border-primary form-input"
+					className="w-full input input-standard form-input"
 				/>
 			</div>
-			<button className="btn btn-filled !rounded-lg mt-5" formAction={signIn}>
+			<button className="btn btn-standard !rounded-lg mt-5" formAction={signIn}>
 				Sign In
 			</button>
 			<button
-				className="btn"
+				className="underline opacity-50 text-lg mt-10"
 				formAction={async () => {
 					nameDialog.current!.showModal();
 				}}
 			>
-				Sign Up
+				No account? Sign Up
 			</button>
 			<dialog ref={nameDialog} className="modal">
 				<div className="modal-box">
