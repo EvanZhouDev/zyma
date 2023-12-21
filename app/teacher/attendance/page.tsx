@@ -3,7 +3,6 @@ import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
 import { cookies } from "next/headers";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import StudentCounter from "./StudentCounter";

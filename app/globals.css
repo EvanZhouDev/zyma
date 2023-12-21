@@ -229,3 +229,8 @@ body {
 	border: 1.5px solid #cf212e;
 	background-color: #cf212e40;
 }
+
+.alert-info {
+	border: 1.5px solid #0A69DA;
+	background-color: #0A69DA40;
+}

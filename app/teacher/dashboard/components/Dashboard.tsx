@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import ClassTable from "./ClassTable";
 import RegisterStudent from "./RegisterStudent";
 import StudentTable from "./StudentTable";
-
 import { Student, StudentsInClassContext } from "@/components/contexts";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
@@ -24,7 +23,7 @@ async function getStudent(uuid: string) {
 		await client
 			.from("students")
 			.select("profiles (username, email), metadata")
-			.eq("student", uuid)
+			.eq("student", uuid),
 	)[0];
 }
 export default function Dashboard({
@@ -44,12 +43,12 @@ export default function Dashboard({
 					await client
 						.from("students")
 						.select("profiles (username, email), metadata")
-						.eq("class", classId)
+						.eq("class", classId),
 				);
 				setStudents(
 					(students ?? []).map((x) => {
 						return { ...x.profiles!, metadata: x.metadata } as Student;
-					})
+					}),
 				);
 				client
 					.channel("students-in-class")
@@ -74,7 +73,7 @@ export default function Dashboard({
 									} as Student,
 								]);
 							});
-						}
+						},
 					)
 					.subscribe();
 			}
@@ -190,9 +189,14 @@ export default function Dashboard({
 						<RepoIcon
 							size="small"
 							verticalAlign="middle"
-							className="mr-2 w-8 h-8"
+							className="mr-2 w-10 h-10"
 						/>
-						Start Attendance
+						<div className="flex flex-col">
+							Start Attendance
+							<span className="font-normal opacity-75 text-lg">
+								for {students.length} students
+							</span>
+						</div>
 					</a>
 					{classes[0] === undefined && (
 						<p className="ml-10 opacity-50">
