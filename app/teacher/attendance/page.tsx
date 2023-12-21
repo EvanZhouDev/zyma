@@ -78,13 +78,13 @@ export default async function Index({
 			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-300 outline-1 basis-1/2 flex flex-col justify-between items-center">
 				<div className="flex justify-between items-center w-full">
 					<div>
-						<Image
+						{/* <Image
 							src="/zyma.svg"
 							width={500}
 							height={500}
 							alt="Zyma Logo"
 							className="w-[8.7vw] ml-5 mb-1"
-						/>
+						/> */}
 						{RTworking ? (
 							<span className="text-[#1E883E] ml-5">
 								<ZapIcon /> RT Connected
