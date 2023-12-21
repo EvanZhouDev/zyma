@@ -9,7 +9,7 @@ import { Student, StudentsInClassContext } from "@/components/contexts";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import NewClass from "./NewClass";
-import { RepoIcon } from "@primer/octicons-react";
+import { RepoIcon, AlertIcon } from "@primer/octicons-react";
 
 async function getStudent(uuid: string) {
 	const client = await createClient();
@@ -91,45 +91,38 @@ export default function Dashboard({
 					>
 						<div className="flex flex-col">
 							<StudentsInClassContext.Provider value={students}>
-								<div className="mt-4 flex w-full flex-row items-center justify-between">
-									<h1 className="mr-2 text-3xl font-bold">Current Group: </h1>{" "}
-									<select
-										className="select input-standard ml-2 mr-2 flex-grow"
-										value={selectedClass}
-										onChange={async (event) => {
-											const newClassIndex = parseInt(event.target.value);
-											setSelectedClass(newClassIndex);
-										}}
-									>
-										<option disabled defaultValue={""}>
-											Pick a class...
-										</option>
-										{classes.map((x, i) => (
-											<option value={i} key={x.id}>
-												{x.name}
-											</option>
-										))}
-									</select>
-								</div>
 								{classId === undefined && className === undefined ? (
 									<div role="alert" className="alert alert-error my-2">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											className="h-6 w-6 shrink-0 stroke-current"
-											fill="none"
-											viewBox="0 0 24 24"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth="2"
-												d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-											/>
-										</svg>
-										<span>Please select a class</span>
+										<AlertIcon size="medium" />
+										<span className="text-lg">
+											Please start by creating a Group in the Manage Your
+											Groups tab.
+										</span>
 									</div>
 								) : (
 									<>
+										<div className="mt-4 flex w-full flex-row items-center justify-between">
+											<h1 className="mr-2 text-3xl font-bold">
+												Current Group:{" "}
+											</h1>{" "}
+											<select
+												className="select input-standard ml-2 mr-2 flex-grow"
+												value={selectedClass}
+												onChange={async (event) => {
+													const newClassIndex = parseInt(event.target.value);
+													setSelectedClass(newClassIndex);
+												}}
+											>
+												<option disabled defaultValue={""}>
+													Pick a group...
+												</option>
+												{classes.map((x, i) => (
+													<option value={i} key={x.id}>
+														{x.name}
+													</option>
+												))}
+											</select>
+										</div>
 										<div className="mt-10 flex w-full flex-row items-center justify-between">
 											<input
 												type="text"
@@ -152,7 +145,7 @@ export default function Dashboard({
 						name="my_tabs_2"
 						role="tab"
 						className="tab h-10 !w-[15vw]"
-						aria-label="Manage Your Classes"
+						aria-label="Manage Your Groups"
 					/>
 					<div
 						role="tabpanel"
@@ -182,7 +175,7 @@ export default function Dashboard({
 			<div className="bg-base-100 rounded-box outline-base-300 m-3 ml-1.5 flex basis-2/5 flex-col items-center outline outline-1">
 				<a
 					className={`btn-start-attendance p-3 m-2 h-[10%] w-[90%] flex items-center justify-center text-2xl font-semibold ${
-						classes[0] === undefined ? " btn-disabled" : ""
+						classes[0] === undefined ? "btn-disabled btn-start-disabled" : ""
 					} mt-5 flex items-center justify-center`}
 					href={`/teacher/attendance?classId=${classId}`}
 				>

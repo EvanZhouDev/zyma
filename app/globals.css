@@ -156,6 +156,15 @@ body {
 	border-radius: inherit;
 }
 
+.btn-start-disabled {
+	background-image: linear-gradient(
+			var(--bg-hover-color),
+			var(--bg-hover-color)
+		),
+		conic-gradient(#9f71c380, #3b93dd80, #ef835780, #d1657f80, #9673ce80) !important;
+	color: rgba(0, 0, 0, 0.5);
+}
+
 .btn-start-attendance:hover::before {
 	opacity: 1;
 }
@@ -214,4 +223,9 @@ body {
 
 .zyma-code-bg {
 	background: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
+}
+
+.alert-error {
+	border: 1.5px solid #cf212e;
+	background-color: #cf212e40;
 }
