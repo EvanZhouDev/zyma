@@ -8,7 +8,7 @@ export default function StudentActions({ student }: { student: Student }) {
 		<div className="flex">
 			<button
 				onClick={() => modal.current!.showModal()}
-				className="ml-2 btn btn-secondary"
+				className="btn btn-standard ml-2"
 			>
 				<InfoIcon size="medium" />
 			</button>
@@ -25,12 +25,12 @@ export default function StudentActions({ student }: { student: Student }) {
 					</p>
 					<div className="modal-action">
 						<form method="dialog">
-							<button className="btn">Close</button>
+							<button className="btn btn-standard">Close</button>
 						</form>
 					</div>
 				</div>
 			</dialog>
-			<button className="ml-2 btn btn-secondary">
+			<button className="btn btn-dangerous ml-2 transition-none">
 				<TrashIcon size="medium" />
 			</button>
 		</div>
