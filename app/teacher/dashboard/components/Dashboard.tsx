@@ -260,13 +260,15 @@ export default function Dashboard({
 					</div>
 				</div>
 				<div className="flex flex-row items-center justify-between w-full mb-5 px-5">
-					<Image
-						src="/zyma.svg"
-						width={125}
-						height={1200}
-						className="ml-2"
-						alt="Zyma Logo"
-					/>
+					{/* <a href="/">
+						<Image
+							src="/zyma.svg"
+							width={125}
+							height={1200}
+							className="ml-2"
+							alt="Zyma Logo"
+						/>
+					</a> */}
 					<div className="flex flex-row items-center justify-between">
 						<label className="swap swap-rotate" title="Toggle light mode">
 							<input
