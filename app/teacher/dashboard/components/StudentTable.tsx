@@ -10,10 +10,6 @@ export default function StudentTable() {
 				<InfoIcon size="medium" />
 				<div>
 					<p className="text-lg">No students registered.</p>
-					<p className="text-sm opacity-75">
-						You can start without adding, but Zyma can help you take care of
-						marking who is here.
-					</p>
 				</div>
 			</div>
 		);
