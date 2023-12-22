@@ -75,11 +75,12 @@ export default async function Index({
 					</h1>
 					<p className="py-6 mb-5">Sign in to start attendance.</p>
 					<div className="flex-1 flex flex-col px-8 min-w-[450px] text-left mb-10">
-						<SignUp
-							signIn={signIn}
-							signUp={signUp}
-							searchParams={searchParams}
-						/>
+						<SignUp signIn={signIn} signUp={signUp} />
+						{searchParams?.message && (
+							<p className="mt-4 p-4 bg-foreground/10 text-foreground text-center rounded-lg">
+								{searchParams.message}
+							</p>
+						)}
 					</div>
 				</div>
 			</div>

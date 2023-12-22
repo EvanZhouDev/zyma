@@ -5,11 +5,9 @@ import { useRef } from "react";
 export default function SignUp({
 	signUp,
 	signIn,
-	searchParams,
 }: {
 	signUp: (formData: FormData) => Promise<void>;
 	signIn: (formData: FormData) => Promise<void>;
-	searchParams: { message: string };
 }) {
 	const nameDialog = useRef<HTMLDialogElement>(null);
 	return (
@@ -71,11 +69,6 @@ export default function SignUp({
 					</button>
 				</div>
 			</dialog>
-			{searchParams?.message && (
-				<p className="mt-4 p-4 bg-foreground/10 text-foreground text-center rounded-lg">
-					{searchParams.message}
-				</p>
-			)}
 		</form>
 	);
 }
