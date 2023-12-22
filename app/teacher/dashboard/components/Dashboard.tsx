@@ -95,7 +95,7 @@ export default function Dashboard({
 					/>
 					<div
 						role="tabpanel"
-						className="tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
+						className="w-[60vw] tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
 					>
 						<div className="flex flex-col">
 							<StudentsInClassContext.Provider value={students}>
@@ -163,7 +163,7 @@ export default function Dashboard({
 					/>
 					<div
 						role="tabpanel"
-						className="tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
+						className="w-[60vw] tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
 					>
 						<div className="flex flex-col">
 							<StudentsInClassContext.Provider value={students}>
