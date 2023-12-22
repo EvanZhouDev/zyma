@@ -68,7 +68,7 @@ export default async function Index({
 	};
 	return (
 		<div className="hero min-h-screen bg-neutral flex flex-col justify-center">
-			<div className="hero-content text-center bg-base-100 p-[2.5vw] rounded-xl border border-base-300 login-page-box">
+			<div className="hero-content text-center bg-base-100 p-6 rounded-xl border border-base-300 login-page-box">
 				<div className="max-w-md flex flex-col items-center mt-10">
 					<h1 className="text-5xl font-bold">
 						<Image src="/zyma.svg" width={250} height={1200} alt="Zyma Logo" />
