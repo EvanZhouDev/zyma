@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ClassTable from "./ClassTable";
 import RegisterStudent from "./RegisterStudent";
 import StudentTable from "./StudentTable";
@@ -14,6 +14,7 @@ import {
 	SignOutIcon,
 	ReportIcon,
 	SunIcon,
+	InfoIcon,
 } from "@primer/octicons-react";
 import Image from "next/image";
 
@@ -31,6 +32,7 @@ export default function Dashboard({
 }: {
 	classes: { name: string; id: number }[];
 }) {
+	const manageClasses = useRef<HTMLInputElement>(null);
 	const [selectedClass, setSelectedClass] = useState(0);
 	const classId = classes[selectedClass]?.id;
 	const className = classes[selectedClass]?.name;
@@ -97,38 +99,43 @@ export default function Dashboard({
 					>
 						<div className="flex flex-col">
 							<StudentsInClassContext.Provider value={students}>
+								<div className="mt-4 flex w-full flex-row items-center justify-between">
+									<h1 className="mr-2 text-3xl font-bold">Current Group: </h1>{" "}
+									<select
+										className="select input-standard mx-2 flex-grow"
+										value={selectedClass}
+										onChange={async (event) => {
+											const newClassIndex = parseInt(event.target.value);
+											setSelectedClass(newClassIndex);
+										}}
+									>
+										<option disabled defaultValue={0}>
+											Pick a group...
+										</option>
+										{classes.map((x, i) => (
+											<option value={i} key={x.id}>
+												{x.name}
+											</option>
+										))}
+									</select>
+								</div>
 								{classId === undefined && className === undefined ? (
-									<div role="alert" className="alert alert-error my-2">
-										<AlertIcon size="medium" />
+									<div role="alert" className="alert alert-info mt-10">
+										<InfoIcon size="medium" />
 										<span className="text-lg">
-											Please start by creating a Group in the Manage Your Groups
-											tab.
+											No Groups found.{" "}
+											<button
+												className="link"
+												onClick={() => {
+													manageClasses.current!.checked = true;
+												}}
+											>
+												Create one to get started.
+											</button>
 										</span>
 									</div>
 								) : (
 									<>
-										<div className="mt-4 flex w-full flex-row items-center justify-between">
-											<h1 className="mr-2 text-3xl font-bold">
-												Current Group:{" "}
-											</h1>{" "}
-											<select
-												className="select input-standard ml-2 mr-2 flex-grow"
-												value={selectedClass}
-												onChange={async (event) => {
-													const newClassIndex = parseInt(event.target.value);
-													setSelectedClass(newClassIndex);
-												}}
-											>
-												<option disabled defaultValue={""}>
-													Pick a group...
-												</option>
-												{classes.map((x, i) => (
-													<option value={i} key={x.id}>
-														{x.name}
-													</option>
-												))}
-											</select>
-										</div>
 										<div className="mt-10 flex w-full flex-row items-center justify-between">
 											<input
 												type="text"
@@ -149,6 +156,7 @@ export default function Dashboard({
 					<input
 						type="radio"
 						name="my_tabs_2"
+						ref={manageClasses}
 						role="tab"
 						className="tab h-10 !w-[15vw]"
 						aria-label="Manage Your Groups"
@@ -163,13 +171,7 @@ export default function Dashboard({
 									<h1 className="mr-2 text-3xl font-bold">Your Groups</h1>
 									<NewClass />
 								</div>
-								<div className="mt-4 flex w-full flex-row items-center justify-between">
-									<input
-										type="text"
-										placeholder="Search Groups..."
-										className="input input-standard mr-2 flex-grow"
-									/>
-								</div>
+								{/* <div className="mt-4 flex w-full flex-row items-center justify-between"></div> */}
 								<div>
 									<ClassTable classes={classes} />
 								</div>

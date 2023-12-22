@@ -1,5 +1,5 @@
 import ClassActions from "./ClassActions";
-import { AlertIcon } from "@primer/octicons-react";
+import { AlertIcon, InfoIcon } from "@primer/octicons-react";
 
 export default function ClassTable({
 	classes,
@@ -8,8 +8,8 @@ export default function ClassTable({
 }) {
 	if (classes.length === 0) {
 		return (
-			<div role="alert" className="alert alert-error my-2">
-				<AlertIcon size="medium" />
+			<div role="alert" className="alert alert-info mt-10">
+				<InfoIcon size="medium" />
 				<span className="text-lg">
 					Please start by creating a Group with the button above.
 				</span>
@@ -17,19 +17,26 @@ export default function ClassTable({
 		);
 	}
 	return (
-		<table className="mt-5 table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Student Count</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{classes.map((klass) => (
-					<ClassActions klass={klass} key={klass.id} />
-				))}
-			</tbody>
-		</table>
+		<>
+			<input
+				type="text"
+				placeholder="Search Groups..."
+				className="input input-standard mr-2 flex-grow mt-10"
+			/>
+			<table className="mt-5 table">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Student Count</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{classes.map((klass) => (
+						<ClassActions klass={klass} key={klass.id} />
+					))}
+				</tbody>
+			</table>
+		</>
 	);
 }

@@ -4,6 +4,20 @@ import StudentActions from "./StudentActions";
 import { InfoIcon } from "@primer/octicons-react";
 export default function StudentTable() {
 	const students = useContext(StudentsInClassContext);
+	if (students.length === 0) {
+		return (
+			<div role="alert" className="alert alert-info mt-5">
+				<InfoIcon size="medium" />
+				<div>
+					<p className="text-lg">No students registered.</p>
+					<p className="text-sm opacity-75">
+						You can start without adding, but Zyma can help you take care of
+						marking who is here.
+					</p>
+				</div>
+			</div>
+		);
+	}
 	return (
 		<>
 			<table className="table mt-5 w-full outline outline-base-300 outline-1 text-[#24292F] rounded-lg">
@@ -36,16 +50,6 @@ export default function StudentTable() {
 					))}
 				</tbody>
 			</table>
-			{students.length === 0 && (
-				<div role="alert" className="alert alert-info mt-5">
-					<InfoIcon size="medium" />
-					<span className="text-lg">
-						No students registered. Click the Register Students button to add
-						Students to your Group. You can start without adding, but Zyma can
-						help you take care of marking who is here.
-					</span>
-				</div>
-			)}
 		</>
 	);
 }
