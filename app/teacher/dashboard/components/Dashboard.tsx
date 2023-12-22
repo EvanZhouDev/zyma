@@ -277,9 +277,15 @@ export default function Dashboard({
 							<SunIcon className="swap-on fill-current w-8 h-8 mx-5" />
 							<MoonIcon className="swap-off fill-current w-8 h-8 mx-5" />
 						</label>
-						<button className="mx-5">
+						<a
+							className="mx-5"
+							href="https://github.com/EvanZhouDev/zyma/issues"
+							title="Report an issue"
+							target="_blank"
+							rel="noreferrer"
+						>
 							<ReportIcon className="w-8 h-8" />
-						</button>
+						</a>
 						<button
 							className="btn btn-dangerous"
 							onClick={async () => {
