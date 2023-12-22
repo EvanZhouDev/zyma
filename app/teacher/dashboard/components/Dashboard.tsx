@@ -268,7 +268,7 @@ export default function Dashboard({
 						alt="Zyma Logo"
 					/>
 					<div className="flex flex-row items-center justify-between">
-						<label className="swap swap-rotate">
+						<label className="swap swap-rotate" title="Toggle light mode">
 							<input
 								type="checkbox"
 								className="theme-controller"
