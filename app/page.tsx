@@ -1,11 +1,8 @@
 import SignUp from "@/components/SignUp";
 import { createClient } from "@/utils/supabase/server";
 import { cookies, headers } from "next/headers";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import MainHero from "@/components/MainHero";
-
-import { MarkGithubIcon, InfoIcon, HeartIcon } from "@primer/octicons-react";
 
 export default async function Index({
 	searchParams,

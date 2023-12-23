@@ -21,7 +21,7 @@ export default async function Join({
 		await client
 			.from("students")
 			.insert([{ student, class: searchParams.class }])
-			.select()
+			.select(),
 	);
 
 	if (data == null) {

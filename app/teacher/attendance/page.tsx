@@ -40,7 +40,7 @@ export default async function Index({
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("class", searchParams.classId)
+			.eq("class", searchParams.classId),
 	);
 	let data: (typeof existingCode)[0];
 
@@ -51,7 +51,7 @@ export default async function Index({
 			await client
 				.from("codes")
 				.insert([{ class: searchParams.classId }])
-				.select(CODE_SELECT)
+				.select(CODE_SELECT),
 		)[0];
 	}
 
@@ -60,14 +60,14 @@ export default async function Index({
 			await client
 				.from("attendance")
 				.select("profiles (username), student, status, created_at")
-				.eq("code_used", data.code)
+				.eq("code_used", data.code),
 		) ?? [];
 	const totalStudents = (
 		v(
 			await client
 				.from("students")
 				.select("*")
-				.eq("class", searchParams.classId)
+				.eq("class", searchParams.classId),
 		) ?? []
 	).length;
 
