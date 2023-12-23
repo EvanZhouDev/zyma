@@ -1,5 +1,5 @@
 import ClassActions from "./ClassActions";
-import { AlertIcon, InfoIcon } from "@primer/octicons-react";
+import { InfoIcon } from "@primer/octicons-react";
 
 export default function ClassTable({
 	classes,

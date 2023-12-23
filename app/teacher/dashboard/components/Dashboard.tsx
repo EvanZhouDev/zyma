@@ -9,7 +9,6 @@ import { createClient } from "@/utils/supabase/client";
 import NewClass from "./NewClass";
 import {
 	RepoIcon,
-	AlertIcon,
 	MoonIcon,
 	SignOutIcon,
 	ReportIcon,

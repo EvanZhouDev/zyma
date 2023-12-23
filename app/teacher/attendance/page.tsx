@@ -9,6 +9,7 @@ import StudentCounter from "./StudentCounter";
 import StudentPresenceTable from "./StudentPresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
+import Image from "next/image";
 
 export default async function Index({
 	searchParams,
@@ -39,7 +40,7 @@ export default async function Index({
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("class", searchParams.classId),
+			.eq("class", searchParams.classId)
 	);
 	let data: (typeof existingCode)[0];
 
@@ -50,7 +51,7 @@ export default async function Index({
 			await client
 				.from("codes")
 				.insert([{ class: searchParams.classId }])
-				.select(CODE_SELECT),
+				.select(CODE_SELECT)
 		)[0];
 	}
 
@@ -59,14 +60,14 @@ export default async function Index({
 			await client
 				.from("attendance")
 				.select("profiles (username), student, status, created_at")
-				.eq("code_used", data.code),
+				.eq("code_used", data.code)
 		) ?? [];
 	const totalStudents = (
 		v(
 			await client
 				.from("students")
 				.select("*")
-				.eq("class", searchParams.classId),
+				.eq("class", searchParams.classId)
 		) ?? []
 	).length;
 
@@ -76,14 +77,14 @@ export default async function Index({
 		<div className="w-full h-full bg-secondary justify-around flex">
 			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-300 outline-1 basis-1/2 flex flex-col justify-between items-center">
 				<div className="flex justify-between items-center w-full">
-					<div>
-						{/* <Image
+					<div className="flex flex-col mt-5">
+						<Image
 							src="/zyma.svg"
 							width={500}
 							height={500}
 							alt="Zyma Logo"
 							className="w-[8.7vw] ml-5 mb-1"
-						/> */}
+						/>
 						{RTworking ? (
 							<span className="text-[#1E883E] ml-5">
 								<ZapIcon /> RT Connected
