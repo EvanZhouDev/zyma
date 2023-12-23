@@ -24,7 +24,7 @@ async function getStudent(uuid: string) {
 		await client
 			.from("students")
 			.select("profiles (username, email), metadata")
-			.eq("student", uuid),
+			.eq("student", uuid)
 	)[0];
 }
 export default function Dashboard({
@@ -45,12 +45,12 @@ export default function Dashboard({
 					await client
 						.from("students")
 						.select("profiles (username, email), metadata")
-						.eq("class", classId),
+						.eq("class", classId)
 				);
 				setStudents(
 					(students ?? []).map((x) => {
 						return { ...x.profiles!, metadata: x.metadata } as Student;
-					}),
+					})
 				);
 				client
 					.channel("students-in-class")
@@ -75,7 +75,7 @@ export default function Dashboard({
 									} as Student,
 								]);
 							});
-						},
+						}
 					)
 					.subscribe();
 			}
@@ -172,9 +172,9 @@ export default function Dashboard({
 									<NewClass />
 								</div>
 								{/* <div className="mt-4 flex w-full flex-row items-center justify-between"></div> */}
-								<div>
-									<ClassTable classes={classes} />
-								</div>
+								{/* <div> */}
+								<ClassTable classes={classes} />
+								{/* </div> */}
 							</StudentsInClassContext.Provider>
 						</div>
 					</div>
@@ -212,7 +212,7 @@ export default function Dashboard({
 						</p>
 					)}
 					{/* TODO: Refactor into config component */}
-					<div className="w-full px-5">
+					<div className="w-full px-5 !mt-5">
 						<h1 className="website-title !text-secondary-content !text-2xl">
 							Configure Your Attendance Session:
 						</h1>
@@ -260,15 +260,13 @@ export default function Dashboard({
 					</div>
 				</div>
 				<div className="flex flex-row items-center justify-between w-full mb-5 px-5">
-					{/* <a href="/">
-						<Image
-							src="/zyma.svg"
-							width={125}
-							height={1200}
-							className="ml-2"
-							alt="Zyma Logo"
-						/>
-					</a> */}
+					<Image
+						src="/zyma.svg"
+						width={125}
+						height={1200}
+						className="ml-2"
+						alt="Zyma Logo"
+					/>
 					<div className="flex flex-row items-center justify-between">
 						<label className="swap swap-rotate" title="Toggle light mode">
 							<input

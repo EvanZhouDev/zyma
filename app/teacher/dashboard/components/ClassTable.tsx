@@ -21,7 +21,7 @@ export default function ClassTable({
 			<input
 				type="text"
 				placeholder="Search Groups..."
-				className="input input-standard mr-2 flex-grow mt-10"
+				className="input input-standard flex-grow mt-5"
 			/>
 			<table className="mt-5 table">
 				<thead>
