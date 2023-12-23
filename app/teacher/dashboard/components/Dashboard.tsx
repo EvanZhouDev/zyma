@@ -200,11 +200,11 @@ export default function Dashboard({
 						</div>
 					</a>
 					{classes[0] === undefined ? (
-						<p className="opacity-50">
+						<p className="opacity-50 text-center">
 							Cannot start attendance session without a class.
 						</p>
 					) : students.length === 0 ? (
-						<p className="opacity-50">
+						<p className="opacity-50 text-center">
 							Zyma will not be able to track attendance without registered
 							students.
 						</p>
