@@ -54,16 +54,21 @@ export default async function Page({
 
 	return (
 		<MainHero padding={10}>
-			<div className="max-w-md">
-				<h1 className="text-5xl font-bold">You're all done.</h1>
-				<p className="mt-5">
-					Joined with code <br />"{searchParams.code}"
-				</p>
-				<Excuse
-					code={searchParams.code}
-					user={studentId}
-					status={data[0].status}
-				/>
+			<div className="flex flex-col w-full border-opacity-50">
+				<div className="grid card">
+					<p className="mt-10">
+						Attended with code <br />
+						<b>{searchParams.code}</b>
+					</p>
+				</div>
+				<div className="divider !m-0 !mt-10" />
+				<div className="grid card">
+					<Excuse
+						code={searchParams.code}
+						user={studentId}
+						status={data[0].status}
+					/>
+				</div>
 			</div>
 		</MainHero>
 	);

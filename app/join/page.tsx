@@ -2,6 +2,8 @@ import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import MainHero from "@/components/MainHero";
+import { AlertIcon } from "@primer/octicons-react";
 
 export default async function Join({
 	searchParams,
@@ -19,23 +21,52 @@ export default async function Join({
 		await client
 			.from("students")
 			.insert([{ student, class: searchParams.class }])
-			.select(),
+			.select()
 	);
 
 	if (data == null) {
 		return <p>An error has occured</p>;
 	}
 
-	return (
-		<div className="hero min-h-screen bg-neutral">
-			<div className="hero-content text-center">
-				<div className="max-w-md">
-					<h1 className="text-5xl font-bold">Joined class.</h1>
-					<p className="py-6 max-w opacity-50">It is safe to close this tab.</p>
+	if (searchParams.class === undefined) {
+		return (
+			<MainHero padding={10}>
+				<div className="mt-5">Could not Join this group.</div>
+				<div role="alert" className="alert alert-error mt-10 mb-10">
+					<AlertIcon size="medium" />
+					<span>No code provided.</span>
 				</div>
-			</div>
-		</div>
+				Please try again, ensuring you entered the code correctly.
+			</MainHero>
+		);
+	}
+
+	// code not working
+	const codeNotWorking = true;
+
+	if (codeNotWorking) {
+		return (
+			<MainHero padding={10}>
+				<div className="mt-5">Could not Attend this group.</div>
+				<div role="alert" className="alert alert-error mt-10 mb-10">
+					<AlertIcon size="medium" />
+					<span>
+						Code <b>{searchParams.class}</b> not found.
+					</span>
+				</div>
+				Please try again, ensuring you entered the code correctly.
+			</MainHero>
+		);
+	}
+
+	return (
+		<MainHero>
+			<h1 className="mt-5 text-xl">
+				Joined class with ID: {searchParams.class}
+			</h1>
+			<p className="mt-10 py-6 max-w opacity-50">
+				It is safe to close this tab.
+			</p>
+		</MainHero>
 	);
-	// TODO: Mark type of attendence
-	// return <p>You have successfully joined</p>;
 }
