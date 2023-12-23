@@ -53,7 +53,7 @@ export default function Excuse({
 				</>
 			) : (
 				<>
-					<div className="bg-secondary py-5 rounded">
+					<div className="bg-secondary py-3 rounded">
 						Successfully Absent with reason:
 						<br />
 						<b>{convertStatus(excuse)}</b>
