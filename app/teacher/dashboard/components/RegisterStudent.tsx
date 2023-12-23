@@ -21,7 +21,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 				<div className="modal-box bg-base-100 min-w-[90vw]">
 					<div className="flex w-full">
 						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow flex-col place-items-center items-center justify-center">
-							<div className="-mt-5 flex flex-col items-center">
+							<div className="flex flex-col items-center">
 								<div className="mb-4 text-3xl">
 									Scan the code to join the Group.
 								</div>
@@ -41,9 +41,13 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 									</div>
 								</div>
 							</div>
-							<div className="opacity-50 flex flex-col items-center px-10 text-center text-xl mt-5">
-								For a fast and easy setup, have students scan your code to link
-								them to your class.
+							<div className="flex flex-col items-center mt-5">
+								<div className="text-2xl mb-2">
+									Alternatively, enter the Class ID:
+								</div>
+								<div className="flex flex-row items-center">
+									<div className="text-3xl font-bold">{classId}</div>
+								</div>
 							</div>
 						</div>
 						<div className="divider divider-horizontal">OR</div>
