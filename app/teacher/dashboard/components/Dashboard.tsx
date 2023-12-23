@@ -199,17 +199,16 @@ export default function Dashboard({
 							</span>
 						</div>
 					</a>
-					{classes[0] === undefined && (
+					{classes[0] === undefined ? (
 						<p className="opacity-50">
 							Cannot start attendance session without a class.
 						</p>
-					)}
-					{students.length === 0 && (
+					) : students.length === 0 ? (
 						<p className="opacity-50">
 							Zyma will not be able to track attendance without registered
 							students.
 						</p>
-					)}
+					) : undefined}
 					{/* TODO: Refactor into config component */}
 					<div className="w-full px-5 !mt-5">
 						<h1 className="website-title !text-secondary-content !text-2xl">
