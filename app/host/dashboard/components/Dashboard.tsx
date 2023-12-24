@@ -1,5 +1,5 @@
 "use client";
-import { Student, StudentsInClassContext } from "@/components/contexts";
+import { Attendee, AttendeesInClassContext } from "@/components/contexts";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import {
@@ -12,65 +12,65 @@ import {
 } from "@primer/octicons-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import ClassTable from "./ClassTable";
-import NewClass from "./NewClass";
-import RegisterStudent from "./RegisterStudent";
-import StudentTable from "./StudentTable";
+import GroupTable from "./GroupTable";
+import NewGroup from "./NewGroup";
+import RegisterAttendee from "./RegisterAttendee";
+import AttendeeTable from "./AttendeeTable";
 
-async function getStudent(uuid: string) {
+async function getAttendee(uuid: string) {
 	const client = await createClient();
 	return v(
 		await client
-			.from("students")
+			.from("attendees")
 			.select("profiles (username, email), metadata")
-			.eq("student", uuid),
+			.eq("attendee", uuid),
 	)[0];
 }
 export default function Dashboard({
-	classes,
+	groups,
 }: {
-	classes: { name: string; id: number }[];
+	groups: { name: string; id: number }[];
 }) {
 	const manageClasses = useRef<HTMLInputElement>(null);
 	const [selectedClass, setSelectedClass] = useState(0);
-	const classId = classes[selectedClass]?.id;
-	const className = classes[selectedClass]?.name;
-	const [students, setStudents] = useState<Student[]>([]);
+	const classId = groups[selectedClass]?.id;
+	const className = groups[selectedClass]?.name;
+	const [attendees, setAttendees] = useState<Attendee[]>([]);
 	useEffect(() => {
 		(async () => {
 			if (classId) {
 				const client = await createClient();
-				const students = v(
+				const attendees = v(
 					await client
-						.from("students")
+						.from("attendees")
 						.select("profiles (username, email), metadata")
-						.eq("class", classId),
+						.eq("group", classId),
 				);
-				setStudents(
-					(students ?? []).map((x) => {
-						return { ...x.profiles!, metadata: x.metadata } as Student;
+				setAttendees(
+					(attendees ?? []).map((x) => {
+						return { ...x.profiles!, metadata: x.metadata } as Attendee;
 					}),
 				);
 				client
-					.channel("students-in-class")
+					.channel("attendees-in-group")
 					.on(
 						"postgres_changes",
 						{
 							event: "INSERT",
 							schema: "public",
-							table: "students",
+							table: "attendees",
 							// I hope this doesn't introduce security errors
-							filter: `class=eq.${classId}`,
+							filter: `group=eq.${classId}`,
 						},
 						(payload) => {
-							getStudent(payload.new.student).then((student) => {
-								console.assert(student.metadata === payload.new.metadata);
-								setStudents((x) => [
+							getAttendee(payload.new.attendee).then((attendee) => {
+								console.assert(attendee.metadata === payload.new.metadata);
+								setAttendees((x) => [
 									...x,
 									{
-										...student.profiles!,
-										metadata: student.metadata,
-									} as Student,
+										...attendee.profiles!,
+										metadata: attendee.metadata,
+									} as Attendee,
 								]);
 							});
 						},
@@ -88,7 +88,7 @@ export default function Dashboard({
 						name="my_tabs_2"
 						role="tab"
 						className="tab h-10 !w-[15vw]"
-						aria-label="Manage Students"
+						aria-label="Manage Attendees"
 						defaultChecked
 					/>
 					<div
@@ -96,7 +96,7 @@ export default function Dashboard({
 						className="w-[60vw] tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
 					>
 						<div className="flex flex-col">
-							<StudentsInClassContext.Provider value={students}>
+							<AttendeesInClassContext.Provider value={attendees}>
 								<div className="mt-4 flex w-full flex-row items-center justify-between">
 									<h1 className="mr-2 text-3xl font-bold">Current Group: </h1>{" "}
 									<select
@@ -110,7 +110,7 @@ export default function Dashboard({
 										<option disabled defaultValue={0}>
 											Pick a group...
 										</option>
-										{classes.map((x, i) => (
+										{groups.map((x, i) => (
 											<option value={i} key={x.id}>
 												{x.name}
 											</option>
@@ -137,17 +137,17 @@ export default function Dashboard({
 										<div className="mt-10 flex w-full flex-row items-center justify-between">
 											<input
 												type="text"
-												placeholder="Search Students..."
+												placeholder="Search Attendees..."
 												className="input input-standard mr-2 flex-grow"
 											/>
-											<RegisterStudent classId={classId} />
+											<RegisterAttendee classId={classId} />
 										</div>
 										<div>
-											<StudentTable />
+											<AttendeeTable />
 										</div>
 									</>
 								)}
-							</StudentsInClassContext.Provider>
+							</AttendeesInClassContext.Provider>
 						</div>
 					</div>
 
@@ -164,16 +164,16 @@ export default function Dashboard({
 						className="w-[60vw] tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
 					>
 						<div className="flex flex-col">
-							<StudentsInClassContext.Provider value={students}>
+							<AttendeesInClassContext.Provider value={attendees}>
 								<div className="mt-4 flex w-full flex-row items-center justify-between">
 									<h1 className="mr-2 text-3xl font-bold">Your Groups</h1>
-									<NewClass />
+									<NewGroup />
 								</div>
 								{/* <div className="mt-4 flex w-full flex-row items-center justify-between"></div> */}
 								{/* <div> */}
-								<ClassTable classes={classes} />
+								<GroupTable groups={groups} />
 								{/* </div> */}
-							</StudentsInClassContext.Provider>
+							</AttendeesInClassContext.Provider>
 						</div>
 					</div>
 				</div>
@@ -182,9 +182,9 @@ export default function Dashboard({
 				<div className="flex flex-col items-center w-full">
 					<a
 						className={`btn-start-attendance p-3 m-2 h-[10vh] w-[90%] flex items-center justify-center text-2xl font-semibold ${
-							classes[0] === undefined ? "btn-disabled btn-start-disabled" : ""
+							groups[0] === undefined ? "btn-disabled btn-start-disabled" : ""
 						} mt-5 flex items-center justify-center`}
-						href={`/teacher/attendance?classId=${classId}`}
+						href={`/host/attendance?classId=${classId}`}
 					>
 						<RepoIcon
 							size="small"
@@ -194,18 +194,18 @@ export default function Dashboard({
 						<div className="flex flex-col">
 							Start Attendance
 							<span className="font-normal opacity-75 text-lg">
-								for {students.length} registered students
+								for {attendees.length} registered attendees
 							</span>
 						</div>
 					</a>
-					{classes[0] === undefined ? (
+					{groups[0] === undefined ? (
 						<p className="opacity-50 text-center">
-							Cannot start attendance session without a class.
+							Cannot start attendance session without a group.
 						</p>
-					) : students.length === 0 ? (
+					) : attendees.length === 0 ? (
 						<p className="opacity-50 text-center">
 							Zyma will not be able to track attendance without registered
-							students.
+							attendees.
 						</p>
 					) : undefined}
 					{/* TODO: Refactor into config component */}
@@ -249,7 +249,7 @@ export default function Dashboard({
 							</div>
 							<div className="label">
 								<span className="label-text">
-									Allow People Not in Class
+									Allow People Not in Group
 									<br />
 								</span>
 							</div>
@@ -299,9 +299,9 @@ export default function Dashboard({
 			</div>
 		</div>
 		// <div className="w-fill h-screen bg-secondary overflow-hidden">
-		// 	{/* class list and management */}
+		// 	{/* group list and management */}
 		// 	{/* button to start the attendance page */}
-		// 	{/* class */}
+		// 	{/* group */}
 		// 	<div className="w-full flex flex-row justify-center h-full mt-[8.5vh]">
 		// 		<div className=" w-[48.5%] mr-[0.5%] h-[90vh]overflow-hidden">
 		// 			<div role="tablist" className="tabs tabs-lifted">
@@ -310,14 +310,14 @@ export default function Dashboard({
 		// 					name="my_tabs_2"
 		// 					role="tab"
 		// 					className="tab min-w-[15vw]"
-		// 					aria-label="Manage Students"
+		// 					aria-label="Manage Attendees"
 		// 					defaultChecked
 		// 				/>
 		// 				<div
 		// 					role="tabpanel"
 		// 					className="tab-content bg-base-100 border-base-300 rounded-box p-6"
 		// 				>
-		// 					<StudentsInClassContext.Provider value={students}>
+		// 					<AttendeesInClassContext.Provider value={attendees}>
 		// 						<div className="min-h-[calc(90vh-78px)]">
 		// 							<div className="flex justify-stretch">
 		// 								<select
@@ -329,9 +329,9 @@ export default function Dashboard({
 		// 									}}
 		// 								>
 		// 									<option disabled defaultValue={""}>
-		// 										Pick a class...
+		// 										Pick a group...
 		// 									</option>
-		// 									{classes.map((x, i) => (
+		// 									{groups.map((x, i) => (
 		// 										<option value={i} key={x.id}>
 		// 											{x.name}
 		// 										</option>
@@ -340,10 +340,10 @@ export default function Dashboard({
 		// 								{classId === undefined ? (
 		// 									<button className="ml-2 btn btn-ghost" disabled>
 		// 										<Icon.Outlined name="User" />
-		// 										Register Students
+		// 										Register Attendees
 		// 									</button>
 		// 								) : (
-		// 									<RegisterStudent classId={classId} />
+		// 									<RegisterAttendee classId={classId} />
 		// 								)}
 		// 							</div>
 		// 							{classId === undefined && className === undefined ? (
@@ -361,25 +361,25 @@ export default function Dashboard({
 		// 											d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
 		// 										/>
 		// 									</svg>
-		// 									<span>Please select a class</span>
+		// 									<span>Please select a group</span>
 		// 								</div>
 		// 							) : (
 		// 								<>
 		// 									<h1 className="website-title pt-5 !-pt-2">
-		// 										Students Registered in {className}
+		// 										Attendees Registered in {className}
 		// 									</h1>
-		// 									<StudentTable />
+		// 									<AttendeeTable />
 		// 								</>
 		// 							)}
 		// 						</div>
-		// 					</StudentsInClassContext.Provider>
+		// 					</AttendeesInClassContext.Provider>
 		// 				</div>
 		// 				<input
 		// 					type="radio"
 		// 					name="my_tabs_2"
 		// 					role="tab"
 		// 					className="tab min-w-[15vw]"
-		// 					aria-label="Manage Classes"
+		// 					aria-label="Manage Groups"
 		// 				/>
 		// 				<div
 		// 					role="tabpanel"
@@ -387,11 +387,11 @@ export default function Dashboard({
 		// 				>
 		// 					<div className="min-h-[calc(90vh-78px)]">
 		// 						<div className="flex flex-row justify-between items-center">
-		// 							<h1 className="website-title">All of Your Classes: </h1>
+		// 							<h1 className="website-title">All of Your Groups: </h1>
 		// 							<NewClass />
 		// 						</div>
 
-		// 						<ClassTable classes={classes} />
+		// 						<ClassTable groups={groups} />
 		// 					</div>
 		// 				</div>
 		// 			</div>
@@ -399,16 +399,16 @@ export default function Dashboard({
 		// 		<div className="bg-base-100 outline outline-1 outline-[#CAC8C5] w-[48.5%] ml-[0.5%] h-[90vh] rounded-xl">
 		// 			<a
 		// 				className={`btn btn-shadow ml-[5%] h-[10%] w-[90%] !flex !flex-row !justify-center !items-center text-3xl mt-5 ${
-		// 					classes[0] === undefined ? " btn-disabled" : ""
+		// 					groups[0] === undefined ? " btn-disabled" : ""
 		// 				}`}
-		// 				href={`/teacher/attendance?classId=${classId}`}
+		// 				href={`/host/attendance?classId=${classId}`}
 		// 			>
 		// 				<Icon.Outlined className="!w-10 !h-10" name="UserGroup" />
 		// 				Start Attendance
 		// 			</a>
-		// 			{classes[0] === undefined && (
+		// 			{groups[0] === undefined && (
 		// 				<p className="ml-10 mt-2 opacity-50">
-		// 					Cannot start attendance session without a class.
+		// 					Cannot start attendance session without a group.
 		// 				</p>
 		// 			)}
 		// 			<div className="ml-[5%] mt-5">
@@ -447,7 +447,7 @@ export default function Dashboard({
 		// 					/>
 		// 					<div className="label">
 		// 						<span className="label-text">
-		// 							Allow People Not in Class
+		// 							Allow People Not in Group
 		// 							<br />
 		// 						</span>
 		// 					</div>

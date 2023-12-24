@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
-export default async function TeacherLayout({
+export default async function HostLayout({
 	children,
 }: {
 	children: React.ReactNode;

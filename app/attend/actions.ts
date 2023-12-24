@@ -12,6 +12,6 @@ export async function updateExcuse(code: string, user: string, status: number) {
 			.from("attendance")
 			.update({ status })
 			.eq("code_used", code)
-			.eq("student", user),
+			.eq("attendee", user),
 	);
 }

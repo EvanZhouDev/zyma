@@ -3,27 +3,27 @@ import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { deleteClass } from "../actions";
 
-export default function ClassActions({
+export default function GroupActions({
 	klass,
 }: {
 	klass: { name: string; id: number };
 }) {
-	const [studentCount, setStudentCount] = useState<number>();
+	const [attendeeCount, setAttendeeCount] = useState<number>();
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
 			const { count, error } = await client
-				.from("students")
+				.from("attendees")
 				// `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the hood.
 				// `"planned"`: Approximated but fast count algorithm. Uses the Postgres statistics under the hood.
 				// `"estimated"`: Uses exact count for low numbers and planned count for high numbers.
 				.select("*", { head: true, count: "estimated" })
-				.eq("class", klass.id);
+				.eq("group", klass.id);
 			if (error !== null) {
 				console.error(error);
 			}
 			console.assert(count !== null, "count is null");
-			setStudentCount(count!);
+			setAttendeeCount(count!);
 		})();
 	});
 	return (
@@ -36,7 +36,7 @@ export default function ClassActions({
 						</div>
 					</div>
 				</td>
-				<td>{studentCount ?? "--"}</td>
+				<td>{attendeeCount ?? "--"}</td>
 				<th>
 					<div className="flex">
 						<button
@@ -58,13 +58,13 @@ export default function ClassActions({
         >
             <div className="modal-box">
                 <h3 className="font-bold text-lg">
-                    Class Name: "{klass.name}"
+                    Group Name: "{klass.name}"
                 </h3>
                 <p className="py-4 mt-5">
-                    The ID associated with this class is {klass.id}.
+                    The ID associated with this group is {klass.id}.
                 </p>
                 <p className="py-4 font-normal">
-                    There are 0 students in this class currently.
+                    There are 0 attendees in this group currently.
                 </p>
                 <div className="modal-action">
                     <form method="dialog">

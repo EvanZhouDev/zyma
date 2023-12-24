@@ -8,15 +8,15 @@ import { redirect } from "next/navigation";
 export default async function Join({
 	searchParams,
 }: {
-	searchParams: { class?: number };
+	searchParams: { group?: number };
 }) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	const student = (await client.auth.getUser()).data?.user?.id;
-	if (student == null) {
+	const attendee = (await client.auth.getUser()).data?.user?.id;
+	if (attendee == null) {
 		return redirect("/");
 	}
-	if (searchParams.class === undefined) {
+	if (searchParams.group === undefined) {
 		return (
 			<MainHero padding={10}>
 				<div className="mt-5">Could not Join this group.</div>
@@ -29,8 +29,8 @@ export default async function Join({
 		);
 	}
 	const { error } = await client
-		.from("students")
-		.insert([{ student, class: searchParams.class }]);
+		.from("attendees")
+		.insert([{ attendee, group: searchParams.group }]);
 	if (error !== null) {
 		if (error.code === "23505") {
 			return (
@@ -44,7 +44,7 @@ export default async function Join({
 				</MainHero>
 			);
 		}
-		// Class not found
+		// Group not found
 		console.assert(error.code === "23503");
 		return (
 			<MainHero padding={10}>
@@ -52,7 +52,7 @@ export default async function Join({
 				<div role="alert" className="alert alert-error my-10">
 					<AlertIcon size="medium" />
 					<span>
-						Class <b>{searchParams.class}</b> not found.
+						Group <b>{searchParams.group}</b> not found.
 					</span>
 				</div>
 				Please try again, ensuring you entered the code correctly.
@@ -60,7 +60,7 @@ export default async function Join({
 		);
 	}
 	const data = v(
-		await client.from("classes").select("name").eq("id", searchParams.class),
+		await client.from("groups").select("name").eq("id", searchParams.group),
 	)[0].name;
 	return (
 		<MainHero>

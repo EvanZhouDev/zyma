@@ -4,33 +4,33 @@ import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
-export async function addStudent(classId: number, form: FormData) {
+export async function addAttendee(classId: number, form: FormData) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	const students = v(
+	const attendees = v(
 		await client
 			.from("profiles")
 			.select("id")
 			.eq("email", form.get("email") as string),
 	);
 	// TODO: Form validation and use return
-	if (students?.length == null) {
-		throw new Error("Student not found");
+	if (attendees?.length == null) {
+		throw new Error("Attendee not found");
 	}
-	const student = students[0].id;
+	const attendee = attendees[0].id;
 
 	const { error } = await client
-		.from("students")
-		.insert([{ class: classId, student }]);
+		.from("attendees")
+		.insert([{ group: classId, attendee }]);
 	if (error != null) {
-		throw new Error("Student is already in your class");
+		throw new Error("Attendee is already in your group");
 	}
 }
 export async function createClass(className: string) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
 	return await client
-		.from("classes")
+		.from("groups")
 		.insert([
 			{ admin: (await client.auth.getUser()).data.user!.id, name: className },
 		]);
@@ -38,5 +38,5 @@ export async function createClass(className: string) {
 export async function deleteClass(classId: number) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	v(await client.from("classes").delete().eq("id", classId));
+	v(await client.from("groups").delete().eq("id", classId));
 }

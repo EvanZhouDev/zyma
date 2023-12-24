@@ -5,27 +5,27 @@ import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { ChangeEvent, useEffect, useState } from "react";
 
-type StudentInAttendance = {
+type AttendeeInAttendance = {
 	profiles: { username: string } | null;
-	student: string;
+	attendee: string;
 	status: number;
 	created_at?: string;
 };
-async function getStudent(uuid: string, code: string) {
+async function getAttendee(uuid: string, code: string) {
 	const client = await createClient();
 	return v(
 		await client
 			.from("attendance")
-			.select("profiles (username), student, status, created_at")
+			.select("profiles (username), attendee, status, created_at")
 			.eq("code_used", code)
-			.eq("student", uuid),
+			.eq("attendee", uuid),
 	)[0];
 }
-export default function StudentPresenceTable({
+export default function AttendeePresenceTable({
 	initialJoined,
 	attendanceCode,
 }: {
-	initialJoined: StudentInAttendance[];
+	initialJoined: AttendeeInAttendance[];
 	attendanceCode: string;
 }) {
 	const [selectedFilter, setSelectedFilter] = useState("All Statuses");
@@ -41,7 +41,7 @@ export default function StudentPresenceTable({
 	const [joined, setJoined] = useState(initialJoined);
 	const [statuses, setStatuses] = useState<{ [key: string]: string }>(
 		Object.fromEntries(
-			joined.map(({ student, status }) => [student, convertStatus(status)]),
+			joined.map(({ attendee, status }) => [attendee, convertStatus(status)]),
 		),
 	);
 	useEffect(() => {
@@ -59,13 +59,15 @@ export default function StudentPresenceTable({
 						filter: `code_used=eq.${attendanceCode}`,
 					},
 					(payload) => {
-						getStudent(payload.new.student, attendanceCode).then((student) => {
-							setJoined((x) => [...x, student!]);
-						});
+						getAttendee(payload.new.attendee, attendanceCode).then(
+							(attendee) => {
+								setJoined((x) => [...x, attendee!]);
+							},
+						);
 						setStatuses((x) => {
 							return {
 								...x,
-								[payload.new.student]: convertStatus(payload.new.status),
+								[payload.new.attendee]: convertStatus(payload.new.status),
 							};
 						});
 					},
@@ -82,7 +84,7 @@ export default function StudentPresenceTable({
 						setStatuses((x) => {
 							return {
 								...x,
-								[payload.new.student]: convertStatus(payload.new.status),
+								[payload.new.attendee]: convertStatus(payload.new.status),
 							};
 						});
 					},
@@ -106,7 +108,7 @@ export default function StudentPresenceTable({
 				</label>
 				<input
 					type="text"
-					placeholder="Search Students..."
+					placeholder="Search Attendees..."
 					className="input input-standard ml-1 flex-grow"
 					onChange={handleSearchChange}
 				/>
@@ -124,17 +126,17 @@ export default function StudentPresenceTable({
 					</thead>
 					<tbody>
 						{joined
-							.filter((student, _i) => {
+							.filter((attendee, _i) => {
 								let show = true;
 								if (
 									selectedFilter === "Absent" &&
-									statuses[student.student] === "Present"
+									statuses[attendee.attendee] === "Present"
 								) {
 									show = false;
 								}
 								if (
 									selectedFilter === "Present" &&
-									statuses[student.student] !== "Present"
+									statuses[attendee.attendee] !== "Present"
 								) {
 									show = false;
 								}
@@ -143,7 +145,7 @@ export default function StudentPresenceTable({
 									show = false;
 								}
 								if (
-									!student
+									!attendee
 										.profiles!.username.toLowerCase()
 										.includes(searchContent.toLowerCase())
 								)
@@ -151,13 +153,13 @@ export default function StudentPresenceTable({
 
 								return show;
 							})
-							.map((student, i) => {
+							.map((attendee, i) => {
 								return (
-									<tr key={student.student}>
+									<tr key={attendee.attendee}>
 										<th>{i + 1}</th>
-										<td>{student.profiles!.username}</td>
+										<td>{attendee.profiles!.username}</td>
 										<td>
-											{new Date(student.created_at ?? "").toLocaleTimeString(
+											{new Date(attendee.created_at ?? "").toLocaleTimeString(
 												[],
 												{
 													hour: "2-digit",
@@ -168,7 +170,7 @@ export default function StudentPresenceTable({
 										<td>
 											{(() => {
 												const parsedStatus =
-													statuses[student.student] === "Present"
+													statuses[attendee.attendee] === "Present"
 														? "Present"
 														: "Absent";
 
@@ -198,7 +200,7 @@ export default function StudentPresenceTable({
 				</table>
 				{joined.length === 0 ? (
 					<h1 className="text-center font-bold mt-5 text-xl opacity-50">
-						Waiting for students to join...
+						Waiting for attendees to join...
 					</h1>
 				) : (
 					""

@@ -6,8 +6,8 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
-import StudentCounter from "./StudentCounter";
-import StudentPresenceTable from "./StudentPresenceTable";
+import AttendeeCounter from "./AttendeeCounter";
+import AttendeePresenceTable from "./AttendeePresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
 
@@ -32,15 +32,15 @@ export default async function Index({
 			return redirect("/");
 		}
 		v(await client.from("codes").delete().eq("id", id));
-		return redirect("/teacher/dashboard");
+		return redirect("/host/dashboard");
 	}
 
-	const CODE_SELECT = "classes (name), code, created_at, id";
+	const CODE_SELECT = "groups (name), code, created_at, id";
 	const existingCode = v(
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("class", searchParams.classId),
+			.eq("group", searchParams.classId),
 	);
 	let data: (typeof existingCode)[0];
 
@@ -50,7 +50,7 @@ export default async function Index({
 		data = v(
 			await client
 				.from("codes")
-				.insert([{ class: searchParams.classId }])
+				.insert([{ group: searchParams.classId }])
 				.select(CODE_SELECT),
 		)[0];
 	}
@@ -59,15 +59,15 @@ export default async function Index({
 		v(
 			await client
 				.from("attendance")
-				.select("profiles (username), student, status, created_at")
+				.select("profiles (username), attendee, status, created_at")
 				.eq("code_used", data.code),
 		) ?? [];
-	const totalStudents = (
+	const totalAttendees = (
 		v(
 			await client
-				.from("students")
+				.from("attendees")
 				.select("*")
-				.eq("class", searchParams.classId),
+				.eq("group", searchParams.classId),
 		) ?? []
 	).length;
 
@@ -98,7 +98,7 @@ export default async function Index({
 					<div className="text-right mr-5 mt-5">
 						Attendance session for
 						<br />
-						<b className="text-xl">{data.classes!.name}</b>
+						<b className="text-xl">{data.groups!.name}</b>
 					</div>
 				</div>
 				<div className="flex flex-col items-center -mt-5">
@@ -142,18 +142,18 @@ export default async function Index({
 				<div className="w-full">
 					<div className="flex flex-row w-full justify-between mt-4">
 						<h1 className="text-4xl font-bold">
-							<StudentCounter
+							<AttendeeCounter
 								attendanceCode={data.code}
 								initialJoined={joined.length}
 							/>
-							/{totalStudents} Students Present
+							/{totalAttendees} Attendees Present
 						</h1>{" "}
 						<form action={handle.bind(null, data.id)}>
 							<button className="btn btn-dangerous">End Session</button>{" "}
 						</form>
 					</div>
 				</div>
-				<StudentPresenceTable
+				<AttendeePresenceTable
 					initialJoined={joined}
 					attendanceCode={data.code}
 				/>
