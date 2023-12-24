@@ -195,7 +195,7 @@ export default function Dashboard({
 						<div className="flex flex-col">
 							Start Attendance
 							<span className="font-normal opacity-75 text-lg">
-								for {students.length} students
+								for {students.length} registered students
 							</span>
 						</div>
 					</a>
