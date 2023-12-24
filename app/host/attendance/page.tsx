@@ -1,6 +1,9 @@
 import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
-import { getServerClientWithRedirect } from "@/utils/supabase/server";
+import {
+	getServerClient,
+	getServerClientWithRedirect,
+} from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -16,16 +19,14 @@ export default async function Index({
 	searchParams: { groupId: number };
 }) {
 	const { client } = await getServerClientWithRedirect(
-		`/host/attendance?groupId=${searchParams.groupId}`,
+		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`,
 	);
 	// We pass it in with the .bind instead of re-using
 	// the codeId in the outer scope
 	// because React Server Components suck
 	async function handle(id: number) {
 		"use server";
-		const { client } = await getServerClientWithRedirect(
-			`/host/attendance?groupId=${searchParams.groupId}`,
-		);
+		const client = getServerClient();
 		v(await client.from("codes").delete().eq("id", id));
 		return redirect("/host/dashboard");
 	}
