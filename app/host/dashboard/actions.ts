@@ -2,7 +2,6 @@
 
 import { v } from "@/utils";
 import { getServerClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 
 export async function addAttendee(classId: number, form: FormData) {
 	const client = getServerClient();
