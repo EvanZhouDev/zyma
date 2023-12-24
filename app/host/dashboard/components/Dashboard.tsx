@@ -16,7 +16,6 @@ import AttendeeTable from "./AttendeeTable";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
-import { themeChange } from "theme-change";
 async function getAttendee(uuid: string) {
 	const client = await createClient();
 	return v(
