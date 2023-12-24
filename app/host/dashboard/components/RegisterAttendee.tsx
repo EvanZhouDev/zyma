@@ -1,6 +1,6 @@
 "use client";
 import { ROOT_URL } from "@/components/constants";
-import { PlusIcon } from "@primer/octicons-react";
+import { PersonAddIcon } from "@primer/octicons-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useRef } from "react";
 import { addAttendee } from "../actions";
@@ -14,7 +14,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 				className="btn btn-standard flex items-center justify-center"
 				onClick={() => myModal.current!.showModal()}
 			>
-				<PlusIcon size="medium" verticalAlign="middle" />
+				<PersonAddIcon size="medium" verticalAlign="middle" />
 				Register Attendees
 			</button>
 			<dialog ref={myModal} className="modal">
@@ -66,7 +66,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 									className="input input-standard form-input w-fit flex-grow"
 								/>
 								<button className="btn btn-standard ml-3">
-									<PlusIcon size="medium" verticalAlign="middle" />
+									<PersonAddIcon size="medium" verticalAlign="middle" />
 									Add Attendee
 								</button>
 							</form>
