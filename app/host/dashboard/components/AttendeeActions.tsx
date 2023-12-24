@@ -1,6 +1,6 @@
-import { Attendee } from "../contexts";
 import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useRef } from "react";
+import { Attendee } from "../contexts";
 
 export default function AttendeeActions({ attendee }: { attendee: Attendee }) {
 	const modal = useRef<HTMLDialogElement>(null);

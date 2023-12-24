@@ -1,6 +1,6 @@
-import { AttendeesInClassContext } from "../contexts";
 import { InfoIcon } from "@primer/octicons-react";
 import { useContext } from "react";
+import { AttendeesInClassContext } from "../contexts";
 import AttendeeActions from "./AttendeeActions";
 export default function AttendeeTable() {
 	const attendees = useContext(AttendeesInClassContext);

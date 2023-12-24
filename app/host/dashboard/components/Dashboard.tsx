@@ -1,5 +1,4 @@
 "use client";
-import { Attendee, AttendeesInClassContext } from "../contexts";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import {
@@ -12,6 +11,7 @@ import {
 } from "@primer/octicons-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { Attendee, AttendeesInClassContext } from "../contexts";
 import AttendeeTable from "./AttendeeTable";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";

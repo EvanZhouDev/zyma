@@ -1,8 +1,8 @@
 import MainHero from "@/components/MainHero";
-import SignUp from "./components/SignUp";
 import { getServerClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { signIn, signUp } from "./actions";
+import SignUp from "./components/SignUp";
 
 export default async function Index({
 	searchParams,
