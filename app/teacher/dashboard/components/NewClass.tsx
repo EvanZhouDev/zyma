@@ -1,5 +1,5 @@
 "use client";
-import Icon from "@/components/Icon";
+import { PlusIcon } from "@primer/octicons-react";
 import { useRef, useState } from "react";
 import { createClass } from "../actions";
 export default function NewClass() {
@@ -16,22 +16,22 @@ export default function NewClass() {
 	return (
 		<>
 			<button
-				className="btn btn-ghost"
+				className="btn btn-standard flex items-center justify-center"
 				onClick={() => modal.current!.showModal()}
 			>
-				<Icon.Outlined name="User" />
-				Create Class
+				<PlusIcon size="medium" verticalAlign="middle" />
+				Add Group
 			</button>
 			<dialog ref={modal} id="my_modal_3" className="modal">
 				<div className="modal-box">
-					<h3 className="font-bold text-lg">Create a Class</h3>
+					<h3 className="text-lg font-bold">Create a Group</h3>
 					<p className="py-4">
 						First, name your class. Afterwards, go to Mange Students and hit
 						Register Students to continue.
 					</p>
 					<div>
 						<label className="label">
-							<span className="text-base label-text">Class Name</span>
+							<span className="label-text text-base">Group Name</span>
 						</label>
 						<input
 							type="text"
@@ -41,17 +41,21 @@ export default function NewClass() {
 							onChange={(event) => {
 								setClassName(event.target.value);
 							}}
-							className="w-full input input-bordered border-primary form-input"
+							className="input input-standard w-full"
+							placeholder="Class name..."
 						/>
 					</div>
 					<p className="py-4 opacity-50">
-						You can rename your class at any time. To make sure the name is
-						unique, it is recommended to include your period.
+						You can rename your class at any time.
 					</p>
 					<div className="modal-action">
 						<form method="dialog">
-							<button className="btn">Close</button>
-							<button className="btn btn-primary ml-3" formAction={handle}>
+							<button className="btn btn-standard">Close</button>
+							<button
+								className="btn btn-standard ml-3"
+								formAction={handle}
+								disabled={className.trim().length === 0}
+							>
 								Create Class
 							</button>
 						</form>

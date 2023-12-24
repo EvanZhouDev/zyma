@@ -11,9 +11,7 @@ export function getRelativeMinuteTime(time1: string, time2: string) {
 	const minutes = Math.floor(diff / 60000);
 	const seconds = parseInt(((diff % 60000) / 1000).toFixed(0));
 	if (minutes === 0) {
-		return `${seconds < 10 ? "0" : ""}${seconds} second${
-			seconds === 1 ? "" : "s"
-		}`;
+		return `${seconds} second${seconds === 1 ? "" : "s"}`;
 	}
 
 	// Return the difference as a string

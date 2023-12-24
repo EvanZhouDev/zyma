@@ -26,9 +26,9 @@ export default function TimeElapsed({
 			const seconds = parseInt(((diff % 60000) / 1000).toFixed(0));
 
 			// Return the difference as a string
-			return `${minutes} minute${minutes === 1 ? "" : "s"} and ${
-				seconds < 10 ? "0" : ""
-			}${seconds} second${seconds === 1 ? "" : "s"} ago`;
+			return `${minutes} minute${
+				minutes === 1 ? "" : "s"
+			} and ${seconds} second${seconds === 1 ? "" : "s"} ago`;
 		});
 
 	if (time === undefined) return <span>--</span>;

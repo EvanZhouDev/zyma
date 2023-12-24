@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar.jsx";
 import { ROOT_URL } from "@/components/constants";
 import { GeistSans } from "geist/font/sans";
 import type React from "react";
@@ -18,9 +17,8 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en" className={GeistSans.className}>
-			<body>
-				<Navbar />
+		<html lang="en" className={`${GeistSans.className} w-full h-full`}>
+			<body className="w-full h-full">
 				{children}
 				<Toaster />
 			</body>

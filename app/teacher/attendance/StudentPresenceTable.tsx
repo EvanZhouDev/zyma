@@ -3,8 +3,7 @@
 import { convertStatus } from "@/components/constants";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
-import TimeElapsed from "./TimeElapsed";
+import { ChangeEvent, useEffect, useState } from "react";
 
 type StudentInAttendance = {
 	profiles: { username: string } | null;
@@ -29,6 +28,16 @@ export default function StudentPresenceTable({
 	initialJoined: StudentInAttendance[];
 	attendanceCode: string;
 }) {
+	const [selectedFilter, setSelectedFilter] = useState("All Statuses");
+	const [searchContent, setSearchContent] = useState("");
+
+	const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
+		setSelectedFilter(event.target.value);
+	};
+	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+		setSearchContent(event.target.value);
+	};
+
 	const [joined, setJoined] = useState(initialJoined);
 	const [statuses, setStatuses] = useState<{ [key: string]: string }>(
 		Object.fromEntries(
@@ -84,28 +93,119 @@ export default function StudentPresenceTable({
 		})();
 	}, [attendanceCode]);
 	return (
-		<table className="table">
-			{/* head */}
-			<thead>
-				<tr>
-					<th />
-					<th>Name</th>
-					<th>Time Joined</th>
-					<th>Status</th>
-				</tr>
-			</thead>
-			<tbody>
-				{joined.map((student, i) => (
-					<tr key={student.student}>
-						<th>{i + 1}</th>
-						<td>{student.profiles!.username}</td>
-						<td>
-							<TimeElapsed time={student.created_at} />
-						</td>
-						<td>{statuses[student.student]}</td>
-					</tr>
-				))}
-			</tbody>
-		</table>
+		<>
+			<div className="flex flex-row items-center w-full justify-between mt-4">
+				<label>
+					<select
+						className="select input-standard mr-2"
+						onChange={handleFilterChange}
+					>
+						<option defaultChecked>All Statuses</option>
+						<option>Present</option>
+						<option>Late</option>
+						<option>Absent</option>
+					</select>
+				</label>
+				<input
+					type="text"
+					placeholder="Search Students..."
+					className="input input-standard ml-1 flex-grow"
+					onChange={handleSearchChange}
+				/>
+			</div>
+			<div className="flex-grow w-full">
+				<table className="table mt-5 w-full outline outline-base-300 outline-1 text-[#24292F] rounded-lg">
+					{/* head */}
+					<thead>
+						<tr>
+							<th />
+							<th>Name</th>
+							<th>Time Joined</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						{joined
+							.filter((student, _i) => {
+								let show = true;
+								if (
+									selectedFilter === "Absent" &&
+									statuses[student.student] === "Present"
+								) {
+									show = false;
+								}
+								if (
+									selectedFilter === "Present" &&
+									statuses[student.student] !== "Present"
+								) {
+									show = false;
+								}
+								if (selectedFilter === "Late") {
+									// TODO: ADD "LATE"
+									show = false;
+								}
+								if (
+									!student
+										.profiles!.username.toLowerCase()
+										.includes(searchContent.toLowerCase())
+								)
+									show = false;
+
+								return show;
+							})
+							.map((student, i) => {
+								return (
+									<tr key={student.student}>
+										<th>{i + 1}</th>
+										<td>{student.profiles!.username}</td>
+										<td>
+											{new Date(student.created_at ?? "").toLocaleTimeString(
+												[],
+												{
+													hour: "2-digit",
+													minute: "2-digit",
+												},
+											)}
+										</td>
+										<td>
+											{(() => {
+												const parsedStatus =
+													statuses[student.student] === "Present"
+														? "Present"
+														: "Absent";
+
+												const colorMap: { [key: string]: string } = {
+													Present: "#1E883E",
+													Absent: "#881E1E",
+												};
+
+												return (
+													<span
+														style={{
+															borderColor: colorMap[parsedStatus],
+															color: colorMap[parsedStatus],
+														}}
+														className={"border border-3 p-2 rounded-full"}
+													>
+														{parsedStatus}
+													</span>
+												);
+											})()}
+										</td>
+									</tr>
+								);
+							})}
+					</tbody>
+					<tfoot className="border-none outline-none" />
+				</table>
+				{joined.length === 0 ? (
+					<h1 className="text-center font-bold mt-5 text-xl opacity-50">
+						Waiting for students to join...
+					</h1>
+				) : (
+					""
+				)}
+			</div>
+		</>
 	);
 }

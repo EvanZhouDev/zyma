@@ -1,13 +1,22 @@
-import Icon from "@/components/Icon";
-import { Student, StudentsInClassContext } from "@/components/contexts";
-import { useContext, useRef } from "react";
-
+import { StudentsInClassContext } from "@/components/contexts";
+import { useContext } from "react";
+import StudentActions from "./StudentActions";
+import { InfoIcon } from "@primer/octicons-react";
 export default function StudentTable() {
 	const students = useContext(StudentsInClassContext);
+	if (students.length === 0) {
+		return (
+			<div role="alert" className="alert alert-info mt-5">
+				<InfoIcon size="medium" />
+				<div>
+					<p className="text-lg">No students registered.</p>
+				</div>
+			</div>
+		);
+	}
 	return (
-		<div className="overflow-x-auto">
-			<table className="table mt-5">
-				{/* head */}
+		<>
+			<table className="table mt-5 w-full outline outline-base-300 outline-1 text-[#24292F] rounded-lg">
 				<thead>
 					<tr>
 						<th>Name</th>
@@ -18,7 +27,7 @@ export default function StudentTable() {
 				</thead>
 				<tbody>
 					{students.map((student) => (
-						<tr key={student.email}>
+						<tr key={student.email} className="border-b-0">
 							<td>
 								<div className="flex items-center gap-3">
 									<div>
@@ -37,40 +46,6 @@ export default function StudentTable() {
 					))}
 				</tbody>
 			</table>
-		</div>
-	);
-}
-function StudentActions({ student }: { student: Student }) {
-	const modal = useRef<HTMLDialogElement>(null);
-	return (
-		<div className="flex">
-			<button
-				onClick={() => modal.current!.showModal()}
-				className="ml-2 btn btn-secondary"
-			>
-				<Icon.Outlined className="w-4 h-4" name="InformationCircle" />
-			</button>
-			<dialog ref={modal} className="modal">
-				<div className="modal-box">
-					<h3 className="font-bold text-lg">
-						Student Name: {student.username}
-					</h3>
-					<p className="py-4 mt-5">
-						The Email associated with this class is {student.email}.
-					</p>
-					<p className="py-4 font-normal">
-						Attendance: {student?.metadata?.attendence}
-					</p>
-					<div className="modal-action">
-						<form method="dialog">
-							<button className="btn">Close</button>
-						</form>
-					</div>
-				</div>
-			</dialog>
-			<button className="ml-2 btn btn-secondary">
-				<Icon.Outlined className="w-4 h-4" name="Trash" />
-			</button>
-		</div>
+		</>
 	);
 }

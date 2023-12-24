@@ -2,6 +2,7 @@ import SignUp from "@/components/SignUp";
 import { createClient } from "@/utils/supabase/server";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import MainHero from "@/components/MainHero";
 
 export default async function Index({
 	searchParams,
@@ -64,20 +65,16 @@ export default async function Index({
 		return redirect("/?message=Check email to continue sign in process");
 	};
 	return (
-		<div className="hero min-h-screen bg-neutral">
-			<div className="hero-content text-center">
-				<div className="max-w-md">
-					<h1 className="text-5xl font-bold">Hello there</h1>
-					<p className="py-6">Sign in or sign up to start taking attendance.</p>
-					<div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 text-left">
-						<SignUp
-							signIn={signIn}
-							signUp={signUp}
-							searchParams={searchParams}
-						/>
-					</div>
-				</div>
+		<MainHero>
+			<p className="py-6 mb-5">Sign in to start attendance.</p>
+			<div className="flex-1 flex flex-col px-8 min-w-[450px] text-left mb-10">
+				<SignUp signIn={signIn} signUp={signUp} />
+				{searchParams?.message && (
+					<p className="mt-4 p-4 bg-foreground/10 text-foreground text-center rounded-lg">
+						{searchParams.message}
+					</p>
+				)}
 			</div>
-		</div>
+		</MainHero>
 	);
 }

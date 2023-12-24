@@ -2,57 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 200 20% 98%;
-    --btn-background: 200 10% 91%;
-    --btn-background-hover: 200 10% 89%;
-    --foreground: 200 50% 3%;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: 200 50% 3%;
-      --btn-background: 200 10% 9%;
-      --btn-background-hover: 200 10% 12%;
-      --foreground: 200 20% 96%;
-    }
-  }
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+		Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 @layer base {
-  * {
-    @apply border-foreground/20;
-  }
+	:root {
+		--background: 200 20% 98%;
+		--btn-background: 200 10% 91%;
+		--btn-background-hover: 200 10% 89%;
+		--foreground: 200 50% 3%;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--background: 200 50% 3%;
+			--btn-background: 200 10% 9%;
+			--btn-background-hover: 200 10% 12%;
+			--foreground: 200 20% 96%;
+		}
+	}
+}
+
+.table {
+	@apply outline-base-300 mt-5 w-full rounded-lg text-[#24292F] outline outline-1;
+}
+
+@layer base {
+	* {
+		@apply border-foreground/20;
+	}
 }
 
 .animate-in {
-  animation: animateIn 0.3s ease 0.15s both;
+	animation: animateIn 0.3s ease 0.15s both;
 }
 
 @keyframes animateIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 /* BUTTON STYLING CODE */
 
 .btn-filled {
-	@apply rounded-full btn-primary;
+	@apply btn-primary rounded-full;
 }
 
 .btn-ghost {
-	@apply rounded-full border-primary text-primary hover:border-primary;
+	@apply border-primary hover:border-primary no-animation rounded-full text-lg text-[#24292F] hover:bg-[#E3E7EA];
+}
+
+.btn-ghost:active {
+	@apply bg-base-300;
 }
 
 .btn-shadow {
-	@apply rounded-full btn-neutral text-primary bg-base-100 hover:bg-neutral;
+	@apply btn-neutral text-primary bg-base-100 hover:bg-neutral rounded-full;
 
 	box-shadow:
 		0px 3px 1px -2px rgb(0 0 0 / 0.2),
@@ -68,7 +82,7 @@
 }
 
 .btn-clear {
-	@apply bg-base-100 border-none rounded-full;
+	@apply bg-base-100 rounded-full border-none;
 }
 
 .btn-clear:hover {
@@ -80,33 +94,146 @@
 }
 
 .btn-classic {
-	@apply rounded-full btn-secondary;
+	@apply btn-secondary rounded-full;
 }
 
 .menu-title {
 	@apply text-secondary-content text-xl;
 }
 
+.btn {
+	@apply rounded-lg !border-none;
+}
+
+.btn-start-attendance {
+	padding: 10px;
+	border: double 5px transparent;
+	--bg-hover-color: white;
+	background-image: linear-gradient(
+			var(--bg-hover-color),
+			var(--bg-hover-color)
+		),
+		conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
+	background-clip: padding-box, border-box;
+	background-origin: padding-box, border-box;
+	box-sizing: border-box;
+	border-radius: 20px;
+	transition:
+		border 0.25s,
+		transform 0.25s;
+	color: #24292f;
+
+	/* Start button flicker fix for WebKit */
+	transform: scale(1);
+}
+
+.btn-start-attendance:hover {
+	border: double 4px transparent;
+	transform: scale(1.01);
+}
+
+.btn-start-attendance::before {
+	content: "";
+	z-index: -1;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
+	transform: translate3d(0px, 0px, 0) scale(0.95);
+	filter: blur(20px);
+	opacity: 0;
+	transition: opacity 0.2s;
+	border-radius: inherit;
+}
+.btn-start-attendance::after {
+	content: "";
+	z-index: -1;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: inherit;
+	border-radius: inherit;
+}
+
+.btn-start-disabled {
+	background-image: linear-gradient(
+			var(--bg-hover-color),
+			var(--bg-hover-color)
+		),
+		conic-gradient(#9f71c380, #3b93dd80, #ef835780, #d1657f80, #9673ce80) !important;
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.btn-start-attendance:hover::before {
+	opacity: 1;
+}
+
+.btn-start-attendance:active::before {
+	opacity: 0.2;
+}
+
+.btn-standard {
+	@apply outline-base-300 bg-neutral no-animation text-lg text-[#24292F] outline outline-1 hover:bg-[#F3F4F6];
+}
+
+.input-standard {
+	@apply outline-base-300 bg-neutral no-animation rounded-lg text-lg text-[#24292F] outline outline-1 hover:bg-[#F3F4F6];
+}
+
+.btn-standard:active {
+	background-color: #ebecef !important;
+}
+
+.btn-dangerous {
+	@apply btn-standard text-lg !text-[#CF212E];
+}
+
+.btn-dangerous:hover {
+	@apply !bg-[#CF212E] !text-white !outline-[#901626];
+}
+
+.btn-dangerous:active {
+	@apply !bg-[#C11F2B] !text-white !outline-[#A9222B];
+}
+
+.btn-standard:active {
+	background-color: #ebecef !important;
+}
+
 .website-title {
-	@apply !ml-1 !my-5 !mt-2 !mb-2 font-bold text-primary text-2xl;
+	@apply text-primary !my-5 !mb-2 !ml-1 !mt-2 text-2xl font-bold;
 }
 
 .main-menu {
-	@apply menu bg-neutral rounded-l h-screen w-[18%] px-5 rounded-box;
-	
+	@apply menu bg-neutral rounded-box h-screen w-[18%] rounded-l px-5;
+
 	* {
 		@apply my-0.5;
 	}
 }
 
 .menu-selection-active {
-	@apply bg-secondary font-bold text-neutral-content;
+	@apply bg-secondary text-neutral-content font-bold;
 }
 
 .btn {
 	animation: none;
 }
 
-.navbar {
-  border-bottom: 1px solid lightgray;
+.zyma-code-bg {
+	background: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
+}
+
+.alert-error {
+	border: 1.5px solid #cf212e;
+	background-color: #cf212e40;
+}
+
+.alert-info {
+	border: 1.5px solid #0A69DA;
+	background-color: #0A69DA40;
 }

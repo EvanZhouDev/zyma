@@ -1,25 +1,29 @@
 "use client";
-import Icon from "@/components/Icon";
 import { convertStatus } from "@/components/constants";
 import { useState } from "react";
 import { updateExcuse } from "../actions";
+import { SignOutIcon } from "@primer/octicons-react";
 
 export default function Excuse({
 	code,
 	user,
 	status,
-}: { code: string; user: string; status: number }) {
+}: {
+	code: string;
+	user: string;
+	status: number;
+}) {
 	const [excuse, setExcuse] = useState(status);
 	const [availableToChoose, setAvailableToChoose] = useState(excuse === 0);
 	return (
 		<div className="flex flex-col justify-stretch">
 			{availableToChoose ? (
 				<>
-					<p className="py-6 max-w">
-						Not actually here? Select a reason and change your status.
+					<p className="py-5 text-sm">
+						Leaving later? Choose a reason and let the teacher know.
 					</p>
 					<select
-						className="select select-bordered w-full"
+						className="select input-standard w-full"
 						value={excuse}
 						onChange={(event) => {
 							setExcuse(parseInt(event.target.value));
@@ -35,7 +39,7 @@ export default function Excuse({
 						<option value={5}>Other</option>
 					</select>
 					<button
-						className="ml-2 mt-5 btn btn-filled"
+						className="mt-5 btn btn-dangerous flex-grow"
 						disabled={excuse === status}
 						onClick={async () => {
 							await updateExcuse(code, user, excuse);
@@ -43,38 +47,40 @@ export default function Excuse({
 							setAvailableToChoose(false);
 						}}
 					>
-						<Icon.Outlined name="ArrowRightOnRectangle" />
+						<SignOutIcon />
 						Mark me as absent
 					</button>
 				</>
 			) : (
 				<>
-					<div className="mt-10 bg-secondary py-5 rounded">
-						Successfully marked you as "{convertStatus(excuse)}"
+					<div className="bg-secondary py-3 rounded">
+						Successfully Absent with reason:
+						<br />
+						<b>{convertStatus(excuse)}</b>
 					</div>
-					<div className="w-full flex flex-row space-x-2">
+					<div className="w-full flex flex-col">
 						<button
-							className="btn btn-primary mt-3"
+							className="btn btn-standard mt-3"
 							onClick={() => {
 								setAvailableToChoose(true);
 							}}
 						>
-							Select a different absense
+							Select a different reason
 						</button>
 						<button
-							className="btn btn-primary mt-3"
+							className="mt-5 underline"
 							onClick={async () => {
 								await updateExcuse(code, user, 0);
 								status = 0;
 								setAvailableToChoose(true);
 							}}
 						>
-							Mark me present
+							Actually here? Mark me present.
 						</button>
 					</div>
 				</>
 			)}
-			<p className="py-6 max-w opacity-50">It is safe to close this tab.</p>
+			<p className="pt-5 max-w opacity-50">It is safe to close this tab.</p>
 		</div>
 	);
 }

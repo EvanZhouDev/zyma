@@ -1,11 +1,13 @@
-import Icon from "@/components/Icon";
 import { createClient } from "@/utils/supabase/client";
+import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { deleteClass } from "../actions";
 
-export default function ClassInfo({
+export default function ClassActions({
 	klass,
-}: { klass: { name: string; id: number } }) {
+}: {
+	klass: { name: string; id: number };
+}) {
 	const [studentCount, setStudentCount] = useState<number>();
 	useEffect(() => {
 		(async () => {
@@ -38,7 +40,7 @@ export default function ClassInfo({
 				<th>
 					<div className="flex">
 						<button
-							className="ml-2 btn btn-secondary"
+							className="btn btn-standard ml-2"
 							onClick={
 								() => {}
 								// (
@@ -48,7 +50,7 @@ export default function ClassInfo({
 								// ).showModal()
 							}
 						>
-							<Icon.Outlined className="w-4 h-4" name="InformationCircle" />
+							<InfoIcon size="medium" />
 						</button>
 						{/* <dialog
             id={`my_modal_${klass.id}`}
@@ -72,13 +74,13 @@ export default function ClassInfo({
             </div>
         </dialog> */}
 						<button
-							className="ml-2 btn btn-secondary"
+							className="btn btn-dangerous ml-2 transition-none"
 							onClick={async () => {
 								await deleteClass(klass.id);
 								// TODO: update UI
 							}}
 						>
-							<Icon.Outlined className="w-4 h-4" name="Trash" />
+							<TrashIcon size="medium" />
 						</button>
 					</div>
 				</th>

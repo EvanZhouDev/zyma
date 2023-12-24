@@ -2,10 +2,14 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Excuse from "./components/Excuse";
+import { AlertIcon } from "@primer/octicons-react";
+import MainHero from "@/components/MainHero";
 
 export default async function Page({
 	searchParams,
-}: { searchParams: { code?: string } }) {
+}: {
+	searchParams: { code?: string };
+}) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
 	const studentId = (await client.auth.getUser()).data?.user?.id;
@@ -14,26 +18,14 @@ export default async function Page({
 	}
 	if (searchParams.code === undefined) {
 		return (
-			<div className="hero min-h-screen bg-neutral">
-				<div className="hero-content text-center">
-					<div role="alert" className="alert alert-error">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="stroke-current shrink-0 h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-							/>
-						</svg>
-						<span>No code provided</span>
-					</div>
+			<MainHero padding={10}>
+				<div className="mt-5">Could not Attend this group.</div>
+				<div role="alert" className="alert alert-error mt-10 mb-10">
+					<AlertIcon size="medium" />
+					<span>No code provided.</span>
 				</div>
-			</div>
+				Please try again, ensuring you entered the code correctly.
+			</MainHero>
 		);
 	}
 	const { data, error } = await client
@@ -43,40 +35,34 @@ export default async function Page({
 			code_used: searchParams.code,
 		})
 		.select("status");
+
 	if (error != null || data === null) {
 		console.assert(error.code === "23503", JSON.stringify(error));
 		return (
-			<div className="hero min-h-screen bg-neutral">
-				<div className="hero-content text-center">
-					<div role="alert" className="alert alert-error">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="stroke-current shrink-0 h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-							/>
-						</svg>
-						<span>Code not found</span>
-					</div>
+			<MainHero padding={10}>
+				<div className="mt-5">Could not Attend this group.</div>
+				<div role="alert" className="alert alert-error mt-10 mb-10">
+					<AlertIcon size="medium" />
+					<span>
+						Code <b>{searchParams.code}</b> not found.
+					</span>
 				</div>
-			</div>
+				Please try again, ensuring you entered the code correctly.
+			</MainHero>
 		);
 	}
 
 	return (
-		<div className="hero min-h-screen bg-neutral">
-			<div className="hero-content text-center">
-				<div className="max-w-md">
-					<h1 className="text-5xl font-bold">You're all done.</h1>
-					<p className="mt-5">
-						Joined with code <br />"{searchParams.code}"
+		<MainHero padding={10}>
+			<div className="flex flex-col w-full border-opacity-50">
+				<div className="grid card">
+					<p className="mt-10">
+						Attended with code <br />
+						<b>{searchParams.code}</b>
 					</p>
+				</div>
+				<div className="divider !m-0 !mt-10" />
+				<div className="grid card">
 					<Excuse
 						code={searchParams.code}
 						user={studentId}
@@ -84,6 +70,6 @@ export default async function Page({
 					/>
 				</div>
 			</div>
-		</div>
+		</MainHero>
 	);
 }

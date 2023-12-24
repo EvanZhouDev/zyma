@@ -16,7 +16,7 @@ export default async function Page() {
 		.select("name, id")
 		.eq("admin", (await client.auth.getUser()).data.user!.id);
 	if (error) {
-		return <p>An error occured</p>;
+		return <p>An error occurred</p>;
 	}
 	return <Dashboard classes={classes} />;
 }
