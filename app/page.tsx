@@ -14,7 +14,7 @@ export default async function Index({
 	const client = getServerClient();
 
 	if ((await client.auth.getUser()).data.user != null) {
-		return redirect(redirectTo ?? "/teacher/dashboard");
+		return redirect(redirectTo ?? "/host/dashboard");
 	}
 
 	const signIn = async (formData: FormData) => {
@@ -33,7 +33,7 @@ export default async function Index({
 			return redirect("/?message=Could not authenticate user");
 		}
 
-		return redirect("/teacher/dashboard");
+		return redirect(redirectTo ?? "/host/dashboard");
 	};
 
 	const signUp = async (formData: FormData) => {
@@ -53,7 +53,7 @@ export default async function Index({
 				data: {
 					name: name,
 				},
-				emailRedirectTo: `${origin}/teacher/dashboard`,
+				emailRedirectTo: `${origin}/host/dashboard`,
 			},
 		});
 
