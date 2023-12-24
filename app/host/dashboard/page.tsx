@@ -4,7 +4,7 @@ import Dashboard from "./components/Dashboard";
 // import { useEffect } from "react";
 
 export default async function Page() {
-	const { client } = await getServerClientWithRedirect("/teacher/dashboard");
+	const { client } = await getServerClientWithRedirect("/host/dashboard");
 	const { data: groups, error } = await client
 		.from("groups")
 		.select("name, id")
