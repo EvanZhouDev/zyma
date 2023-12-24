@@ -61,12 +61,12 @@ export default function SignUp({
 						<input
 							type="text"
 							name="name"
-							className="w-full input input-bordered border-primary form-input mb-10"
+							className="w-full input input-standard mb-10"
 						/>
 					</div>
 					<button
 						type="submit"
-						className="btn"
+						className="btn btn-standard"
 						formAction={async (formData: FormData) => {
 							await signUp(formData);
 							nameDialog.current!.close();
