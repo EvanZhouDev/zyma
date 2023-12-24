@@ -1,16 +1,13 @@
 import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
-import {
-	getServerClient,
-	getServerClientWithRedirect,
-} from "@/utils/supabase/server";
+import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import AttendeeCounter from "./AttendeeCounter";
 import AttendeePresenceTable from "./AttendeePresenceTable";
 import TimeElapsed from "./TimeElapsed";
+import { endSession } from "./actions";
 import { getRelativeMinuteTime } from "./utils";
 
 export default async function Index({
@@ -21,16 +18,6 @@ export default async function Index({
 	const { client } = await getServerClientWithRedirect(
 		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`,
 	);
-	// We pass it in with the .bind instead of re-using
-	// the codeId in the outer scope
-	// because React Server Components suck
-	async function handle(id: number) {
-		"use server";
-		const client = getServerClient();
-		v(await client.from("codes").delete().eq("id", id));
-		return redirect("/host/dashboard");
-	}
-
 	const CODE_SELECT = "groups (name), code, created_at, id";
 	const existingCode = v(
 		await client
@@ -144,7 +131,7 @@ export default async function Index({
 							/>
 							/{totalAttendees} Attendees Present
 						</h1>{" "}
-						<form action={handle.bind(null, data.id)}>
+						<form action={endSession.bind(null, data.id)}>
 							<button className="btn btn-dangerous">End Session</button>{" "}
 						</form>
 					</div>
