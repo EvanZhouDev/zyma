@@ -4,23 +4,23 @@ import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
-export async function addStudent(classId: number, form: FormData) {
+export async function addAttendee(classId: number, form: FormData) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	const students = v(
+	const attendees = v(
 		await client
 			.from("profiles")
 			.select("id")
 			.eq("email", form.get("email") as string),
 	);
 	// TODO: Form validation and use return
-	if (students?.length == null) {
+	if (attendees?.length == null) {
 		throw new Error("Attendee not found");
 	}
-	const attendee = students[0].id;
+	const attendee = attendees[0].id;
 
 	const { error } = await client
-		.from("students")
+		.from("attendees")
 		.insert([{ group: classId, attendee }]);
 	if (error != null) {
 		throw new Error("Attendee is already in your group");

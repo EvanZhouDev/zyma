@@ -3,10 +3,10 @@ import { ROOT_URL } from "@/components/constants";
 import { PlusIcon } from "@primer/octicons-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useRef } from "react";
-import { addStudent } from "../actions";
-import StudentTable from "./StudentTable";
+import { addAttendee } from "../actions";
+import AttendeeTable from "./AttendeeTable";
 
-export default function RegisterStudent({ classId }: { classId: number }) {
+export default function RegisterAttendee({ classId }: { classId: number }) {
 	const myModal = useRef<HTMLDialogElement>(null);
 	return (
 		<>
@@ -15,7 +15,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 				onClick={() => myModal.current!.showModal()}
 			>
 				<PlusIcon size="medium" verticalAlign="middle" />
-				Register Students
+				Register Attendees
 			</button>
 			<dialog ref={myModal} className="modal">
 				<div className="modal-box bg-base-100 min-w-[90vw]">
@@ -54,7 +54,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow place-items-center">
 							<form
 								className="my-10 flex justify-stretch w-full space-x-2"
-								action={addStudent.bind(null, classId)}
+								action={addAttendee.bind(null, classId)}
 							>
 								<label className="label">
 									<span className="label-text text-base">Attendee Email: </span>
@@ -70,7 +70,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 									Add Attendee
 								</button>
 							</form>
-							<StudentTable />
+							<AttendeeTable />
 						</div>
 					</div>
 					<div className="modal-action justify-self-end">

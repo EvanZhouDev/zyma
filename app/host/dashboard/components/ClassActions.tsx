@@ -8,12 +8,12 @@ export default function ClassActions({
 }: {
 	klass: { name: string; id: number };
 }) {
-	const [studentCount, setStudentCount] = useState<number>();
+	const [attendeeCount, setAttendeeCount] = useState<number>();
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
 			const { count, error } = await client
-				.from("students")
+				.from("attendees")
 				// `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the hood.
 				// `"planned"`: Approximated but fast count algorithm. Uses the Postgres statistics under the hood.
 				// `"estimated"`: Uses exact count for low numbers and planned count for high numbers.
@@ -23,7 +23,7 @@ export default function ClassActions({
 				console.error(error);
 			}
 			console.assert(count !== null, "count is null");
-			setStudentCount(count!);
+			setAttendeeCount(count!);
 		})();
 	});
 	return (
@@ -36,7 +36,7 @@ export default function ClassActions({
 						</div>
 					</div>
 				</td>
-				<td>{studentCount ?? "--"}</td>
+				<td>{attendeeCount ?? "--"}</td>
 				<th>
 					<div className="flex">
 						<button
@@ -64,7 +64,7 @@ export default function ClassActions({
                     The ID associated with this group is {klass.id}.
                 </p>
                 <p className="py-4 font-normal">
-                    There are 0 students in this group currently.
+                    There are 0 attendees in this group currently.
                 </p>
                 <div className="modal-action">
                     <form method="dialog">

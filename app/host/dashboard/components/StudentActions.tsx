@@ -2,7 +2,7 @@ import { Attendee } from "@/components/contexts";
 import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useRef } from "react";
 
-export default function StudentActions({ attendee }: { attendee: Attendee }) {
+export default function AttendeeActions({ attendee }: { attendee: Attendee }) {
 	const modal = useRef<HTMLDialogElement>(null);
 	return (
 		<div className="flex">

@@ -12,8 +12,8 @@ export default async function Page({
 }) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	const studentId = (await client.auth.getUser()).data?.user?.id;
-	if (studentId == null) {
+	const attendeeId = (await client.auth.getUser()).data?.user?.id;
+	if (attendeeId == null) {
 		return redirect("/");
 	}
 	if (searchParams.code === undefined) {
@@ -31,7 +31,7 @@ export default async function Page({
 	const { data, error } = await client
 		.from("attendance")
 		.upsert({
-			attendee: studentId,
+			attendee: attendeeId,
 			code_used: searchParams.code,
 		})
 		.select("status");
@@ -65,7 +65,7 @@ export default async function Page({
 				<div className="grid card">
 					<Excuse
 						code={searchParams.code}
-						user={studentId}
+						user={attendeeId}
 						status={data[0].status}
 					/>
 				</div>

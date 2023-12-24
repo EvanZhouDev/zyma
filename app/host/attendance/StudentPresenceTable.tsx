@@ -5,13 +5,13 @@ import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { ChangeEvent, useEffect, useState } from "react";
 
-type StudentInAttendance = {
+type AttendeeInAttendance = {
 	profiles: { username: string } | null;
 	attendee: string;
 	status: number;
 	created_at?: string;
 };
-async function getStudent(uuid: string, code: string) {
+async function getAttendee(uuid: string, code: string) {
 	const client = await createClient();
 	return v(
 		await client
@@ -21,11 +21,11 @@ async function getStudent(uuid: string, code: string) {
 			.eq("attendee", uuid),
 	)[0];
 }
-export default function StudentPresenceTable({
+export default function AttendeePresenceTable({
 	initialJoined,
 	attendanceCode,
 }: {
-	initialJoined: StudentInAttendance[];
+	initialJoined: AttendeeInAttendance[];
 	attendanceCode: string;
 }) {
 	const [selectedFilter, setSelectedFilter] = useState("All Statuses");
@@ -59,7 +59,7 @@ export default function StudentPresenceTable({
 						filter: `code_used=eq.${attendanceCode}`,
 					},
 					(payload) => {
-						getStudent(payload.new.attendee, attendanceCode).then(
+						getAttendee(payload.new.attendee, attendanceCode).then(
 							(attendee) => {
 								setJoined((x) => [...x, attendee!]);
 							},
@@ -108,7 +108,7 @@ export default function StudentPresenceTable({
 				</label>
 				<input
 					type="text"
-					placeholder="Search Students..."
+					placeholder="Search Attendees..."
 					className="input input-standard ml-1 flex-grow"
 					onChange={handleSearchChange}
 				/>
@@ -200,7 +200,7 @@ export default function StudentPresenceTable({
 				</table>
 				{joined.length === 0 ? (
 					<h1 className="text-center font-bold mt-5 text-xl opacity-50">
-						Waiting for students to join...
+						Waiting for attendees to join...
 					</h1>
 				) : (
 					""

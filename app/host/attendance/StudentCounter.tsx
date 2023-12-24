@@ -3,14 +3,14 @@
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 
-export default function StudentCounter({
+export default function AttendeeCounter({
 	attendanceCode,
 	initialJoined,
 }: {
 	attendanceCode: string;
 	initialJoined: number;
 }) {
-	const [studentCount, setStudentCount] = useState(initialJoined);
+	const [attendeeCount, setAttendeeCount] = useState(initialJoined);
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
@@ -26,11 +26,11 @@ export default function StudentCounter({
 						filter: `code_used=eq.${attendanceCode}`,
 					},
 					(_) => {
-						setStudentCount((x) => x + 1);
+						setAttendeeCount((x) => x + 1);
 					},
 				)
 				.subscribe();
 		})();
 	});
-	return <>{studentCount}</>;
+	return <>{attendeeCount}</>;
 }

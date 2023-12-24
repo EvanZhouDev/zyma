@@ -6,8 +6,8 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
-import StudentCounter from "./StudentCounter";
-import StudentPresenceTable from "./StudentPresenceTable";
+import AttendeeCounter from "./AttendeeCounter";
+import AttendeePresenceTable from "./AttendeePresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { getRelativeMinuteTime } from "./utils";
 
@@ -62,10 +62,10 @@ export default async function Index({
 				.select("profiles (username), attendee, status, created_at")
 				.eq("code_used", data.code),
 		) ?? [];
-	const totalStudents = (
+	const totalAttendees = (
 		v(
 			await client
-				.from("students")
+				.from("attendees")
 				.select("*")
 				.eq("group", searchParams.classId),
 		) ?? []
@@ -142,18 +142,18 @@ export default async function Index({
 				<div className="w-full">
 					<div className="flex flex-row w-full justify-between mt-4">
 						<h1 className="text-4xl font-bold">
-							<StudentCounter
+							<AttendeeCounter
 								attendanceCode={data.code}
 								initialJoined={joined.length}
 							/>
-							/{totalStudents} Students Present
+							/{totalAttendees} Attendees Present
 						</h1>{" "}
 						<form action={handle.bind(null, data.id)}>
 							<button className="btn btn-dangerous">End Session</button>{" "}
 						</form>
 					</div>
 				</div>
-				<StudentPresenceTable
+				<AttendeePresenceTable
 					initialJoined={joined}
 					attendanceCode={data.code}
 				/>

@@ -11,44 +11,109 @@ export interface Database {
     Tables: {
       attendance: {
         Row: {
+          attendee: string
           code_used: string
           created_at: string
           metadata: Json | null
           status: number
-          student: string
         }
         Insert: {
+          attendee: string
           code_used: string
           created_at?: string
           metadata?: Json | null
           status?: number
-          student: string
         }
         Update: {
+          attendee?: string
           code_used?: string
           created_at?: string
           metadata?: Json | null
           status?: number
-          student?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "attendance_attendee_fkey"
+            columns: ["attendee"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "attendance_code_used_fkey"
             columns: ["code_used"]
             isOneToOne: false
             referencedRelation: "codes"
             referencedColumns: ["code"]
-          },
+          }
+        ]
+      }
+      attendees: {
+        Row: {
+          attendee: string
+          group: number
+          metadata: Json | null
+        }
+        Insert: {
+          attendee: string
+          group: number
+          metadata?: Json | null
+        }
+        Update: {
+          attendee?: string
+          group?: number
+          metadata?: Json | null
+        }
+        Relationships: [
           {
-            foreignKeyName: "attendance_student_fkey"
-            columns: ["student"]
+            foreignKeyName: "attendees_attendee_fkey"
+            columns: ["attendee"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendees_group_fkey"
+            columns: ["group"]
+            isOneToOne: false
+            referencedRelation: "groups"
             referencedColumns: ["id"]
           }
         ]
       }
-      classes: {
+      codes: {
+        Row: {
+          code: string
+          created_at: string
+          group: number
+          id: number
+          metadata: Json
+        }
+        Insert: {
+          code?: string
+          created_at?: string
+          group: number
+          id?: number
+          metadata?: Json
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          group?: number
+          id?: number
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "codes_group_fkey"
+            columns: ["group"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      groups: {
         Row: {
           admin: string
           config: Json | null
@@ -72,42 +137,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "classes_admin_fkey"
+            foreignKeyName: "groups_admin_fkey"
             columns: ["admin"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      codes: {
-        Row: {
-          class: number
-          code: string
-          created_at: string
-          id: number
-          metadata: Json
-        }
-        Insert: {
-          class: number
-          code?: string
-          created_at?: string
-          id?: number
-          metadata?: Json
-        }
-        Update: {
-          class?: number
-          code?: string
-          created_at?: string
-          id?: number
-          metadata?: Json
-        }
-        Relationships: [
-          {
-            foreignKeyName: "codes_class_fkey"
-            columns: ["class"]
-            isOneToOne: false
-            referencedRelation: "classes"
             referencedColumns: ["id"]
           }
         ]
@@ -134,39 +167,6 @@ export interface Database {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      students: {
-        Row: {
-          class: number
-          metadata: Json | null
-          student: string
-        }
-        Insert: {
-          class: number
-          metadata?: Json | null
-          student: string
-        }
-        Update: {
-          class?: number
-          metadata?: Json | null
-          student?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "students_class_fkey"
-            columns: ["class"]
-            isOneToOne: false
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "students_student_fkey"
-            columns: ["student"]
-            isOneToOne: false
-            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]

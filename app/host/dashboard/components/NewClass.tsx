@@ -26,8 +26,8 @@ export default function NewClass() {
 				<div className="modal-box">
 					<h3 className="text-lg font-bold">Create a Group</h3>
 					<p className="py-4">
-						First, name your group. Afterwards, go to Mange Students and hit
-						Register Students to continue.
+						First, name your group. Afterwards, go to Mange Attendees and hit
+						Register Attendees to continue.
 					</p>
 					<div>
 						<label className="label">

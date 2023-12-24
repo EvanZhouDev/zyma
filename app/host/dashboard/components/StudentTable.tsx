@@ -1,15 +1,15 @@
-import { StudentsInClassContext } from "@/components/contexts";
+import { AttendeesInClassContext } from "@/components/contexts";
 import { InfoIcon } from "@primer/octicons-react";
 import { useContext } from "react";
-import StudentActions from "./StudentActions";
-export default function StudentTable() {
-	const students = useContext(StudentsInClassContext);
-	if (students.length === 0) {
+import AttendeeActions from "./AttendeeActions";
+export default function AttendeeTable() {
+	const attendees = useContext(AttendeesInClassContext);
+	if (attendees.length === 0) {
 		return (
 			<div role="alert" className="alert alert-info mt-5">
 				<InfoIcon size="medium" />
 				<div>
-					<p className="text-lg">No students registered.</p>
+					<p className="text-lg">No attendees registered.</p>
 				</div>
 			</div>
 		);
@@ -26,7 +26,7 @@ export default function StudentTable() {
 					</tr>
 				</thead>
 				<tbody>
-					{students.map((attendee) => (
+					{attendees.map((attendee) => (
 						<tr key={attendee.email} className="border-b-0">
 							<td>
 								<div className="flex items-center gap-3">
@@ -40,7 +40,7 @@ export default function StudentTable() {
 							<td>{attendee.email}</td>
 							<td>{attendee?.metadata?.attendence}</td>
 							<th>
-								<StudentActions attendee={attendee} />
+								<AttendeeActions attendee={attendee} />
 							</th>
 						</tr>
 					))}

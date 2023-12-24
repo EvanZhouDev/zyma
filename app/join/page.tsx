@@ -29,7 +29,7 @@ export default async function Join({
 		);
 	}
 	const { error } = await client
-		.from("students")
+		.from("attendees")
 		.insert([{ attendee, group: searchParams.group }]);
 	if (error !== null) {
 		if (error.code === "23505") {
