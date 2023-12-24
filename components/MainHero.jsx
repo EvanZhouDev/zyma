@@ -1,5 +1,5 @@
 import { HeartIcon, InfoIcon, MarkGithubIcon } from "@primer/octicons-react";
-import Image from "next/image";
+import Logo from "./Logo";
 
 export default function MainHero({ children, padding = 6 }) {
 	return (
@@ -9,7 +9,7 @@ export default function MainHero({ children, padding = 6 }) {
 			>
 				<div className="max-w-md flex flex-col items-center py-6">
 					<h1 className="text-5xl font-bold">
-						<Image src="/zyma.svg" width={250} height={1200} alt="Zyma Logo" />
+						<Logo size={250} />
 					</h1>
 					{children}
 				</div>

@@ -1,8 +1,8 @@
 "use client";
 
+import { MoonIcon, SunIcon } from "@primer/octicons-react";
 import React, { useLayoutEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
-import { MoonIcon, SunIcon } from "@primer/octicons-react";
 
 const SwitchTheme = () => {
 	// Function to get the initial theme value from the local storage
@@ -26,7 +26,11 @@ const SwitchTheme = () => {
 
 	return (
 		<button onClick={toggleTheme}>
-			{theme === "github" ? <SunIcon className="fill-current w-8 h-8 mx-5" /> : <MoonIcon className="fill-current w-8 h-8 mx-5" />}
+			{theme === "github" ? (
+				<SunIcon className="fill-current w-8 h-8 mx-5" />
+			) : (
+				<MoonIcon className="fill-current w-8 h-8 mx-5" />
+			)}
 		</button>
 	);
 };

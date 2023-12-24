@@ -1,4 +1,6 @@
 "use client";
+import Logo from "@/components/Logo";
+import SwitchTheme from "@/components/SwitchTheme.jsx";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import {
@@ -7,14 +9,12 @@ import {
 	ReportIcon,
 	SignOutIcon,
 } from "@primer/octicons-react";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Attendee, AttendeesInClassContext } from "../contexts";
 import AttendeeTable from "./AttendeeTable";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
-import SwitchTheme from "@/components/SwitchTheme.jsx";
 
 async function getAttendee(uuid: string) {
 	const client = await createClient();
@@ -22,7 +22,7 @@ async function getAttendee(uuid: string) {
 		await client
 			.from("attendees")
 			.select("profiles (username, email), metadata")
-			.eq("attendee", uuid)
+			.eq("attendee", uuid),
 	)[0];
 }
 
@@ -45,12 +45,12 @@ export default function Dashboard({
 					await client
 						.from("attendees")
 						.select("profiles (username, email), metadata")
-						.eq("group", groupId)
+						.eq("group", groupId),
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
 						return { ...x.profiles!, metadata: x.metadata } as Attendee;
-					})
+					}),
 				);
 				client
 					.channel("attendees-in-group")
@@ -74,7 +74,7 @@ export default function Dashboard({
 									} as Attendee,
 								]);
 							});
-						}
+						},
 					)
 					.subscribe();
 			}
@@ -259,13 +259,7 @@ export default function Dashboard({
 					</div>
 				</div>
 				<div className="flex flex-row items-center justify-between w-full mb-5 px-5">
-					<Image
-						src="/zyma.svg"
-						width={125}
-						height={1200}
-						className="ml-2"
-						alt="Zyma Logo"
-					/>
+					<Logo className="ml-2" size={125} />
 					<div className="flex flex-row items-center justify-between">
 						<SwitchTheme />
 

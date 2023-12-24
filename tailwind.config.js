@@ -38,7 +38,7 @@ module.exports = {
 					secondary: "#F6F8FA", // Normal color of buttons
 					// "--secondary-hover": "#F3F4F6", // Hover color of buttons
 					"--secondary-hover": "#F3F4F6", // Hover color of buttons
-					"--secondary-active": "#EBECEF",  // Active color of buttons
+					"--secondary-active": "#EBECEF", // Active color of buttons
 					"secondary-content": "#24292F", // Color of text on buttons like "Star" (Repo)
 
 					"base-100": "#FFFFFF", // Main background on GitHub

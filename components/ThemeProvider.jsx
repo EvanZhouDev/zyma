@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
 const ThemeProvider = () => {
-	const [theme, _setTheme] = useLocalStorage("theme", "github")
+	const [theme, _setTheme] = useLocalStorage("theme", "github");
 
 	useEffect(() => {
 		const body = document.body;

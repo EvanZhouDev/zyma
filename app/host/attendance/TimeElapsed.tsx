@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { themeChange } from "theme-change";
 
 export default function TimeElapsed({
 	time,
@@ -10,13 +9,6 @@ export default function TimeElapsed({
 	time?: string;
 	getRelativeTime?: (time1: string, time2: string) => string;
 }) {
-	useEffect(() => {
-		themeChange(false);
-		return () => {
-			themeChange(false);
-		};
-	}, []);
-	
 	const getRelativeTime =
 		getR ??
 		((time1: string, time2: string) => {

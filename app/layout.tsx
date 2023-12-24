@@ -1,9 +1,9 @@
+import ThemeProvider from "@/components/ThemeProvider.jsx";
 import { ROOT_URL } from "@/components/constants";
 import { GeistSans } from "geist/font/sans";
 import type React from "react";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import ThemeProvider from "@/components/ThemeProvider.jsx";
 
 export const metadata = {
 	metadataBase: new URL(ROOT_URL),

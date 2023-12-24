@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { v } from "@/utils";
 import { getServerClient } from "@/utils/supabase/server";
