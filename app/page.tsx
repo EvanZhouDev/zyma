@@ -16,17 +16,27 @@ export default async function Index({
 	}
 	return (
 		<MainHero>
-			<p className="py-6 mb-5">Sign in to start attendance.</p>
-			<div className="flex-1 flex flex-col px-8 min-w-[450px] text-left mb-10">
+			<div className="flex-1 flex flex-col items-center px-8 min-w-[450px] text-left mb-10">
+				{searchParams?.message ? (
+					<p
+						className={`alert ${
+							searchParams.message.includes("Could not authenticate")
+								? "alert-error"
+								: "alert-info"
+						} !h-15 !my-2 !mt-5 bg-foreground/10 text-foreground rounded-lg flex flex-col items-center`}
+					>
+						{searchParams.message}
+					</p>
+				) : (
+					<p className="alert h-15 my-2 mt-5 bg-base-100 border-none flex flex-col items-center">
+						Sign in to start attendance.
+					</p>
+				)}
+
 				<SignUp
 					signIn={signIn.bind(null, searchParams.redirectTo)}
 					signUp={signUp}
 				/>
-				{searchParams?.message && (
-					<p className="mt-4 p-4 bg-foreground/10 text-foreground text-center rounded-lg">
-						{searchParams.message}
-					</p>
-				)}
 			</div>
 		</MainHero>
 	);
