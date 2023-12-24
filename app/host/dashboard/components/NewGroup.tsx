@@ -2,7 +2,7 @@
 import { PlusIcon } from "@primer/octicons-react";
 import { useRef, useState } from "react";
 import { createClass } from "../actions";
-export default function NewClass() {
+export default function NewGroup() {
 	const [className, setClassName] = useState<string>("");
 	const handle = async () => {
 		const { error } = await createClass(className);

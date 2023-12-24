@@ -3,7 +3,7 @@ import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { deleteClass } from "../actions";
 
-export default function ClassActions({
+export default function GroupActions({
 	klass,
 }: {
 	klass: { name: string; id: number };

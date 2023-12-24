@@ -12,8 +12,8 @@ import {
 } from "@primer/octicons-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import ClassTable from "./ClassTable";
-import NewClass from "./NewClass";
+import GroupTable from "./GroupTable";
+import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
 import AttendeeTable from "./AttendeeTable";
 
@@ -167,11 +167,11 @@ export default function Dashboard({
 							<AttendeesInClassContext.Provider value={attendees}>
 								<div className="mt-4 flex w-full flex-row items-center justify-between">
 									<h1 className="mr-2 text-3xl font-bold">Your Groups</h1>
-									<NewClass />
+									<NewGroup />
 								</div>
 								{/* <div className="mt-4 flex w-full flex-row items-center justify-between"></div> */}
 								{/* <div> */}
-								<ClassTable groups={groups} />
+								<GroupTable groups={groups} />
 								{/* </div> */}
 							</AttendeesInClassContext.Provider>
 						</div>

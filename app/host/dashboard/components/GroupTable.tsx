@@ -1,7 +1,7 @@
 import { InfoIcon } from "@primer/octicons-react";
-import ClassActions from "./ClassActions";
+import GroupActions from "./GroupActions";
 
-export default function ClassTable({
+export default function GroupTable({
 	groups,
 }: {
 	groups: { name: string; id: number }[];
@@ -33,7 +33,7 @@ export default function ClassTable({
 				</thead>
 				<tbody>
 					{groups.map((klass) => (
-						<ClassActions klass={klass} key={klass.id} />
+						<GroupActions klass={klass} key={klass.id} />
 					))}
 				</tbody>
 			</table>
