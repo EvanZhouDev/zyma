@@ -63,7 +63,6 @@ export default function Dashboard({
 							filter: `class=eq.${classId}`,
 						},
 						(payload) => {
-							console.log("insert", payload);
 							getStudent(payload.new.student).then((student) => {
 								console.assert(student.metadata === payload.new.metadata);
 								setStudents((x) => [

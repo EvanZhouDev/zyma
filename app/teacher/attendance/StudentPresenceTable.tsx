@@ -59,7 +59,6 @@ export default function StudentPresenceTable({
 						filter: `code_used=eq.${attendanceCode}`,
 					},
 					(payload) => {
-						console.log("insert", payload);
 						getStudent(payload.new.student, attendanceCode).then((student) => {
 							setJoined((x) => [...x, student!]);
 						});
@@ -80,7 +79,6 @@ export default function StudentPresenceTable({
 						filter: `code_used=eq.${attendanceCode}`,
 					},
 					(payload) => {
-						console.log("update", payload);
 						setStatuses((x) => {
 							return {
 								...x,

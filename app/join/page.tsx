@@ -32,7 +32,6 @@ export default async function Join({
 		.from("students")
 		.insert([{ student, class: searchParams.class }]);
 	if (error !== null) {
-		console.log(error);
 		if (error.code === "23505") {
 			return (
 				<MainHero>
