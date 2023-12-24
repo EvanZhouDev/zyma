@@ -1,12 +1,11 @@
 "use server";
 
 import { v } from "@/utils";
-import { createClient } from "@/utils/supabase/server";
+import { getServerClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
 export async function addAttendee(classId: number, form: FormData) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
+	const client = getServerClient();
 	const attendees = v(
 		await client
 			.from("profiles")
@@ -27,8 +26,7 @@ export async function addAttendee(classId: number, form: FormData) {
 	}
 }
 export async function createClass(className: string) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
+	const client = getServerClient();
 	return await client
 		.from("groups")
 		.insert([
@@ -36,7 +34,6 @@ export async function createClass(className: string) {
 		]);
 }
 export async function deleteClass(classId: number) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
+	const client = getServerClient();
 	v(await client.from("groups").delete().eq("id", classId));
 }

@@ -1,8 +1,6 @@
 import MainHero from "@/components/MainHero";
-import { createClient } from "@/utils/supabase/server";
+import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon } from "@primer/octicons-react";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import Excuse from "./components/Excuse";
 
 export default async function Page({
@@ -10,12 +8,7 @@ export default async function Page({
 }: {
 	searchParams: { code?: string };
 }) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
-	const attendeeId = (await client.auth.getUser()).data?.user?.id;
-	if (attendeeId == null) {
-		return redirect("/");
-	}
+	const { client, attendeeId } = await getServerClientWithRedirect("/attend");
 	if (searchParams.code === undefined) {
 		return (
 			<MainHero padding={10}>

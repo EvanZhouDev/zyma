@@ -1,8 +1,7 @@
 import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
-import { createClient } from "@/utils/supabase/server";
+import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
-import { cookies } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
@@ -16,21 +15,13 @@ export default async function Index({
 }: {
 	searchParams: { classId: number };
 }) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
-	if ((await client.auth.getUser()).data?.user?.id == null) {
-		return redirect("/");
-	}
+	const { client } = await getServerClientWithRedirect("/host/attendance");
 	// We pass it in with the .bind instead of re-using
 	// the codeId in the outer scope
 	// because React Server Components suck
 	async function handle(id: number) {
 		"use server";
-		const cookieStore = cookies();
-		const client = createClient(cookieStore);
-		if ((await client.auth.getUser()).data?.user?.id == null) {
-			return redirect("/");
-		}
+		const { client } = await getServerClientWithRedirect("/host/attendance");
 		v(await client.from("codes").delete().eq("id", id));
 		return redirect("/host/dashboard");
 	}

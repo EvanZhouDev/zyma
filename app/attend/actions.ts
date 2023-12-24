@@ -1,12 +1,10 @@
 "use server";
 
 import { v } from "@/utils";
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import { getServerClient } from "@/utils/supabase/server";
 
 export async function updateExcuse(code: string, user: string, status: number) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
+	const client = getServerClient();
 	v(
 		await client
 			.from("attendance")

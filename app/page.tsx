@@ -1,7 +1,7 @@
 import MainHero from "@/components/MainHero";
 import SignUp from "@/components/SignUp";
-import { createClient } from "@/utils/supabase/server";
-import { cookies, headers } from "next/headers";
+import { getServerClient } from "@/utils/supabase/server";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Index({
@@ -9,11 +9,10 @@ export default async function Index({
 }: {
 	searchParams: { message: string };
 }) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
+	const client = getServerClient();
 
 	if ((await client.auth.getUser()).data.user != null) {
-		return redirect("/host/dashboard");
+		return redirect("/teacher/dashboard");
 	}
 
 	const signIn = async (formData: FormData) => {
@@ -21,10 +20,9 @@ export default async function Index({
 
 		const email = formData.get("email") as string;
 		const password = formData.get("password") as string;
-		const cookieStore = cookies();
-		const supabase = createClient(cookieStore);
+		const client = getServerClient();
 
-		const { error } = await supabase.auth.signInWithPassword({
+		const { error } = await client.auth.signInWithPassword({
 			email,
 			password,
 		});
@@ -33,7 +31,7 @@ export default async function Index({
 			return redirect("/?message=Could not authenticate user");
 		}
 
-		return redirect("/host/dashboard");
+		return redirect("/teacher/dashboard");
 	};
 
 	const signUp = async (formData: FormData) => {
@@ -44,17 +42,16 @@ export default async function Index({
 		const password = formData.get("password") as string;
 		const name = formData.get("name") as string;
 
-		const cookieStore = cookies();
-		const supabase = createClient(cookieStore);
+		const client = getServerClient();
 
-		const { error } = await supabase.auth.signUp({
+		const { error } = await client.auth.signUp({
 			email,
 			password,
 			options: {
 				data: {
 					name: name,
 				},
-				emailRedirectTo: `${origin}/host/dashboard`,
+				emailRedirectTo: `${origin}/teacher/dashboard`,
 			},
 		});
 

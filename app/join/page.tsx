@@ -1,21 +1,14 @@
 import MainHero from "@/components/MainHero";
 import { v } from "@/utils";
-import { createClient } from "@/utils/supabase/server";
+import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, InfoIcon } from "@primer/octicons-react";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function Join({
 	searchParams,
 }: {
 	searchParams: { group?: number };
 }) {
-	const cookieStore = cookies();
-	const client = createClient(cookieStore);
-	const attendee = (await client.auth.getUser()).data?.user?.id;
-	if (attendee == null) {
-		return redirect("/");
-	}
+	const { client, attendeeId } = await getServerClientWithRedirect("/join");
 	if (searchParams.group === undefined) {
 		return (
 			<MainHero padding={10}>
@@ -30,7 +23,7 @@ export default async function Join({
 	}
 	const { error } = await client
 		.from("attendees")
-		.insert([{ attendee, group: searchParams.group }]);
+		.insert([{ attendee: attendeeId, group: searchParams.group }]);
 	if (error !== null) {
 		if (error.code === "23505") {
 			return (
