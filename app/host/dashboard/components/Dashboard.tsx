@@ -1,5 +1,5 @@
 "use client";
-import { Attendee, AttendeesInClassContext } from "@/components/contexts";
+import { Attendee, AttendeesInClassContext } from "../contexts";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import {

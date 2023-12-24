@@ -1,4 +1,4 @@
-import { AttendeesInClassContext } from "@/components/contexts";
+import { AttendeesInClassContext } from "../contexts";
 import { InfoIcon } from "@primer/octicons-react";
 import { useContext } from "react";
 import AttendeeActions from "./AttendeeActions";
