@@ -16,7 +16,7 @@ export default function AttendeeTable() {
 	}
 	return (
 		<>
-			<table className="table mt-5 w-full outline outline-base-300 outline-1 text-[#24292F] rounded-lg">
+			<table className="table mt-5 w-full outline outline-base-200 outline-1 text-[#24292F] rounded-lg">
 				<thead>
 					<tr>
 						<th>Name</th>

@@ -22,6 +22,8 @@ module.exports = {
 					background: "hsl(var(--btn-background))",
 					"background-hover": "hsl(var(--btn-background-hover))",
 				},
+				"secondary-hover": "var(--secondary-hover)",
+				"secondary-active": "var(--secondary-active)",
 			},
 		},
 	},
@@ -32,15 +34,26 @@ module.exports = {
 			{
 				github: {
 					primary: "#0A69DA", // Blue Color on GitHub
-					neutral: "#F6F8FA", // Titlebar on GitHub
+
+					secondary: "#F6F8FA", // Normal color of buttons
+					// "--secondary-hover": "#F3F4F6", // Hover color of buttons
+					"--secondary-hover": "#F3F4F6", // Hover color of buttons
+					"--secondary-active": "#EBECEF",  // Active color of buttons
+					"secondary-content": "#24292F", // Color of text on buttons like "Star" (Repo)
+
 					"base-100": "#FFFFFF", // Main background on GitHub
-					"base-300": "#D0D7DE", // Border Color on GitHub
+					"base-200": "#D0D7DE", // Border Color on GitHub
 				},
 				githubDark: {
 					primary: "#3081F7",
-					neutral: "#02040A",
+
+					secondary: "#21262D",
+					"--secondary-hover": "#30363D",
+					"--secondary-active": "#282D34",
+					"secondary-content": "#C8D1D9",
+
 					"base-100": "#0D1116",
-					"base-300": "#21262D",
+					"base-200": "#373B41",
 				},
 				materialYou: {
 					primary: "#4f6630",

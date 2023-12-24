@@ -16,14 +16,14 @@ export default async function Index({
 	searchParams: { groupId: number };
 }) {
 	const { client } = await getServerClientWithRedirect(
-		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`,
+		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`
 	);
 	const CODE_SELECT = "groups (name), code, created_at, id";
 	const existingCode = v(
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("group", searchParams.groupId),
+			.eq("group", searchParams.groupId)
 	);
 	let data: (typeof existingCode)[0];
 
@@ -34,7 +34,7 @@ export default async function Index({
 			await client
 				.from("codes")
 				.insert([{ group: searchParams.groupId }])
-				.select(CODE_SELECT),
+				.select(CODE_SELECT)
 		)[0];
 	}
 
@@ -43,22 +43,22 @@ export default async function Index({
 			await client
 				.from("attendance")
 				.select("profiles (username), attendee, status, created_at")
-				.eq("code_used", data.code),
+				.eq("code_used", data.code)
 		) ?? [];
 	const totalAttendees = (
 		v(
 			await client
 				.from("attendees")
 				.select("*")
-				.eq("group", searchParams.groupId),
+				.eq("group", searchParams.groupId)
 		) ?? []
 	).length;
 
 	const RTworking = true;
 
 	return (
-		<div className="w-full h-full bg-secondary justify-around flex">
-			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-300 outline-1 basis-1/2 flex flex-col justify-between items-center">
+		<div className="w-full h-full bg-secondary-active justify-around flex">
+			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-200 outline-1 basis-1/2 flex flex-col justify-between items-center">
 				<div className="flex justify-between items-center w-full">
 					<div className="flex flex-col mt-5">
 						<Image
@@ -121,7 +121,7 @@ export default async function Index({
 					</div>
 				</div>
 			</div>
-			<div className="bg-base-100 rounded-xl m-3 ml-1.5 outline outline-base-300 outline-1 basis-1/2 flex flex-col justify-between items-center pl-5 pr-5">
+			<div className="bg-base-100 rounded-xl m-3 ml-1.5 outline outline-base-200 outline-1 basis-1/2 flex flex-col justify-between items-center pl-5 pr-5">
 				<div className="w-full">
 					<div className="flex flex-row w-full justify-between mt-4">
 						<h1 className="text-4xl font-bold">

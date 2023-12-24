@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import type React from "react";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import ThemeHandler from "@/components/ThemeHandler";
 
 export const metadata = {
 	metadataBase: new URL(ROOT_URL),
@@ -21,6 +22,7 @@ export default function RootLayout({
 			<body className="w-full h-full">
 				{children}
 				<Toaster />
+				<ThemeHandler />
 			</body>
 		</html>
 	);

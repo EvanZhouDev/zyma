@@ -26,7 +26,7 @@ body {
 }
 
 .table {
-	@apply outline-base-300 mt-5 w-full rounded-lg text-[#24292F] outline outline-1;
+	@apply outline-base-200 mt-5 w-full rounded-lg text-secondary-content outline outline-1;
 }
 
 @layer base {
@@ -53,7 +53,7 @@ body {
 
 /* BUTTON STYLING CODE */
 
-.btn-filled {
+/* .btn-filled {
 	@apply btn-primary rounded-full;
 }
 
@@ -62,11 +62,11 @@ body {
 }
 
 .btn-ghost:active {
-	@apply bg-base-300;
+	@apply bg-base-200;
 }
 
 .btn-shadow {
-	@apply btn-neutral text-primary bg-base-100 hover:bg-neutral rounded-full;
+	@apply btn-secondary text-primary bg-base-100 hover:bg-secondary rounded-full;
 
 	box-shadow:
 		0px 3px 1px -2px rgb(0 0 0 / 0.2),
@@ -94,8 +94,8 @@ body {
 }
 
 .btn-classic {
-	@apply btn-secondary rounded-full;
-}
+	@apply btn-secondary-active rounded-full;
+} */
 
 .menu-title {
 	@apply text-secondary-content text-xl;
@@ -108,11 +108,7 @@ body {
 .btn-start-attendance {
 	padding: 10px;
 	border: double 5px transparent;
-	--bg-hover-color: white;
-	background-image: linear-gradient(
-			var(--bg-hover-color),
-			var(--bg-hover-color)
-		),
+	background-image: linear-gradient(oklch(var(--b1)), oklch(var(--b1))),
 		conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
 	background-clip: padding-box, border-box;
 	background-origin: padding-box, border-box;
@@ -121,7 +117,8 @@ body {
 	transition:
 		border 0.25s,
 		transform 0.25s;
-	color: #24292f;
+	@apply text-secondary-content;
+	/* color: #24292f; */
 
 	/* Start button flicker fix for WebKit */
 	transform: scale(1);
@@ -177,15 +174,15 @@ body {
 }
 
 .btn-standard {
-	@apply outline-base-300 bg-neutral no-animation text-lg text-[#24292F] outline outline-1 hover:bg-[#F3F4F6];
+	@apply outline-base-200 bg-secondary no-animation text-lg text-secondary-content outline outline-1 hover:bg-secondary-hover;
 }
 
 .input-standard {
-	@apply outline-base-300 bg-neutral no-animation rounded-lg text-lg text-[#24292F] outline outline-1 hover:bg-[#F3F4F6];
+	@apply outline-base-200 bg-secondary no-animation rounded-lg text-lg text-secondary-content outline outline-1 hover:bg-secondary-hover;
 }
 
 .btn-standard:active {
-	background-color: #ebecef !important;
+	@apply !bg-secondary-active;
 }
 
 .btn-dangerous {
@@ -201,7 +198,7 @@ body {
 }
 
 .btn-standard:active {
-	background-color: #ebecef !important;
+	@apply !bg-secondary-active;
 }
 
 .website-title {
@@ -209,7 +206,7 @@ body {
 }
 
 .main-menu {
-	@apply menu bg-neutral rounded-box h-screen w-[18%] rounded-l px-5;
+	@apply menu bg-secondary rounded-box h-screen w-[18%] rounded-l px-5;
 
 	* {
 		@apply my-0.5;
@@ -217,7 +214,7 @@ body {
 }
 
 .menu-selection-active {
-	@apply bg-secondary text-neutral-content font-bold;
+	@apply bg-secondary-active text-secondary-content font-bold;
 }
 
 .btn {
@@ -231,9 +228,11 @@ body {
 .alert-error {
 	border: 1.5px solid #cf212e;
 	background-color: #cf212e40;
+	@apply text-secondary-content;
 }
 
 .alert-info {
-	border: 1.5px solid #0A69DA;
-	background-color: #0A69DA40;
+	border: 1.5px solid #0a69da;
+	background-color: #0a69da40;
+	@apply text-secondary-content;
 }

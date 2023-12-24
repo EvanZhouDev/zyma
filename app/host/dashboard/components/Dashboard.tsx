@@ -16,14 +16,14 @@ import AttendeeTable from "./AttendeeTable";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
-
+import { themeChange } from "theme-change";
 async function getAttendee(uuid: string) {
 	const client = await createClient();
 	return v(
 		await client
 			.from("attendees")
 			.select("profiles (username, email), metadata")
-			.eq("attendee", uuid),
+			.eq("attendee", uuid)
 	)[0];
 }
 export default function Dashboard({
@@ -37,6 +37,10 @@ export default function Dashboard({
 	const className = groups[selectedClass]?.name;
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
 	useEffect(() => {
+		themeChange(false);
+		// 👆 false parameter is required for react project
+	}, []);
+	useEffect(() => {
 		(async () => {
 			if (groupId) {
 				const client = await createClient();
@@ -44,12 +48,12 @@ export default function Dashboard({
 					await client
 						.from("attendees")
 						.select("profiles (username, email), metadata")
-						.eq("group", groupId),
+						.eq("group", groupId)
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
 						return { ...x.profiles!, metadata: x.metadata } as Attendee;
-					}),
+					})
 				);
 				client
 					.channel("attendees-in-group")
@@ -73,12 +77,18 @@ export default function Dashboard({
 									} as Attendee,
 								]);
 							});
-						},
+						}
 					)
 					.subscribe();
 			}
 		})();
 	}, [groupId]);
+	const [isdark, setIsdark] = useState<boolean>(
+		JSON.parse(localStorage.getItem("isdark") ?? JSON.stringify(false))
+	);
+	useEffect(() => {
+		localStorage.setItem("isdark", JSON.stringify(isdark));
+	}, [isdark]);
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
 			<div className="rounded-box m-3 mr-1.5 basis-3/5">
@@ -93,7 +103,7 @@ export default function Dashboard({
 					/>
 					<div
 						role="tabpanel"
-						className="w-[60vw] tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
+						className="w-[60vw] tab-content bg-base-100 border-base-200 rounded-box h-[calc(100vh-62px)] p-6"
 					>
 						<div className="flex flex-col">
 							<AttendeesInClassContext.Provider value={attendees}>
@@ -161,7 +171,7 @@ export default function Dashboard({
 					/>
 					<div
 						role="tabpanel"
-						className="w-[60vw] tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
+						className="w-[60vw] tab-content bg-base-100 border-base-200 rounded-box h-[calc(100vh-62px)] p-6"
 					>
 						<div className="flex flex-col">
 							<AttendeesInClassContext.Provider value={attendees}>
@@ -178,7 +188,7 @@ export default function Dashboard({
 					</div>
 				</div>
 			</div>
-			<div className="bg-base-100 rounded-box outline-base-300 m-3 ml-1.5 flex basis-2/5 flex-col items-center outline outline-1 justify-between">
+			<div className="bg-base-100 rounded-box outline-base-200 m-3 ml-1.5 flex basis-2/5 flex-col items-center outline outline-1 justify-between">
 				<div className="flex flex-col items-center w-full">
 					<a
 						className={`btn-start-attendance p-3 m-2 h-[10vh] w-[90%] flex items-center justify-center text-2xl font-semibold ${
@@ -270,10 +280,13 @@ export default function Dashboard({
 								type="checkbox"
 								className="theme-controller"
 								value="githubDark"
+								checked={isdark}
+								onChange={() => setIsdark(!isdark)}
 							/>
-							<SunIcon className="swap-on fill-current w-8 h-8 mx-5" />
-							<MoonIcon className="swap-off fill-current w-8 h-8 mx-5" />
+							<MoonIcon className="swap-on fill-current w-8 h-8 mx-5" />
+							<SunIcon className="swap-off fill-current w-8 h-8 mx-5" />
 						</label>
+
 						<a
 							className="mx-5"
 							href="https://github.com/EvanZhouDev/zyma/issues"
