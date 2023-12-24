@@ -34,7 +34,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 									</div>
 									<div className="absolute z-30">
 										<QRCodeSVG
-											value={`${ROOT_URL}/join?class=${classId}`}
+											value={`${ROOT_URL}/join?group=${classId}`}
 											size={400}
 											className="left-0 top-0 h-[23vw] w-[23vw]"
 										/>
@@ -43,7 +43,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 							</div>
 							<div className="flex flex-col items-center mt-5">
 								<div className="text-2xl mb-2">
-									Alternatively, enter the Class ID:
+									Alternatively, enter the Group ID:
 								</div>
 								<div className="flex flex-row items-center">
 									<div className="text-3xl font-bold">{classId}</div>
@@ -57,7 +57,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 								action={addStudent.bind(null, classId)}
 							>
 								<label className="label">
-									<span className="label-text text-base">Student Email: </span>
+									<span className="label-text text-base">Attendee Email: </span>
 								</label>
 								<input
 									name="email"
@@ -67,7 +67,7 @@ export default function RegisterStudent({ classId }: { classId: number }) {
 								/>
 								<button className="btn btn-standard ml-3">
 									<PlusIcon size="medium" verticalAlign="middle" />
-									Add Student
+									Add Attendee
 								</button>
 							</form>
 							<StudentTable />

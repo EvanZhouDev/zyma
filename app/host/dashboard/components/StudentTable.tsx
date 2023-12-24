@@ -26,21 +26,21 @@ export default function StudentTable() {
 					</tr>
 				</thead>
 				<tbody>
-					{students.map((student) => (
-						<tr key={student.email} className="border-b-0">
+					{students.map((attendee) => (
+						<tr key={attendee.email} className="border-b-0">
 							<td>
 								<div className="flex items-center gap-3">
 									<div>
 										<div className="font-bold">
-											{student.username || "Not implemented"}
+											{attendee.username || "Not implemented"}
 										</div>
 									</div>
 								</div>
 							</td>
-							<td>{student.email}</td>
-							<td>{student?.metadata?.attendence}</td>
+							<td>{attendee.email}</td>
+							<td>{attendee?.metadata?.attendence}</td>
 							<th>
-								<StudentActions student={student} />
+								<StudentActions attendee={attendee} />
 							</th>
 						</tr>
 					))}

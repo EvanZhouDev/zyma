@@ -15,22 +15,22 @@ export async function addStudent(classId: number, form: FormData) {
 	);
 	// TODO: Form validation and use return
 	if (students?.length == null) {
-		throw new Error("Student not found");
+		throw new Error("Attendee not found");
 	}
-	const student = students[0].id;
+	const attendee = students[0].id;
 
 	const { error } = await client
 		.from("students")
-		.insert([{ class: classId, student }]);
+		.insert([{ group: classId, attendee }]);
 	if (error != null) {
-		throw new Error("Student is already in your class");
+		throw new Error("Attendee is already in your group");
 	}
 }
 export async function createClass(className: string) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
 	return await client
-		.from("classes")
+		.from("groups")
 		.insert([
 			{ admin: (await client.auth.getUser()).data.user!.id, name: className },
 		]);
@@ -38,5 +38,5 @@ export async function createClass(className: string) {
 export async function deleteClass(classId: number) {
 	const cookieStore = cookies();
 	const client = createClient(cookieStore);
-	v(await client.from("classes").delete().eq("id", classId));
+	v(await client.from("groups").delete().eq("id", classId));
 }

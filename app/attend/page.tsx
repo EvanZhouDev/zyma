@@ -31,7 +31,7 @@ export default async function Page({
 	const { data, error } = await client
 		.from("attendance")
 		.upsert({
-			student: studentId,
+			attendee: studentId,
 			code_used: searchParams.code,
 		})
 		.select("status");

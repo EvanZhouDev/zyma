@@ -1,8 +1,8 @@
-import { Student } from "@/components/contexts";
+import { Attendee } from "@/components/contexts";
 import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useRef } from "react";
 
-export default function StudentActions({ student }: { student: Student }) {
+export default function StudentActions({ attendee }: { attendee: Attendee }) {
 	const modal = useRef<HTMLDialogElement>(null);
 	return (
 		<div className="flex">
@@ -15,13 +15,13 @@ export default function StudentActions({ student }: { student: Student }) {
 			<dialog ref={modal} className="modal">
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">
-						Student Name: {student.username}
+						Attendee Name: {attendee.username}
 					</h3>
 					<p className="py-4 mt-5">
-						The Email associated with this class is {student.email}.
+						The Email associated with this group is {attendee.email}.
 					</p>
 					<p className="py-4 font-normal">
-						Attendance: {student?.metadata?.attendence}
+						Attendance: {attendee?.metadata?.attendence}
 					</p>
 					<div className="modal-action">
 						<form method="dialog">

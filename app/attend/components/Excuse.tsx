@@ -20,7 +20,7 @@ export default function Excuse({
 			{availableToChoose ? (
 				<>
 					<p className="py-5 text-sm">
-						Leaving later? Choose a reason and let the teacher know.
+						Leaving later? Choose a reason and let the host know.
 					</p>
 					<select
 						className="select input-standard w-full"

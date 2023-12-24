@@ -26,7 +26,7 @@ export default function NewClass() {
 				<div className="modal-box">
 					<h3 className="text-lg font-bold">Create a Group</h3>
 					<p className="py-4">
-						First, name your class. Afterwards, go to Mange Students and hit
+						First, name your group. Afterwards, go to Mange Students and hit
 						Register Students to continue.
 					</p>
 					<div>
@@ -42,11 +42,11 @@ export default function NewClass() {
 								setClassName(event.target.value);
 							}}
 							className="input input-standard w-full"
-							placeholder="Class name..."
+							placeholder="Group name..."
 						/>
 					</div>
 					<p className="py-4 opacity-50">
-						You can rename your class at any time.
+						You can rename your group at any time.
 					</p>
 					<div className="modal-action">
 						<form method="dialog">
@@ -56,7 +56,7 @@ export default function NewClass() {
 								formAction={handle}
 								disabled={className.trim().length === 0}
 							>
-								Create Class
+								Create Group
 							</button>
 						</form>
 					</div>

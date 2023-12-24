@@ -2,11 +2,11 @@ import { InfoIcon } from "@primer/octicons-react";
 import ClassActions from "./ClassActions";
 
 export default function ClassTable({
-	classes,
+	groups,
 }: {
-	classes: { name: string; id: number }[];
+	groups: { name: string; id: number }[];
 }) {
-	if (classes.length === 0) {
+	if (groups.length === 0) {
 		return (
 			<div role="alert" className="alert alert-info mt-10">
 				<InfoIcon size="medium" />
@@ -27,12 +27,12 @@ export default function ClassTable({
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th>Student Count</th>
+						<th>Attendee Count</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
-					{classes.map((klass) => (
+					{groups.map((klass) => (
 						<ClassActions klass={klass} key={klass.id} />
 					))}
 				</tbody>

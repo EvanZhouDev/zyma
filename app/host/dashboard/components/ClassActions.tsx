@@ -18,7 +18,7 @@ export default function ClassActions({
 				// `"planned"`: Approximated but fast count algorithm. Uses the Postgres statistics under the hood.
 				// `"estimated"`: Uses exact count for low numbers and planned count for high numbers.
 				.select("*", { head: true, count: "estimated" })
-				.eq("class", klass.id);
+				.eq("group", klass.id);
 			if (error !== null) {
 				console.error(error);
 			}
@@ -58,13 +58,13 @@ export default function ClassActions({
         >
             <div className="modal-box">
                 <h3 className="font-bold text-lg">
-                    Class Name: "{klass.name}"
+                    Group Name: "{klass.name}"
                 </h3>
                 <p className="py-4 mt-5">
-                    The ID associated with this class is {klass.id}.
+                    The ID associated with this group is {klass.id}.
                 </p>
                 <p className="py-4 font-normal">
-                    There are 0 students in this class currently.
+                    There are 0 students in this group currently.
                 </p>
                 <div className="modal-action">
                     <form method="dialog">
