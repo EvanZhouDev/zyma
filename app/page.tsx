@@ -6,13 +6,15 @@ import { redirect } from "next/navigation";
 
 export default async function Index({
 	searchParams,
+	redirectTo,
 }: {
 	searchParams: { message: string };
+	redirectTo?: string;
 }) {
 	const client = getServerClient();
 
 	if ((await client.auth.getUser()).data.user != null) {
-		return redirect("/teacher/dashboard");
+		return redirect(redirectTo ?? "/teacher/dashboard");
 	}
 
 	const signIn = async (formData: FormData) => {
