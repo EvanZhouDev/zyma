@@ -122,6 +122,7 @@ body {
 		border 0.25s,
 		transform 0.25s;
 	color: #24292f;
+	transform: scale(1);
 }
 
 .btn-start-attendance:hover {
