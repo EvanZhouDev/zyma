@@ -3,11 +3,9 @@ import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import {
 	InfoIcon,
-	MoonIcon,
 	RepoIcon,
 	ReportIcon,
 	SignOutIcon,
-	SunIcon,
 } from "@primer/octicons-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +14,8 @@ import AttendeeTable from "./AttendeeTable";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
+import SwitchTheme from "@/components/SwitchTheme.jsx";
+
 async function getAttendee(uuid: string) {
 	const client = await createClient();
 	return v(
@@ -25,6 +25,7 @@ async function getAttendee(uuid: string) {
 			.eq("attendee", uuid)
 	)[0];
 }
+
 export default function Dashboard({
 	groups,
 }: {
@@ -35,10 +36,7 @@ export default function Dashboard({
 	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
-	useEffect(() => {
-		themeChange(false);
-		// 👆 false parameter is required for react project
-	}, []);
+
 	useEffect(() => {
 		(async () => {
 			if (groupId) {
@@ -82,12 +80,7 @@ export default function Dashboard({
 			}
 		})();
 	}, [groupId]);
-	const [isdark, setIsdark] = useState<boolean>(
-		JSON.parse(localStorage.getItem("isdark") ?? JSON.stringify(false))
-	);
-	useEffect(() => {
-		localStorage.setItem("isdark", JSON.stringify(isdark));
-	}, [isdark]);
+
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
 			<div className="rounded-box m-3 mr-1.5 basis-3/5">
@@ -274,17 +267,7 @@ export default function Dashboard({
 						alt="Zyma Logo"
 					/>
 					<div className="flex flex-row items-center justify-between">
-						<label className="swap swap-rotate" title="Toggle light mode">
-							<input
-								type="checkbox"
-								className="theme-controller"
-								value="githubDark"
-								checked={isdark}
-								onChange={() => setIsdark(!isdark)}
-							/>
-							<MoonIcon className="swap-on fill-current w-8 h-8 mx-5" />
-							<SunIcon className="swap-off fill-current w-8 h-8 mx-5" />
-						</label>
+						<SwitchTheme />
 
 						<a
 							className="mx-5"
