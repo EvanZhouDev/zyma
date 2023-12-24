@@ -3,7 +3,7 @@
 import { v } from "@/utils";
 import { getServerClient } from "@/utils/supabase/server";
 
-export async function addAttendee(classId: number, form: FormData) {
+export async function addAttendee(groupId: number, form: FormData) {
 	const client = getServerClient();
 	const attendees = v(
 		await client
@@ -19,7 +19,7 @@ export async function addAttendee(classId: number, form: FormData) {
 
 	const { error } = await client
 		.from("attendees")
-		.insert([{ group: classId, attendee }]);
+		.insert([{ group: groupId, attendee }]);
 	if (error != null) {
 		throw new Error("Attendee is already in your group");
 	}
@@ -32,7 +32,7 @@ export async function createClass(className: string) {
 			{ admin: (await client.auth.getUser()).data.user!.id, name: className },
 		]);
 }
-export async function deleteClass(classId: number) {
+export async function deleteClass(groupId: number) {
 	const client = getServerClient();
-	v(await client.from("groups").delete().eq("id", classId));
+	v(await client.from("groups").delete().eq("id", groupId));
 }

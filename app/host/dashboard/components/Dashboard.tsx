@@ -33,18 +33,18 @@ export default function Dashboard({
 }) {
 	const manageClasses = useRef<HTMLInputElement>(null);
 	const [selectedClass, setSelectedClass] = useState(0);
-	const classId = groups[selectedClass]?.id;
+	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
 	useEffect(() => {
 		(async () => {
-			if (classId) {
+			if (groupId) {
 				const client = await createClient();
 				const attendees = v(
 					await client
 						.from("attendees")
 						.select("profiles (username, email), metadata")
-						.eq("group", classId),
+						.eq("group", groupId),
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
@@ -60,7 +60,7 @@ export default function Dashboard({
 							schema: "public",
 							table: "attendees",
 							// I hope this doesn't introduce security errors
-							filter: `group=eq.${classId}`,
+							filter: `group=eq.${groupId}`,
 						},
 						(payload) => {
 							getAttendee(payload.new.attendee).then((attendee) => {
@@ -78,7 +78,7 @@ export default function Dashboard({
 					.subscribe();
 			}
 		})();
-	}, [classId]);
+	}, [groupId]);
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
 			<div className="rounded-box m-3 mr-1.5 basis-3/5">
@@ -117,7 +117,7 @@ export default function Dashboard({
 										))}
 									</select>
 								</div>
-								{classId === undefined && className === undefined ? (
+								{groupId === undefined && className === undefined ? (
 									<div role="alert" className="alert alert-info mt-10">
 										<InfoIcon size="medium" />
 										<span className="text-lg">
@@ -140,7 +140,7 @@ export default function Dashboard({
 												placeholder="Search Attendees..."
 												className="input input-standard mr-2 flex-grow"
 											/>
-											<RegisterAttendee classId={classId} />
+											<RegisterAttendee groupId={groupId} />
 										</div>
 										<div>
 											<AttendeeTable />
@@ -184,7 +184,7 @@ export default function Dashboard({
 						className={`btn-start-attendance p-3 m-2 h-[10vh] w-[90%] flex items-center justify-center text-2xl font-semibold ${
 							groups[0] === undefined ? "btn-disabled btn-start-disabled" : ""
 						} mt-5 flex items-center justify-center`}
-						href={`/host/attendance?classId=${classId}`}
+						href={`/host/attendance?groupId=${groupId}`}
 					>
 						<RepoIcon
 							size="small"

@@ -6,7 +6,7 @@ import { useRef } from "react";
 import { addAttendee } from "../actions";
 import AttendeeTable from "./AttendeeTable";
 
-export default function RegisterAttendee({ classId }: { classId: number }) {
+export default function RegisterAttendee({ groupId }: { groupId: number }) {
 	const myModal = useRef<HTMLDialogElement>(null);
 	return (
 		<>
@@ -34,7 +34,7 @@ export default function RegisterAttendee({ classId }: { classId: number }) {
 									</div>
 									<div className="absolute z-30">
 										<QRCodeSVG
-											value={`${ROOT_URL}/join?group=${classId}`}
+											value={`${ROOT_URL}/join?group=${groupId}`}
 											size={400}
 											className="left-0 top-0 h-[23vw] w-[23vw]"
 										/>
@@ -46,7 +46,7 @@ export default function RegisterAttendee({ classId }: { classId: number }) {
 									Alternatively, enter the Group ID:
 								</div>
 								<div className="flex flex-row items-center">
-									<div className="text-3xl font-bold">{classId}</div>
+									<div className="text-3xl font-bold">{groupId}</div>
 								</div>
 							</div>
 						</div>
@@ -54,7 +54,7 @@ export default function RegisterAttendee({ classId }: { classId: number }) {
 						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow place-items-center">
 							<form
 								className="my-10 flex justify-stretch w-full space-x-2"
-								action={addAttendee.bind(null, classId)}
+								action={addAttendee.bind(null, groupId)}
 							>
 								<label className="label">
 									<span className="label-text text-base">Attendee Email: </span>

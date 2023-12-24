@@ -6,18 +6,15 @@ import { redirect } from "next/navigation";
 
 export default async function Index({
 	searchParams,
-	redirectTo,
 }: {
-	searchParams: { message: string };
-	redirectTo?: string;
+	searchParams: { message: string; redirectTo?: string };
 }) {
 	const client = getServerClient();
 
 	if ((await client.auth.getUser()).data.user != null) {
-		return redirect(redirectTo ?? "/host/dashboard");
+		return redirect(searchParams.redirectTo ?? "/host/dashboard");
 	}
-
-	const signIn = async (formData: FormData) => {
+	const signIn = async (redirectTo: string | undefined, formData: FormData) => {
 		"use server";
 
 		const email = formData.get("email") as string;
@@ -32,7 +29,6 @@ export default async function Index({
 		if (error) {
 			return redirect("/?message=Could not authenticate user");
 		}
-
 		return redirect(redirectTo ?? "/host/dashboard");
 	};
 
@@ -67,7 +63,10 @@ export default async function Index({
 		<MainHero>
 			<p className="py-6 mb-5">Sign in to start attendance.</p>
 			<div className="flex-1 flex flex-col px-8 min-w-[450px] text-left mb-10">
-				<SignUp signIn={signIn} signUp={signUp} />
+				<SignUp
+					signIn={signIn.bind(null, searchParams.redirectTo)}
+					signUp={signUp}
+				/>
 				{searchParams?.message && (
 					<p className="mt-4 p-4 bg-foreground/10 text-foreground text-center rounded-lg">
 						{searchParams.message}

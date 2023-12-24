@@ -13,15 +13,19 @@ import { getRelativeMinuteTime } from "./utils";
 export default async function Index({
 	searchParams,
 }: {
-	searchParams: { classId: number };
+	searchParams: { groupId: number };
 }) {
-	const { client } = await getServerClientWithRedirect("/host/attendance");
+	const { client } = await getServerClientWithRedirect(
+		`/host/attendance?groupId=${searchParams.groupId}`,
+	);
 	// We pass it in with the .bind instead of re-using
 	// the codeId in the outer scope
 	// because React Server Components suck
 	async function handle(id: number) {
 		"use server";
-		const { client } = await getServerClientWithRedirect("/host/attendance");
+		const { client } = await getServerClientWithRedirect(
+			`/host/attendance?groupId=${searchParams.groupId}`,
+		);
 		v(await client.from("codes").delete().eq("id", id));
 		return redirect("/host/dashboard");
 	}
@@ -31,7 +35,7 @@ export default async function Index({
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("group", searchParams.classId),
+			.eq("group", searchParams.groupId),
 	);
 	let data: (typeof existingCode)[0];
 
@@ -41,7 +45,7 @@ export default async function Index({
 		data = v(
 			await client
 				.from("codes")
-				.insert([{ group: searchParams.classId }])
+				.insert([{ group: searchParams.groupId }])
 				.select(CODE_SELECT),
 		)[0];
 	}
@@ -58,7 +62,7 @@ export default async function Index({
 			await client
 				.from("attendees")
 				.select("*")
-				.eq("group", searchParams.classId),
+				.eq("group", searchParams.groupId),
 		) ?? []
 	).length;
 

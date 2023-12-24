@@ -17,6 +17,7 @@ export default function SignUp({
 					<span className="text-base label-text">Email</span>
 				</label>
 				<input
+					required
 					type="email"
 					name="email"
 					className="w-full input input-standard form-input"
@@ -27,6 +28,7 @@ export default function SignUp({
 					<span className="text-base label-text">Password</span>
 				</label>
 				<input
+					required
 					type="password"
 					name="password"
 					className="w-full input input-standard form-input"
