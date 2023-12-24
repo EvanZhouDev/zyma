@@ -1,9 +1,9 @@
+import MainHero from "@/components/MainHero";
 import { createClient } from "@/utils/supabase/server";
+import { AlertIcon } from "@primer/octicons-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Excuse from "./components/Excuse";
-import { AlertIcon } from "@primer/octicons-react";
-import MainHero from "@/components/MainHero";
 
 export default async function Page({
 	searchParams,

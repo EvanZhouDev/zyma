@@ -1,8 +1,8 @@
 "use client";
 import { convertStatus } from "@/components/constants";
+import { SignOutIcon } from "@primer/octicons-react";
 import { useState } from "react";
 import { updateExcuse } from "../actions";
-import { SignOutIcon } from "@primer/octicons-react";
 
 export default function Excuse({
 	code,

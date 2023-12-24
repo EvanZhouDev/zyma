@@ -1,21 +1,21 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import ClassTable from "./ClassTable";
-import RegisterStudent from "./RegisterStudent";
-import StudentTable from "./StudentTable";
 import { Student, StudentsInClassContext } from "@/components/contexts";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
-import NewClass from "./NewClass";
 import {
-	RepoIcon,
-	MoonIcon,
-	SignOutIcon,
-	ReportIcon,
-	SunIcon,
 	InfoIcon,
+	MoonIcon,
+	RepoIcon,
+	ReportIcon,
+	SignOutIcon,
+	SunIcon,
 } from "@primer/octicons-react";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import ClassTable from "./ClassTable";
+import NewClass from "./NewClass";
+import RegisterStudent from "./RegisterStudent";
+import StudentTable from "./StudentTable";
 
 async function getStudent(uuid: string) {
 	const client = await createClient();

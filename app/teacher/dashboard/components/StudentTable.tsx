@@ -1,7 +1,7 @@
 import { StudentsInClassContext } from "@/components/contexts";
+import { InfoIcon } from "@primer/octicons-react";
 import { useContext } from "react";
 import StudentActions from "./StudentActions";
-import { InfoIcon } from "@primer/octicons-react";
 export default function StudentTable() {
 	const students = useContext(StudentsInClassContext);
 	if (students.length === 0) {

@@ -1,4 +1,4 @@
-import { MarkGithubIcon, InfoIcon, HeartIcon } from "@primer/octicons-react";
+import { HeartIcon, InfoIcon, MarkGithubIcon } from "@primer/octicons-react";
 import Image from "next/image";
 
 export default function MainHero({ children, padding = 6 }) {
