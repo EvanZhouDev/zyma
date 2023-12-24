@@ -6,7 +6,6 @@ import { useLocalStorage } from "usehooks-ts";
 export default function Logo({ className, size }) {
     // Function to get the initial theme value from the local storage
     const getInitialTheme = () => {
-        if (!window) return "github";
         const savedTheme = window.localStorage.getItem("theme");
         return savedTheme ? savedTheme : "github";
     };
