@@ -1,5 +1,5 @@
-export const ATTENDENCE_STATUS_PRESENT = 0;
-export const STATUS_MAP = { 0: "Present" };
+export const CODE_TYPE_ATTENDANCE = 0;
+export const CODE_TYPE_JOIN = 1;
 export function convertStatus(status: number) {
 	switch (status) {
 		case 0:

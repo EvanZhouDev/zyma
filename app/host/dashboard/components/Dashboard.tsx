@@ -45,7 +45,7 @@ export default function Dashboard({
 					await client
 						.from("attendees")
 						.select("profiles (username, email), metadata")
-						.eq("group", groupId),
+						.eq("codes.group", groupId),
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {

@@ -3,7 +3,11 @@
 import { v } from "@/utils";
 import { getServerClient } from "@/utils/supabase/server";
 
-export async function addAttendee(groupId: number, form: FormData) {
+export async function addAttendee(
+	groupId: number,
+	code: string,
+	form: FormData,
+) {
 	const client = getServerClient();
 	const attendees = v(
 		await client
@@ -19,7 +23,7 @@ export async function addAttendee(groupId: number, form: FormData) {
 
 	const { error } = await client
 		.from("attendees")
-		.insert([{ group: groupId, attendee }]);
+		.insert([{ group: groupId, attendee, code_used: code }]);
 	if (error != null) {
 		throw new Error("Attendee is already in your group");
 	}

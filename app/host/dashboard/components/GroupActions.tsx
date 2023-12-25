@@ -18,7 +18,7 @@ export default function GroupActions({
 				// `"planned"`: Approximated but fast count algorithm. Uses the Postgres statistics under the hood.
 				// `"estimated"`: Uses exact count for low numbers and planned count for high numbers.
 				.select("*", { head: true, count: "estimated" })
-				.eq("group", klass.id);
+				.eq("codes.group", klass.id);
 			if (error !== null) {
 				console.error(error);
 			}

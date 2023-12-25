@@ -1,5 +1,5 @@
 import Logo from "@/components/Logo.jsx";
-import { ROOT_URL } from "@/components/constants";
+import { CODE_TYPE_ATTENDANCE, ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
@@ -23,7 +23,8 @@ export default async function Index({
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("group", searchParams.groupId),
+			.eq("group", searchParams.groupId)
+			.eq("type", CODE_TYPE_ATTENDANCE),
 	);
 	let data: (typeof existingCode)[0];
 
@@ -33,7 +34,7 @@ export default async function Index({
 		data = v(
 			await client
 				.from("codes")
-				.insert([{ group: searchParams.groupId }])
+				.insert([{ group: searchParams.groupId, type: CODE_TYPE_ATTENDANCE }])
 				.select(CODE_SELECT),
 		)[0];
 	}
@@ -50,7 +51,7 @@ export default async function Index({
 			await client
 				.from("attendees")
 				.select("*")
-				.eq("group", searchParams.groupId),
+				.eq("codes.group", searchParams.groupId),
 		) ?? []
 	).length;
 
