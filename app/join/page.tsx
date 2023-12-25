@@ -10,7 +10,13 @@ export default async function Join({
 }: {
 	searchParams: { code?: string };
 }) {
-	const { client, attendeeId } = await getServerClientWithRedirect("/join");
+	const { client, attendeeId } = await getServerClientWithRedirect(
+		`/join${
+			searchParams.code !== undefined
+				? `?code=${encodeURIComponent(searchParams.code)}`
+				: ""
+		}`,
+	);
 	if (searchParams.code === undefined) {
 		return <NoCodeProvided action="Join" />;
 	}

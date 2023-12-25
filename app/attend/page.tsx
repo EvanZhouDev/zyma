@@ -9,7 +9,13 @@ export default async function Page({
 }: {
 	searchParams: { code?: string };
 }) {
-	const { client, attendeeId } = await getServerClientWithRedirect("/attend");
+	const { client, attendeeId } = await getServerClientWithRedirect(
+		`/attend${
+			searchParams.code !== undefined
+				? `?code=${encodeURIComponent(searchParams.code)}`
+				: ""
+		}`,
+	);
 	if (searchParams.code === undefined) {
 		return <NoCodeProvided action="Attend" />;
 	}
