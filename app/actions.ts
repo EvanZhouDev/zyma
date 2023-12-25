@@ -19,7 +19,7 @@ export async function signIn(
 	});
 
 	if (error) {
-		return redirect("/?message=Could not authenticate user");
+		return redirect(`/?message=${error}`);
 	}
 	return redirect(redirectTo ?? "/host/dashboard");
 }
@@ -43,7 +43,7 @@ export async function signUp(formData: FormData) {
 	});
 
 	if (error) {
-		return redirect("/?message=Could not authenticate user");
+		return redirect(`/?message=${error}`);
 	}
 
 	return redirect("/?message=Check email to continue sign in process");

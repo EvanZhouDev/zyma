@@ -20,12 +20,14 @@ export default async function Index({
 				{searchParams?.message ? (
 					<p
 						className={`alert ${
-							searchParams.message.includes("Could not authenticate")
+							searchParams.message.includes("AuthApiError: ")
 								? "alert-error"
 								: "alert-info"
 						} !h-15 !my-2 !mt-5 bg-foreground/10 text-foreground rounded-lg flex flex-col items-center`}
 					>
-						{searchParams.message}
+						{searchParams.message.includes("AuthApiError: ")
+							? searchParams.message.slice("AuthApiError: ".length)
+							: searchParams.message}
 					</p>
 				) : (
 					<p className="alert h-15 my-2 mt-5 bg-base-100 border-none flex flex-col items-center">
