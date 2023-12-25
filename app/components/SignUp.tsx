@@ -42,7 +42,7 @@ export default function SignUp({
 					Sign In
 				</button>
 				<button
-					className="underline opacity-50 text-lg mt-10"
+					className="underline opacity-50 text-lg mt-10 text-secondary-content"
 					formAction={async () => {
 						nameDialog.current!.showModal();
 					}}

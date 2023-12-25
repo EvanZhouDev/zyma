@@ -16,7 +16,7 @@ export default async function Index({
 	}
 	return (
 		<MainHero>
-			<div className="flex-1 flex flex-col items-center px-8 min-w-[450px] text-left mb-10">
+			<div className="flex-1 flex flex-col items-center px-8 min-w-[25vw] text-left mb-10">
 				{searchParams?.message ? (
 					<p
 						className={`alert ${
