@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function SignUp({
 	signUp,
@@ -10,9 +10,13 @@ export default function SignUp({
 	signIn: (formData: FormData) => Promise<void>;
 }) {
 	const nameDialog = useRef<HTMLDialogElement>(null);
+	const [username, setUsername] = useState("");
 	return (
 		<>
-			<form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+			<form
+				id="account"
+				className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
+			>
 				<div className="w-full">
 					<label className="label">
 						<span className="text-base label-text">Email</span>
@@ -60,21 +64,38 @@ export default function SignUp({
 						</label>
 						<input
 							type="text"
+							value={username}
+							onChange={(event) => {
+								setUsername(event.target.value);
+							}}
 							name="name"
 							className="w-full input input-standard mb-10"
 						/>
 					</div>
-					<button
-						type="submit"
-						className="btn btn-standard"
-						formAction={async (formData: FormData) => {
-							await signUp(formData);
-							nameDialog.current!.close();
-						}}
-					>
-						Submit
-					</button>
+					<div className="modal-action">
+						<form method="dialog">
+							{/* if there is a button in form, it will close the modal */}
+							<button className="btn btn-standard">Close</button>
+							<button
+								form="account"
+								type="submit"
+								className="btn btn-standard ml-3"
+								disabled={username.length === 0}
+								formAction={async (formData: FormData) => {
+									console.log("Hi");
+									nameDialog.current!.close();
+									formData.set("name", username);
+									await signUp(formData);
+								}}
+							>
+								Submit
+							</button>
+						</form>
+					</div>
 				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button>Close</button>
+				</form>
 			</dialog>
 		</>
 	);
