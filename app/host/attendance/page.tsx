@@ -1,8 +1,8 @@
+import Logo from "@/components/Logo.jsx";
 import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
-import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
 import AttendeeCounter from "./AttendeeCounter";
 import AttendeePresenceTable from "./AttendeePresenceTable";
@@ -57,17 +57,12 @@ export default async function Index({
 	const RTworking = true;
 
 	return (
-		<div className="w-full h-full bg-secondary justify-around flex">
-			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-300 outline-1 basis-1/2 flex flex-col justify-between items-center">
+		<div className="w-full h-full bg-secondary-active justify-around flex">
+			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-200 outline-1 basis-1/2 flex flex-col justify-between items-center">
 				<div className="flex justify-between items-center w-full">
 					<div className="flex flex-col mt-5">
-						<Image
-							src="/zyma.svg"
-							width={500}
-							height={500}
-							alt="Zyma Logo"
-							className="w-[8.7vw] ml-5 mb-1"
-						/>
+						<Logo className="w-[8.7vw] ml-5 mb-1" size={500} />
+
 						{RTworking ? (
 							<span className="text-[#1E883E] ml-5">
 								<ZapIcon /> RT Connected
@@ -121,7 +116,7 @@ export default async function Index({
 					</div>
 				</div>
 			</div>
-			<div className="bg-base-100 rounded-xl m-3 ml-1.5 outline outline-base-300 outline-1 basis-1/2 flex flex-col justify-between items-center pl-5 pr-5">
+			<div className="bg-base-100 rounded-xl m-3 ml-1.5 outline outline-base-200 outline-1 basis-1/2 flex flex-col justify-between items-center pl-5 pr-5">
 				<div className="w-full">
 					<div className="flex flex-row w-full justify-between mt-4">
 						<h1 className="text-4xl font-bold">

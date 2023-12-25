@@ -24,6 +24,6 @@
       "@/components/*": ["./components/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/page.jsx", "components/ThemeProvider.jsx", "components/SwitchTheme.jsx"],
   "exclude": ["node_modules"]
 }

@@ -1,3 +1,4 @@
+import ThemeProvider from "@/components/ThemeProvider.jsx";
 import { ROOT_URL } from "@/components/constants";
 import { GeistSans } from "geist/font/sans";
 import type React from "react";
@@ -19,6 +20,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={`${GeistSans.className} w-full h-full`}>
 			<body className="w-full h-full">
+				<ThemeProvider />
 				{children}
 				<Toaster />
 			</body>

@@ -114,7 +114,7 @@ export default function AttendeePresenceTable({
 				/>
 			</div>
 			<div className="flex-grow w-full">
-				<table className="table mt-5 w-full outline outline-base-300 outline-1 text-[#24292F] rounded-lg">
+				<table className="table mt-5 w-full outline outline-base-200 outline-1 text-[#24292F] rounded-lg">
 					{/* head */}
 					<thead>
 						<tr>

@@ -1,15 +1,15 @@
 import { HeartIcon, InfoIcon, MarkGithubIcon } from "@primer/octicons-react";
-import Image from "next/image";
+import Logo from "./Logo";
 
 export default function MainHero({ children, padding = 6 }) {
 	return (
-		<div className="hero min-h-screen bg-neutral flex flex-col justify-center">
+		<div className="hero min-h-screen bg-secondary flex flex-col justify-center">
 			<div
-				className={`hero-content text-center bg-base-100 p-${padding} rounded-xl border border-base-300 login-page-box`}
+				className={`hero-content text-center bg-base-100 p-${padding} rounded-xl border border-base-200 login-page-box`}
 			>
 				<div className="max-w-md flex flex-col items-center py-6">
 					<h1 className="text-5xl font-bold">
-						<Image src="/zyma.svg" width={250} height={1200} alt="Zyma Logo" />
+						<Logo size={250} />
 					</h1>
 					{children}
 				</div>

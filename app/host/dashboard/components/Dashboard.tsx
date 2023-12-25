@@ -1,15 +1,14 @@
 "use client";
+import Logo from "@/components/Logo";
+import SwitchTheme from "@/components/SwitchTheme.jsx";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import {
 	InfoIcon,
-	MoonIcon,
 	RepoIcon,
 	ReportIcon,
 	SignOutIcon,
-	SunIcon,
 } from "@primer/octicons-react";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Attendee, AttendeesInClassContext } from "../contexts";
 import AttendeeTable from "./AttendeeTable";
@@ -26,6 +25,7 @@ async function getAttendee(uuid: string) {
 			.eq("attendee", uuid),
 	)[0];
 }
+
 export default function Dashboard({
 	groups,
 }: {
@@ -36,6 +36,7 @@ export default function Dashboard({
 	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
+
 	useEffect(() => {
 		(async () => {
 			if (groupId) {
@@ -79,6 +80,7 @@ export default function Dashboard({
 			}
 		})();
 	}, [groupId]);
+
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
 			<div className="rounded-box m-3 mr-1.5 basis-3/5">
@@ -93,7 +95,7 @@ export default function Dashboard({
 					/>
 					<div
 						role="tabpanel"
-						className="w-[60vw] tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
+						className="w-[60vw] tab-content bg-base-100 border-base-200 rounded-box h-[calc(100vh-62px)] p-6"
 					>
 						<div className="flex flex-col">
 							<AttendeesInClassContext.Provider value={attendees}>
@@ -161,7 +163,7 @@ export default function Dashboard({
 					/>
 					<div
 						role="tabpanel"
-						className="w-[60vw] tab-content bg-base-100 border-base-300 rounded-box h-[calc(100vh-62px)] p-6"
+						className="w-[60vw] tab-content bg-base-100 border-base-200 rounded-box h-[calc(100vh-62px)] p-6"
 					>
 						<div className="flex flex-col">
 							<AttendeesInClassContext.Provider value={attendees}>
@@ -178,7 +180,7 @@ export default function Dashboard({
 					</div>
 				</div>
 			</div>
-			<div className="bg-base-100 rounded-box outline-base-300 m-3 ml-1.5 flex basis-2/5 flex-col items-center outline outline-1 justify-between">
+			<div className="bg-base-100 rounded-box outline-base-200 m-3 ml-1.5 flex basis-2/5 flex-col items-center outline outline-1 justify-between">
 				<div className="flex flex-col items-center w-full">
 					<a
 						className={`btn-start-attendance p-3 m-2 h-[10vh] w-[90%] flex items-center justify-center text-2xl font-semibold ${
@@ -257,23 +259,10 @@ export default function Dashboard({
 					</div>
 				</div>
 				<div className="flex flex-row items-center justify-between w-full mb-5 px-5">
-					<Image
-						src="/zyma.svg"
-						width={125}
-						height={1200}
-						className="ml-2"
-						alt="Zyma Logo"
-					/>
+					<Logo className="ml-2" size={125} />
 					<div className="flex flex-row items-center justify-between">
-						<label className="swap swap-rotate" title="Toggle light mode">
-							<input
-								type="checkbox"
-								className="theme-controller"
-								value="githubDark"
-							/>
-							<SunIcon className="swap-on fill-current w-8 h-8 mx-5" />
-							<MoonIcon className="swap-off fill-current w-8 h-8 mx-5" />
-						</label>
+						<SwitchTheme />
+
 						<a
 							className="mx-5"
 							href="https://github.com/EvanZhouDev/zyma/issues"
