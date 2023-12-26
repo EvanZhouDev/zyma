@@ -57,9 +57,8 @@ export default function SignUp({
 					onSubmit={async (event) => {
 						event.preventDefault();
 						const formData = new FormData(event.currentTarget);
-						console.log(formData.get("role"));
-						// await signUp(formData);
-						// nameDialog.current!.close();
+						await signUp(formData);
+						nameDialog.current!.close();
 					}}
 				>
 					<div className="modal-box">
