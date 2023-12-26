@@ -37,7 +37,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 			<dialog ref={myModal} className="modal">
 				<div className="modal-box bg-base-100 min-w-[90vw]">
 					<div className="flex w-full">
-						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow flex-col place-items-center items-center justify-center">
+						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow flex-col place-items-center items-center justify-between">
 							<ZymaCode code={code} url={`${ROOT_URL}/join?code=${code}`} />
 						</div>
 						<div className="divider divider-horizontal">OR</div>
