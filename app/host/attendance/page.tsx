@@ -1,15 +1,14 @@
 import Logo from "@/components/Logo.jsx";
+import ZymaCode from "@/components/ZymaCode";
 import { CODE_TYPE_ATTENDANCE, ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
-import { QRCodeSVG } from "qrcode.react";
 import AttendeeCounter from "./AttendeeCounter";
 import AttendeePresenceTable from "./AttendeePresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { endSession } from "./actions";
 import { getRelativeMinuteTime } from "./utils";
-import ZymaCode from "@/components/ZymaCode";
 
 export default async function Index({
 	searchParams,

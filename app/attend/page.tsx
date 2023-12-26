@@ -1,8 +1,8 @@
+import CodeNotFound from "@/components/CodeNotFound";
 import MainHero from "@/components/MainHero";
+import NoCodeProvided from "@/components/NoCodeProvided";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import Excuse from "./components/Excuse";
-import NoCodeProvided from "@/components/NoCodeProvided";
-import CodeNotFound from "@/components/CodeNotFound";
 
 export default async function Page({
 	searchParams,

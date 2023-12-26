@@ -1,12 +1,12 @@
 "use client";
+import ZymaCode from "@/components/ZymaCode";
 import { CODE_TYPE_JOIN, ROOT_URL } from "@/components/constants";
+import { v } from "@/utils";
+import { createClient } from "@/utils/supabase/client";
 import { PersonAddIcon } from "@primer/octicons-react";
 import { useEffect, useRef, useState } from "react";
 import { addAttendee } from "../actions";
 import AttendeeTable from "./AttendeeTable";
-import { createClient } from "@/utils/supabase/client";
-import { v } from "@/utils";
-import ZymaCode from "@/components/ZymaCode";
 
 export default function RegisterAttendee({ groupId }: { groupId: number }) {
 	const myModal = useRef<HTMLDialogElement>(null);
