@@ -61,7 +61,7 @@ export default function Dashboard({
 							schema: "public",
 							table: "attendees",
 							// I hope this doesn't introduce security errors
-							filter: `codes.group=eq.${groupId}`,
+							filter: `group=eq.${groupId}`,
 						},
 						(payload) => {
 							getAttendee(payload.new.attendee).then((attendee) => {
