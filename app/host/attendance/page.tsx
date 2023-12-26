@@ -9,6 +9,7 @@ import AttendeePresenceTable from "./AttendeePresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { endSession } from "./actions";
 import { getRelativeMinuteTime } from "./utils";
+import ZymaCode from "@/components/ZymaCode";
 
 export default async function Index({
 	searchParams,
@@ -50,8 +51,8 @@ export default async function Index({
 		v(
 			await client
 				.from("attendees")
-				.select("*")
-				.eq("codes.group", searchParams.groupId),
+				.select("group")
+				.eq("group", searchParams.groupId),
 		) ?? []
 	).length;
 
@@ -80,7 +81,11 @@ export default async function Index({
 						<b className="text-xl">{data.groups!.name}</b>
 					</div>
 				</div>
-				<div className="flex flex-col items-center -mt-5">
+				<ZymaCode
+					code={data.code}
+					url={`${ROOT_URL}/attend?code=${data.code}`}
+				/>
+				{/* <div className="flex flex-col items-center">
 					<div className="text-3xl mb-4">Scan the code to attend.</div>
 					<div className="flex items-center justify-center w-[27vw] h-[27vw]">
 						<div className="absolute z-10">
@@ -104,7 +109,7 @@ export default async function Index({
 					<div className="flex flex-row items-center">
 						<div className="text-3xl font-bold">{data.code}</div>
 					</div>
-				</div>
+				</div> */}
 
 				<div className="flex flex-col items-center mb-4">
 					<div className="text-3xl opacity-50">

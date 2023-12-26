@@ -51,17 +51,17 @@ export interface Database {
       attendees: {
         Row: {
           attendee: string
-          code_used: string
+          group: number
           metadata: Json | null
         }
         Insert: {
           attendee: string
-          code_used: string
+          group: number
           metadata?: Json | null
         }
         Update: {
           attendee?: string
-          code_used?: string
+          group?: number
           metadata?: Json | null
         }
         Relationships: [
@@ -73,11 +73,11 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "attendees_code_used_fkey"
-            columns: ["code_used"]
+            foreignKeyName: "attendees_group_fkey"
+            columns: ["group"]
             isOneToOne: false
-            referencedRelation: "codes"
-            referencedColumns: ["code"]
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
           }
         ]
       }

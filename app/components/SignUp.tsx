@@ -82,7 +82,6 @@ export default function SignUp({
 								className="btn btn-standard ml-3"
 								disabled={username.length === 0}
 								formAction={async (formData: FormData) => {
-									console.log("Hi");
 									nameDialog.current!.close();
 									formData.set("name", username);
 									await signUp(formData);

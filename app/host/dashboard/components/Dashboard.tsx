@@ -45,7 +45,7 @@ export default function Dashboard({
 					await client
 						.from("attendees")
 						.select("profiles (username, email), metadata")
-						.eq("codes.group", groupId),
+						.eq("group", groupId),
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
@@ -61,7 +61,7 @@ export default function Dashboard({
 							schema: "public",
 							table: "attendees",
 							// I hope this doesn't introduce security errors
-							filter: `group=eq.${groupId}`,
+							filter: `codes.group=eq.${groupId}`,
 						},
 						(payload) => {
 							getAttendee(payload.new.attendee).then((attendee) => {
@@ -76,7 +76,7 @@ export default function Dashboard({
 							});
 						},
 					)
-					.subscribe();
+					.subscribe(console.log);
 			}
 		})();
 	}, [groupId]);
@@ -205,7 +205,7 @@ export default function Dashboard({
 							Cannot start attendance session without a group.
 						</p>
 					) : attendees.length === 0 ? (
-						<p className="opacity-50 text-center">
+						<p className="opacity-50 text-center max-w-lg">
 							Zyma will not be able to track attendance without registered
 							attendees.
 						</p>

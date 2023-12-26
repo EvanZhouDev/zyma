@@ -1,13 +1,30 @@
 "use client";
-import { ROOT_URL } from "@/components/constants";
+import { CODE_TYPE_JOIN, ROOT_URL } from "@/components/constants";
 import { PersonAddIcon } from "@primer/octicons-react";
-import { QRCodeSVG } from "qrcode.react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { addAttendee } from "../actions";
 import AttendeeTable from "./AttendeeTable";
+import { createClient } from "@/utils/supabase/client";
+import { v } from "@/utils";
+import ZymaCode from "@/components/ZymaCode";
 
 export default function RegisterAttendee({ groupId }: { groupId: number }) {
 	const myModal = useRef<HTMLDialogElement>(null);
+	const [code, setCode] = useState("");
+	useEffect(() => {
+		(async () => {
+			const client = await createClient();
+			console.log("lol");
+			const data = v(
+				await client
+					.from("codes")
+					.upsert({ group: groupId, type: CODE_TYPE_JOIN })
+					.select("code"),
+			);
+			console.assert(data.length === 1, `Expected 1 code, got ${data.length}`);
+			setCode(data[0].code);
+		})();
+	}, [groupId]);
 	return (
 		<>
 			<button
@@ -21,34 +38,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 				<div className="modal-box bg-base-100 min-w-[90vw]">
 					<div className="flex w-full">
 						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow flex-col place-items-center items-center justify-center">
-							<div className="flex flex-col items-center">
-								<div className="mb-4 text-3xl">
-									Scan the code to join the Group.
-								</div>
-								<div className="flex h-[27vw] w-[27vw] items-center justify-center">
-									<div className="absolute z-10">
-										<div className="zyma-code-bg h-[27vw] w-[27vw] rounded-3xl" />
-									</div>
-									<div className="absolute z-20">
-										<div className="bg-base-100 h-[25vw] w-[25vw] rounded-2xl" />
-									</div>
-									<div className="absolute z-30">
-										<QRCodeSVG
-											value={`${ROOT_URL}/join?group=${groupId}`}
-											size={400}
-											className="left-0 top-0 h-[23vw] w-[23vw]"
-										/>
-									</div>
-								</div>
-							</div>
-							<div className="flex flex-col items-center mt-5">
-								<div className="text-2xl mb-2">
-									Alternatively, enter the Group ID:
-								</div>
-								<div className="flex flex-row items-center">
-									<div className="text-3xl font-bold">{groupId}</div>
-								</div>
-							</div>
+							<ZymaCode code={code} url={`${ROOT_URL}/join?code=${code}`} />
 						</div>
 						<div className="divider divider-horizontal">OR</div>
 						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow place-items-center">

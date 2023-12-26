@@ -2,9 +2,14 @@ import CodeNotFound from "@/components/CodeNotFound";
 import MainHero from "@/components/MainHero";
 import NoCodeProvided from "@/components/NoCodeProvided";
 import { v } from "@/utils";
-import { getServerClientWithRedirect } from "@/utils/supabase/server";
+import {
+	ServerClient,
+	getServerClientWithRedirect,
+} from "@/utils/supabase/server";
 import { InfoIcon } from "@primer/octicons-react";
-
+async function getGroup(client: ServerClient, code: string) {
+	return v(await client.from("codes").select("group").eq("code", code))[0];
+}
 export default async function Join({
 	searchParams,
 }: {
@@ -20,9 +25,12 @@ export default async function Join({
 	if (searchParams.code === undefined) {
 		return <NoCodeProvided action="Join" />;
 	}
-	const { error } = await client
-		.from("attendees")
-		.insert([{ attendee: attendeeId, code_used: searchParams.code }]);
+	const { error } = await client.from("attendees").insert([
+		{
+			attendee: attendeeId,
+			group: (await getGroup(client, searchParams.code)).group,
+		},
+	]);
 	if (error !== null) {
 		if (error.code === "23505") {
 			return (
