@@ -74,7 +74,6 @@ export default function GroupActions({
 							className="btn btn-dangerous ml-2 transition-none"
 							onClick={async () => {
 								await deleteClass(klass.id);
-								// TODO: update UI
 							}}
 						>
 							<TrashIcon size="medium" />

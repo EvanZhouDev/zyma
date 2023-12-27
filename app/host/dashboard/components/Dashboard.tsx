@@ -15,6 +15,7 @@ import AttendeeTable from "./AttendeeTable";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
+import { Tables } from "@/utils/supabase/types";
 
 async function getAttendee(uuid: string) {
 	const client = await createClient();
@@ -25,18 +26,71 @@ async function getAttendee(uuid: string) {
 			.eq("attendee", uuid),
 	)[0];
 }
-
+type Group = Tables<"groups">;
 export default function Dashboard({
-	groups,
+	initialGroups,
+	admin,
 }: {
-	groups: { name: string; id: number }[];
+	initialGroups: Group[];
+	admin: string;
 }) {
 	const manageClasses = useRef<HTMLInputElement>(null);
 	const [selectedClass, setSelectedClass] = useState(0);
+	const [groups, setGroups] = useState(initialGroups);
 	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
-
+	useEffect(() => {
+		(async () => {
+			const client = await createClient();
+			client
+				.channel("groups")
+				.on(
+					"postgres_changes",
+					{
+						event: "INSERT",
+						schema: "public",
+						table: "groups",
+						filter: `admin=eq.${admin}`,
+					},
+					(payload) => {
+						console.log(payload);
+						setGroups((x) => [...x, payload.new as Group]);
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "UPDATE",
+						schema: "public",
+						table: "groups",
+						filter: `admin=eq.${admin}`,
+					},
+					(payload) => {
+						console.log(payload);
+						setGroups((groups) =>
+							groups.filter((x) => (x.id === payload.new.id ? payload.new : x)),
+						);
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "DELETE",
+						schema: "public",
+						table: "groups",
+						filter: `admin=eq.${admin}`,
+					},
+					(payload) => {
+						console.log(payload);
+						setGroups((groups) =>
+							groups.filter((x) => x.id !== payload.old.id),
+						);
+					},
+				)
+				.subscribe(console.log);
+		})();
+	}, [admin]);
 	useEffect(() => {
 		(async () => {
 			if (groupId) {
