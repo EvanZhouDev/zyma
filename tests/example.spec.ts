@@ -1,28 +1,49 @@
-import { expect, test } from "@playwright/test";
+import { Page, expect, test } from "@playwright/test";
+async function login(page: Page, name: string) {
+  await page.goto("/");
+  await page.locator('input[name="email"]').fill(name);
+  await page.locator('input[name="password"]').click();
+  await page.locator('input[name="password"]').fill("123456");
+  await page.getByRole("button", { name: /Sign In/g }).click();
+}
 test.describe("Happy path", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/");
-  });
-  // Started with a generated test via
-  // bun run playwright codegen
-  test("Create Account, Group, and Start/End Attendance", async ({
+  test.beforeAll(
+    "(Both host and attendee) Create Account",
+    async ({ browser, browserName }) => {
+      const hostContext = await browser.newContext();
+      const attendeeContext = await browser.newContext();
+      const hostPage = await hostContext.newPage();
+      const attendeePage = await attendeeContext.newPage();
+      for (const tuple of [
+        [hostPage, "Host"],
+        [attendeePage, "Attendee"],
+      ]) {
+        const [page, name] = tuple as [Page, string];
+        await page.goto("/");
+        await page
+          .locator('input[name="email"]')
+          .fill(`${name}.${browserName}@acme.org`);
+        await page.locator('input[name="password"]').click();
+        await page.locator('input[name="password"]').fill("123456");
+        await page.getByRole("button", { name: /Sign Up/ }).click();
+        await expect(page.getByRole("dialog")).toBeVisible();
+        await expect(
+          page.locator("dialog button").filter({ hasText: /^Submit$/ })
+        ).toBeDisabled();
+        await page.locator('input[name="name"]').fill(name);
+        await expect(
+          page.locator("dialog button").filter({ hasText: /^Submit$/ })
+        ).toBeEnabled();
+        await page.getByRole("button", { name: "Submit" }).click();
+      }
+    }
+  );
+  test("(Host) Login Account, Create Group, Start/End Attendance (no attendees)", async ({
     page,
     browserName,
   }) => {
-    await page.locator('input[name="email"]').fill(`${browserName}@acme.org`);
-    await page.locator('input[name="password"]').click();
-    await page.locator('input[name="password"]').fill("123456");
-    await page.getByRole("button", { name: /Sign Up/ }).click();
-    await expect(page.getByRole("dialog")).toBeVisible();
-    await expect(
-      page.locator("dialog button").filter({ hasText: /^Submit$/ })
-    ).toBeDisabled();
-    await page.locator('input[name="name"]').fill("Host");
-    await expect(
-      page.locator("dialog button").filter({ hasText: /^Submit$/ })
-    ).toBeEnabled();
-    await page.getByRole("button", { name: "Submit" }).click();
-
+    await login(page, `host.${browserName}@acme.org`);
+    // Create groups
     await page.waitForURL(/dashboard/);
     await page.getByLabel("Manage Your Groups").click();
     await page.getByRole("button", { name: "Add Group" }).click();
@@ -41,11 +62,11 @@ test.describe("Happy path", () => {
     await page.goto("/");
     await page.waitForURL(/dashboard/);
     await expect(page.getByRole("combobox")).toBeVisible();
-    await page.screenshot({ path: `example-${browserName}.png` });
     await expect(page.getByRole("tabpanel")).toContainText(
       "No attendees registered."
     );
-
+    // Start attendance
+    await page.getByRole("link", { name: /Start Attendance/ }).isEnabled();
     await page.getByRole("link", { name: /Start Attendance/ }).click();
     await page.locator("select").selectOption("Absent");
     await page.locator("select").selectOption("All Statuses");
