@@ -4,10 +4,8 @@ import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
-import AttendeeCounter from "./AttendeeCounter";
-import AttendeePresenceTable from "./AttendeePresenceTable";
+import Right from "./Right";
 import TimeElapsed from "./TimeElapsed";
-import { endSession } from "./actions";
 import { getRelativeMinuteTime } from "./utils";
 
 export default async function Index({
@@ -94,26 +92,12 @@ export default async function Index({
 					</div>
 				</div>
 			</div>
-			<div className="bg-base-100 rounded-xl m-3 ml-1.5 outline outline-base-200 outline-1 basis-1/2 flex flex-col justify-between items-center pl-5 pr-5">
-				<div className="w-full">
-					<div className="flex flex-row w-full justify-between mt-4">
-						<h1 className="text-4xl font-bold">
-							<AttendeeCounter
-								attendanceCode={data.code}
-								initialJoined={joined.length}
-							/>
-							/{totalAttendees} Attendees Present
-						</h1>{" "}
-						<form action={endSession.bind(null, searchParams.groupId)}>
-							<button className="btn btn-dangerous">End Session</button>{" "}
-						</form>
-					</div>
-				</div>
-				<AttendeePresenceTable
-					initialJoined={joined}
-					attendanceCode={data.code}
-				/>
-			</div>
+			<Right
+				data={data}
+				initialJoined={joined}
+				totalAttendees={totalAttendees}
+				searchParams={searchParams}
+			/>
 		</div>
 	);
 }
