@@ -7,8 +7,8 @@ import { useLocalStorage } from "usehooks-ts";
 const SwitchTheme = () => {
 	// Function to get the initial theme value from the local storage
 	const getInitialTheme = () => {
-		const savedTheme = window.localStorage.getItem("theme");
-		return savedTheme ? savedTheme : "github";
+		const savedTheme = global?.localStorage?.getItem("theme");
+		return savedTheme ?? "github";
 	};
 
 	// We store the theme in localStorage to preserve the state on next visit
