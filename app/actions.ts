@@ -19,7 +19,13 @@ export async function signIn(
   });
 
   if (error) {
-    return redirect(`/?message=${error}`);
+    const redirectURL = new URL(headers().get("origin")!);
+    redirectURL.searchParams.append("error", error.message);
+    if (redirectTo) {
+      redirectURL.searchParams.append("redirectTo", redirectTo);
+    }
+
+    return redirect(redirectURL.href);
   }
   return redirect(redirectTo ?? "/host/dashboard");
 }
@@ -30,7 +36,6 @@ export async function signUp(formData: FormData) {
   const name = formData.get("name") as string;
 
   const client = getServerClient();
-  console.log(origin);
 
   const { error } = await client.auth.signUp({
     email,
