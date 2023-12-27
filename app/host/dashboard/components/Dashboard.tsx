@@ -98,12 +98,17 @@ export default function Dashboard({
 				const attendees = v(
 					await client
 						.from("attendees")
-						.select("profiles (username, email), metadata")
+						.select("profiles (username, email), metadata, attendee")
 						.eq("group", groupId),
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
-						return { ...x.profiles!, metadata: x.metadata } as Attendee;
+						return {
+							...x.profiles!,
+							metadata: x.metadata,
+							id: x.attendee,
+							group: groupId,
+						} as Attendee;
 					}),
 				);
 				client
@@ -128,6 +133,38 @@ export default function Dashboard({
 									} as Attendee,
 								]);
 							});
+						},
+					)
+					.on(
+						"postgres_changes",
+						{
+							event: "UPDATE",
+							schema: "public",
+							table: "attendees",
+							filter: `group=eq.${groupId}`,
+						},
+						(payload) => {
+							console.log(payload);
+							setAttendees((attendees) =>
+								attendees.filter((x) =>
+									x.id === payload.new.id ? payload.new : x,
+								),
+							);
+						},
+					)
+					.on(
+						"postgres_changes",
+						{
+							event: "DELETE",
+							schema: "public",
+							table: "attendees",
+							filter: `group=eq.${groupId}`,
+						},
+						(payload) => {
+							console.log(payload);
+							setAttendees((attendees) =>
+								attendees.filter((x) => x.id !== payload.old.id),
+							);
 						},
 					)
 					.subscribe(console.log);
