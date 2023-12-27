@@ -3,6 +3,7 @@ import Logo from "@/components/Logo";
 import SwitchTheme from "@/components/SwitchTheme.jsx";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
+import { Tables } from "@/utils/supabase/types";
 import {
 	InfoIcon,
 	RepoIcon,
@@ -25,18 +26,71 @@ async function getAttendee(uuid: string) {
 			.eq("attendee", uuid),
 	)[0];
 }
-
+type Group = Tables<"groups">;
 export default function Dashboard({
-	groups,
+	initialGroups,
+	admin,
 }: {
-	groups: { name: string; id: number }[];
+	initialGroups: Group[];
+	admin: string;
 }) {
 	const manageClasses = useRef<HTMLInputElement>(null);
 	const [selectedClass, setSelectedClass] = useState(0);
+	const [groups, setGroups] = useState(initialGroups);
 	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
-
+	useEffect(() => {
+		(async () => {
+			const client = await createClient();
+			client
+				.channel("groups")
+				.on(
+					"postgres_changes",
+					{
+						event: "INSERT",
+						schema: "public",
+						table: "groups",
+						filter: `admin=eq.${admin}`,
+					},
+					(payload) => {
+						console.log(payload);
+						setGroups((x) => [...x, payload.new as Group]);
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "UPDATE",
+						schema: "public",
+						table: "groups",
+						filter: `admin=eq.${admin}`,
+					},
+					(payload) => {
+						console.log(payload);
+						setGroups((groups) =>
+							groups.filter((x) => (x.id === payload.new.id ? payload.new : x)),
+						);
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "DELETE",
+						schema: "public",
+						table: "groups",
+						filter: `admin=eq.${admin}`,
+					},
+					(payload) => {
+						console.log(payload);
+						setGroups((groups) =>
+							groups.filter((x) => x.id !== payload.old.id),
+						);
+					},
+				)
+				.subscribe(console.log);
+		})();
+	}, [admin]);
 	useEffect(() => {
 		(async () => {
 			if (groupId) {
@@ -44,12 +98,17 @@ export default function Dashboard({
 				const attendees = v(
 					await client
 						.from("attendees")
-						.select("profiles (username, email), metadata")
+						.select("profiles (username, email), metadata, attendee")
 						.eq("group", groupId),
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
-						return { ...x.profiles!, metadata: x.metadata } as Attendee;
+						return {
+							...x.profiles!,
+							metadata: x.metadata,
+							id: x.attendee,
+							group: groupId,
+						} as Attendee;
 					}),
 				);
 				client
@@ -74,6 +133,38 @@ export default function Dashboard({
 									} as Attendee,
 								]);
 							});
+						},
+					)
+					.on(
+						"postgres_changes",
+						{
+							event: "UPDATE",
+							schema: "public",
+							table: "attendees",
+							filter: `group=eq.${groupId}`,
+						},
+						(payload) => {
+							console.log(payload);
+							setAttendees((attendees) =>
+								attendees.filter((x) =>
+									x.id === payload.new.id ? payload.new : x,
+								),
+							);
+						},
+					)
+					.on(
+						"postgres_changes",
+						{
+							event: "DELETE",
+							schema: "public",
+							table: "attendees",
+							filter: `group=eq.${groupId}`,
+						},
+						(payload) => {
+							console.log(payload);
+							setAttendees((attendees) =>
+								attendees.filter((x) => x.id !== payload.old.id),
+							);
 						},
 					)
 					.subscribe(console.log);

@@ -25,6 +25,16 @@ export async function addAttendee(group: number, form: FormData) {
 		throw new Error("Attendee is already in your group");
 	}
 }
+export async function removeAttendee(group: number, attendee: string) {
+	const client = getServerClient();
+	v(
+		await client
+			.from("attendees")
+			.delete()
+			.eq("attendee", attendee)
+			.eq("group", group),
+	);
+}
 export async function createClass(className: string) {
 	const client = getServerClient();
 	return await client

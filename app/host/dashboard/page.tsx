@@ -4,13 +4,14 @@ import Dashboard from "./components/Dashboard";
 // import { useEffect } from "react";
 
 export default async function Page() {
-	const { client } = await getServerClientWithRedirect("/host/dashboard");
+	const { client, attendeeId } =
+		await getServerClientWithRedirect("/host/dashboard");
 	const { data: groups, error } = await client
 		.from("groups")
-		.select("name, id")
-		.eq("admin", (await client.auth.getUser()).data.user!.id);
+		.select("*")
+		.eq("admin", attendeeId);
 	if (error) {
 		return <p>An error occurred</p>;
 	}
-	return <Dashboard groups={groups} />;
+	return <Dashboard initialGroups={groups} admin={attendeeId} />;
 }

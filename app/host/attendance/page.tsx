@@ -1,14 +1,6 @@
-import Logo from "@/components/Logo.jsx";
-import ZymaCode from "@/components/ZymaCode";
-import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
-import { AlertIcon, ZapIcon } from "@primer/octicons-react";
-import AttendeeCounter from "./AttendeeCounter";
-import AttendeePresenceTable from "./AttendeePresenceTable";
-import TimeElapsed from "./TimeElapsed";
-import { endSession } from "./actions";
-import { getRelativeMinuteTime } from "./utils";
+import Dashboard from "./Dashboard";
 
 export default async function Index({
 	searchParams,
@@ -54,66 +46,12 @@ export default async function Index({
 		) ?? []
 	).length;
 
-	const RTworking = true;
-
 	return (
-		<div className="w-full h-full bg-secondary-active justify-around flex">
-			<div className="bg-base-100 rounded-xl m-3 mr-1.5 outline outline-base-200 outline-1 basis-1/2 flex flex-col justify-between items-center">
-				<div className="flex justify-between items-center w-full">
-					<div className="flex flex-col mt-5">
-						<Logo className="w-[8.7vw] ml-5 mb-1" size={500} />
-
-						{RTworking ? (
-							<span className="text-[#1E883E] ml-5">
-								<ZapIcon /> RT Connected
-							</span>
-						) : (
-							<span className="text-red-600 ml-5">
-								<AlertIcon /> RT Failed
-							</span>
-						)}
-					</div>
-					<div className="text-right mr-5 mt-5">
-						Attendance session for
-						<br />
-						<b className="text-xl">{data.groups!.name}</b>
-					</div>
-				</div>
-				<ZymaCode
-					code={data.code}
-					url={`${ROOT_URL}/attend?code=${data.code}`}
-				/>
-				<div className="flex flex-col items-center mb-4">
-					<div className="text-3xl opacity-50">
-						Session started{" "}
-						<TimeElapsed
-							time={data.created_at}
-							getRelativeTime={getRelativeMinuteTime}
-						/>{" "}
-						ago.
-					</div>
-				</div>
-			</div>
-			<div className="bg-base-100 rounded-xl m-3 ml-1.5 outline outline-base-200 outline-1 basis-1/2 flex flex-col justify-between items-center pl-5 pr-5">
-				<div className="w-full">
-					<div className="flex flex-row w-full justify-between mt-4">
-						<h1 className="text-4xl font-bold">
-							<AttendeeCounter
-								attendanceCode={data.code}
-								initialJoined={joined.length}
-							/>
-							/{totalAttendees} Attendees Present
-						</h1>{" "}
-						<form action={endSession.bind(null, searchParams.groupId)}>
-							<button className="btn btn-dangerous">End Session</button>{" "}
-						</form>
-					</div>
-				</div>
-				<AttendeePresenceTable
-					initialJoined={joined}
-					attendanceCode={data.code}
-				/>
-			</div>
-		</div>
+		<Dashboard
+			data={data}
+			initialJoined={joined}
+			totalAttendees={totalAttendees}
+			groupId={searchParams.groupId}
+		/>
 	);
 }

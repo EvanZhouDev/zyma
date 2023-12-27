@@ -1,9 +1,7 @@
 "use client";
 
 import { convertStatus } from "@/components/constants";
-import { v } from "@/utils";
-import { createClient } from "@/utils/supabase/client";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 type AttendeeInAttendance = {
 	profiles: { username: string } | null;
@@ -11,22 +9,10 @@ type AttendeeInAttendance = {
 	status: number;
 	created_at?: string;
 };
-async function getAttendee(uuid: string, code: string) {
-	const client = await createClient();
-	return v(
-		await client
-			.from("attendance")
-			.select("profiles (username), attendee, status, created_at")
-			.eq("code_used", code)
-			.eq("attendee", uuid),
-	)[0];
-}
 export default function AttendeePresenceTable({
-	initialJoined,
-	attendanceCode,
+	joined,
 }: {
-	initialJoined: AttendeeInAttendance[];
-	attendanceCode: string;
+	joined: AttendeeInAttendance[];
 }) {
 	const [selectedFilter, setSelectedFilter] = useState("All Statuses");
 	const [searchContent, setSearchContent] = useState("");
@@ -38,60 +24,58 @@ export default function AttendeePresenceTable({
 		setSearchContent(event.target.value);
 	};
 
-	const [joined, setJoined] = useState(initialJoined);
-	const [statuses, setStatuses] = useState<{ [key: string]: string }>(
-		Object.fromEntries(
-			joined.map(({ attendee, status }) => [attendee, convertStatus(status)]),
-		),
+	// const [joined, setJoined] = useState(initialJoined);
+	const statuses = Object.fromEntries(
+		joined.map(({ attendee, status }) => [attendee, convertStatus(status)]),
 	);
-	useEffect(() => {
-		(async () => {
-			const client = await createClient();
-			client
-				.channel("custom-insert-channel")
-				.on(
-					"postgres_changes",
-					{
-						event: "INSERT",
-						schema: "public",
-						table: "attendance",
-						// I hope this doesn't introduce security errors
-						filter: `code_used=eq.${attendanceCode}`,
-					},
-					(payload) => {
-						getAttendee(payload.new.attendee, attendanceCode).then(
-							(attendee) => {
-								setJoined((x) => [...x, attendee!]);
-							},
-						);
-						setStatuses((x) => {
-							return {
-								...x,
-								[payload.new.attendee]: convertStatus(payload.new.status),
-							};
-						});
-					},
-				)
-				.on(
-					"postgres_changes",
-					{
-						event: "UPDATE",
-						schema: "public",
-						table: "attendance",
-						filter: `code_used=eq.${attendanceCode}`,
-					},
-					(payload) => {
-						setStatuses((x) => {
-							return {
-								...x,
-								[payload.new.attendee]: convertStatus(payload.new.status),
-							};
-						});
-					},
-				)
-				.subscribe();
-		})();
-	}, [attendanceCode]);
+	// useEffect(() => {
+	// 	(async () => {
+	// 		const client = await createClient();
+	// 		client
+	// 			.channel("custom-insert-channel")
+	// 			.on(
+	// 				"postgres_changes",
+	// 				{
+	// 					event: "INSERT",
+	// 					schema: "public",
+	// 					table: "attendance",
+	// 					// I hope this doesn't introduce security errors
+	// 					filter: `code_used=eq.${attendanceCode}`,
+	// 				},
+	// 				(payload) => {
+	// 					getAttendee(payload.new.attendee, attendanceCode).then(
+	// 						(attendee) => {
+	// 							setJoined((x) => [...x, attendee!]);
+	// 						},
+	// 					);
+	// 					setStatuses((x) => {
+	// 						return {
+	// 							...x,
+	// 							[payload.new.attendee]: convertStatus(payload.new.status),
+	// 						};
+	// 					});
+	// 				},
+	// 			)
+	// 			.on(
+	// 				"postgres_changes",
+	// 				{
+	// 					event: "UPDATE",
+	// 					schema: "public",
+	// 					table: "attendance",
+	// 					filter: `code_used=eq.${attendanceCode}`,
+	// 				},
+	// 				(payload) => {
+	// 					setStatuses((x) => {
+	// 						return {
+	// 							...x,
+	// 							[payload.new.attendee]: convertStatus(payload.new.status),
+	// 						};
+	// 					});
+	// 				},
+	// 			)
+	// 			.subscribe();
+	// 	})();
+	// }, [attendanceCode]);
 	return (
 		<>
 			<div className="flex flex-row items-center w-full justify-between mt-4">
