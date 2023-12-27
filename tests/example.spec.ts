@@ -5,8 +5,10 @@ async function login(page: Page, name: string) {
   await page.locator('input[name="password"]').click();
   await page.locator('input[name="password"]').fill("123456");
   await page.getByRole("button", { name: /Sign In/g }).click();
+  await page.waitForURL(/dashboard/);
 }
 test.describe("Happy path", () => {
+  // These tests are inherently serial because they share the same account
   test.describe.configure({ mode: "serial" });
 
   test("(Both host and attendee) Create Account", async ({
@@ -41,13 +43,9 @@ test.describe("Happy path", () => {
       await page.getByRole("button", { name: "Submit" }).click();
     }
   });
-  test("(Host) Login Account, Create Group, Start/End Attendance (no attendees)", async ({
-    page,
-    browserName,
-  }) => {
+  test("(Host) Login Account, Create Group", async ({ page, browserName }) => {
     await login(page, `host.${browserName}@acme.org`);
     // Create groups
-    await page.waitForURL(/dashboard/);
     await expect(page).toHaveScreenshot("dashboard-no-groups.png");
     await page.getByLabel("Manage Your Groups").click();
     await page.getByRole("button", { name: "Add Group" }).click();
@@ -68,6 +66,16 @@ test.describe("Happy path", () => {
     await expect(page).toHaveScreenshot("dashboard-with-groups.png");
     await expect(page).toHaveScreenshot();
     await expect(page.getByRole("combobox")).toBeVisible();
+    await expect(page.getByRole("tabpanel")).toContainText(
+      "No attendees registered."
+    );
+  });
+  test("(Host) Login Account, Start/End Attendance (no attendees)", async ({
+    page,
+    browserName,
+  }) => {
+    await login(page, `host.${browserName}@acme.org`);
+    // Assert that a Group exists
     await expect(page.getByRole("tabpanel")).toContainText(
       "No attendees registered."
     );
