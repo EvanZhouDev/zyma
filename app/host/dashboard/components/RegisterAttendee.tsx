@@ -1,7 +1,7 @@
 "use client";
 import ZymaCode from "@/components/ZymaCode";
-import { CODE_TYPE_JOIN, ROOT_URL } from "@/components/constants";
-import { v } from "@/utils";
+import { ROOT_URL } from "@/components/constants";
+import { generateCode, v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { PersonAddIcon } from "@primer/octicons-react";
 import { useEffect, useRef, useState } from "react";
@@ -17,12 +17,12 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 			console.log("lol");
 			const data = v(
 				await client
-					.from("codes")
-					.upsert({ group: groupId, type: CODE_TYPE_JOIN })
+					.from("groups")
+					.update({ code: generateCode() })
+					.eq("id", groupId)
 					.select("code"),
 			);
-			console.assert(data.length === 1, `Expected 1 code, got ${data.length}`);
-			setCode(data[0].code);
+			setCode(data[0].code!);
 		})();
 	}, [groupId]);
 	return (

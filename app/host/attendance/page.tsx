@@ -1,6 +1,6 @@
 import Logo from "@/components/Logo.jsx";
 import ZymaCode from "@/components/ZymaCode";
-import { CODE_TYPE_ATTENDANCE, ROOT_URL } from "@/components/constants";
+import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
@@ -18,23 +18,22 @@ export default async function Index({
 	const { client } = await getServerClientWithRedirect(
 		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`,
 	);
-	const CODE_SELECT = "groups (name), code, created_at, id";
+	const CODE_SELECT = "groups (name), code, created_at";
 	const existingCode = v(
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("group", searchParams.groupId)
-			.eq("type", CODE_TYPE_ATTENDANCE),
+			.eq("group", searchParams.groupId),
 	);
 	let data: (typeof existingCode)[0];
-
+	//XXX: Can't I just do an UPSERT?
 	if (existingCode.length === 1) {
 		data = existingCode[0];
 	} else {
 		data = v(
 			await client
 				.from("codes")
-				.insert([{ group: searchParams.groupId, type: CODE_TYPE_ATTENDANCE }])
+				.insert([{ group: searchParams.groupId }])
 				.select(CODE_SELECT),
 		)[0];
 	}
@@ -105,7 +104,7 @@ export default async function Index({
 							/>
 							/{totalAttendees} Attendees Present
 						</h1>{" "}
-						<form action={endSession.bind(null, data.id)}>
+						<form action={endSession.bind(null, searchParams.groupId)}>
 							<button className="btn btn-dangerous">End Session</button>{" "}
 						</form>
 					</div>
