@@ -17,7 +17,8 @@ test.describe("Happy path", () => {
     await expect(
       page.locator("button").filter({ hasText: /^Submit$/ })
     ).toBeDisabled();
-    await page.locator('input[name="text"]').fill("Host");
+    await page.locator('input[name="name"]').click();
+    await page.locator('input[name="name"]').fill("Host");
     await page.getByRole("button", { name: "Submit" }).click();
     await page
       .getByRole("button", { name: "Create one to get started." })
@@ -37,8 +38,8 @@ test.describe("Happy path", () => {
     // XXX: Reload because realtime is disabled
     await page.goto("/");
     await page.getByRole("link", { name: /Start Attendance/ }).click();
-    await page.getByRole("listbox").selectOption("Absent");
-    await page.getByRole("listbox").selectOption("All Statuses");
+    await page.locator("select").selectOption("Absent");
+    await page.locator("select").selectOption("All Statuses");
     await page.getByRole("button", { name: "End Session" }).click();
   });
 });
