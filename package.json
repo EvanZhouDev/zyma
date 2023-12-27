@@ -8,7 +8,8 @@
     "lint": "biome lint .",
     "fix": "biome check --apply .",
     "fix-unsafe": "biome check --apply-unsafe .",
-    "update-types": "supabase gen types typescript --local --schema public > utils/supabase/types.ts"
+    "update-types": "supabase gen types typescript --local --schema public > utils/supabase/types.ts",
+    "test": "bunx playwright test"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
@@ -32,9 +33,11 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.4.1",
+    "@playwright/test": "^1.40.1",
     "@types/node": "20.3.1",
     "@types/react": "18.2.8",
     "@types/react-dom": "18.2.5",
+    "dotenv": "^16.3.1",
     "encoding": "^0.1.13"
   }
 }
