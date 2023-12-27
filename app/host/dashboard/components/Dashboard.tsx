@@ -76,7 +76,7 @@ export default function Dashboard({
 							});
 						},
 					)
-					.subscribe();
+					.subscribe(console.log);
 			}
 		})();
 	}, [groupId]);
@@ -205,7 +205,7 @@ export default function Dashboard({
 							Cannot start attendance session without a group.
 						</p>
 					) : attendees.length === 0 ? (
-						<p className="opacity-50 text-center">
+						<p className="opacity-50 text-center max-w-lg">
 							Zyma will not be able to track attendance without registered
 							attendees.
 						</p>

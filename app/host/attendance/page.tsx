@@ -1,9 +1,9 @@
 import Logo from "@/components/Logo.jsx";
+import ZymaCode from "@/components/ZymaCode";
 import { ROOT_URL } from "@/components/constants";
 import { v } from "@/utils";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { AlertIcon, ZapIcon } from "@primer/octicons-react";
-import { QRCodeSVG } from "qrcode.react";
 import AttendeeCounter from "./AttendeeCounter";
 import AttendeePresenceTable from "./AttendeePresenceTable";
 import TimeElapsed from "./TimeElapsed";
@@ -18,7 +18,7 @@ export default async function Index({
 	const { client } = await getServerClientWithRedirect(
 		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`,
 	);
-	const CODE_SELECT = "groups (name), code, created_at, id";
+	const CODE_SELECT = "groups (name), code, created_at";
 	const existingCode = v(
 		await client
 			.from("codes")
@@ -26,7 +26,7 @@ export default async function Index({
 			.eq("group", searchParams.groupId),
 	);
 	let data: (typeof existingCode)[0];
-
+	//XXX: Can't I just do an UPSERT?
 	if (existingCode.length === 1) {
 		data = existingCode[0];
 	} else {
@@ -49,7 +49,7 @@ export default async function Index({
 		v(
 			await client
 				.from("attendees")
-				.select("*")
+				.select("group")
 				.eq("group", searchParams.groupId),
 		) ?? []
 	).length;
@@ -79,32 +79,10 @@ export default async function Index({
 						<b className="text-xl">{data.groups!.name}</b>
 					</div>
 				</div>
-				<div className="flex flex-col items-center -mt-5">
-					<div className="text-3xl mb-4">Scan the code to attend.</div>
-					<div className="flex items-center justify-center w-[27vw] h-[27vw]">
-						<div className="absolute z-10">
-							<div className="w-[27vw] h-[27vw] rounded-3xl zyma-code-bg" />
-						</div>
-						<div className="absolute z-20">
-							<div className="w-[25vw] h-[25vw] rounded-2xl bg-base-100" />
-						</div>
-						<div className="absolute z-30">
-							<QRCodeSVG
-								value={`${ROOT_URL}/attend?code=${data.code}`}
-								size={400}
-								className="top-0 left-0 w-[23vw] h-[23vw]"
-							/>
-						</div>
-					</div>
-				</div>
-
-				<div className="flex flex-col items-center">
-					<div className="text-2xl mb-2">Alternatively, enter the Passcode</div>
-					<div className="flex flex-row items-center">
-						<div className="text-3xl font-bold">{data.code}</div>
-					</div>
-				</div>
-
+				<ZymaCode
+					code={data.code}
+					url={`${ROOT_URL}/attend?code=${data.code}`}
+				/>
 				<div className="flex flex-col items-center mb-4">
 					<div className="text-3xl opacity-50">
 						Session started{" "}
@@ -126,7 +104,7 @@ export default async function Index({
 							/>
 							/{totalAttendees} Attendees Present
 						</h1>{" "}
-						<form action={endSession.bind(null, data.id)}>
+						<form action={endSession.bind(null, searchParams.groupId)}>
 							<button className="btn btn-dangerous">End Session</button>{" "}
 						</form>
 					</div>

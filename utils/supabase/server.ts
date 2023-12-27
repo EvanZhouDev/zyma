@@ -8,6 +8,7 @@ export function getServerClient() {
 	const client = createClient(cookieStore);
 	return client;
 }
+export type ServerClient = Awaited<ReturnType<typeof getServerClient>>;
 export async function getServerClientWithRedirect(currentRoute: string) {
 	const client = getServerClient();
 	const attendeeId = (await client.auth.getUser()).data?.user?.id;

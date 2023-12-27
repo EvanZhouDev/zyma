@@ -3,7 +3,7 @@
 import { v } from "@/utils";
 import { getServerClient } from "@/utils/supabase/server";
 
-export async function addAttendee(groupId: number, form: FormData) {
+export async function addAttendee(group: number, form: FormData) {
 	const client = getServerClient();
 	const attendees = v(
 		await client
@@ -12,15 +12,16 @@ export async function addAttendee(groupId: number, form: FormData) {
 			.eq("email", form.get("email") as string),
 	);
 	// TODO: Form validation and use return
-	if (attendees?.length == null) {
+	if (attendees.length === 0) {
 		throw new Error("Attendee not found");
 	}
 	const attendee = attendees[0].id;
 
 	const { error } = await client
 		.from("attendees")
-		.insert([{ group: groupId, attendee }]);
+		.insert([{ attendee, group }]);
 	if (error != null) {
+		console.error(error);
 		throw new Error("Attendee is already in your group");
 	}
 }

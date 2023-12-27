@@ -12,18 +12,15 @@ export default function GroupActions({
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
-			const { count, error } = await client
+			const { count } = await client
 				.from("attendees")
 				// `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the hood.
 				// `"planned"`: Approximated but fast count algorithm. Uses the Postgres statistics under the hood.
 				// `"estimated"`: Uses exact count for low numbers and planned count for high numbers.
 				.select("*", { head: true, count: "estimated" })
 				.eq("group", klass.id);
-			if (error !== null) {
-				console.error(error);
-			}
-			console.assert(count !== null, "count is null");
-			setAttendeeCount(count!);
+			// If count is null, it means that there are no entires
+			setAttendeeCount(count ?? 0);
 		})();
 	});
 	return (
