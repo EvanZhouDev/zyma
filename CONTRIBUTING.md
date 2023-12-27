@@ -81,7 +81,7 @@ If you have made any visual changes, remember to update the snapshots:
 $ bun run test --update-snapshots
 ```
 
-To update snapshots for other OSes, get the updated snapshots from the CI.
+If you don't use a Linux-based system, get the updated snapshots from the CI.
 
 See [here](./tests/example.spec.ts) for an example test. We use [Playwright](https://playwright.dev) for end-to-end testing.
 

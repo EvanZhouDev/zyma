@@ -6,12 +6,9 @@ on:
     branches: ["main"]
 name: Generate Snapshots
 jobs:
-  test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+  generate:
     timeout-minutes: 60
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
@@ -35,6 +32,6 @@ jobs:
         run: bun run test --update-snapshots
       - uses: actions/upload-artifact@v3
         with:
-          name: Snapshots (${{ runner.os }})
+          name: Snapshots
           path: |
             tests/**/*.ts-snapshots/
