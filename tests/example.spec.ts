@@ -64,7 +64,6 @@ test.describe("Happy path", () => {
 		await page.goto("/");
 		await page.waitForURL(/dashboard/);
 		await expect(page).toHaveScreenshot("dashboard-with-groups.png");
-		await expect(page).toHaveScreenshot();
 		await expect(page.getByRole("combobox")).toBeVisible();
 		await expect(page.getByRole("tabpanel")).toContainText(
 			"No attendees registered.",
