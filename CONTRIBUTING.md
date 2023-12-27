@@ -22,7 +22,7 @@ $ supabase --version
 1.123.4
 ```
 
-When you've cloned the repo (or your fork of this repo) and checked out to your branch (following the [GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow#create-a-branch)), be sure to run `bun install`, `supabase start`, `supabase db reset`.
+When you've cloned the repo (or your fork of this repo) and checked out to your branch (following the [GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow#create-a-branch)), be sure to run `bun install`, `supabase start`, and `supabase db reset`.
 
 ## Pull Request contributing guide
 
@@ -39,6 +39,8 @@ If an issue's solution seems obvious or clear (like fixing a typo or link), you 
 
 ### Major PR
 
+If you're making somewhat bigger code changes please [write tests](#testing) if they don't exist already :test_tube:.
+
 If you're fixing a bug :bug:, please remember link to the applicable issue describing the bug like this (if it exists):
 
 ```md
@@ -52,6 +54,28 @@ For example:
 ```
 
 If you're changing/adding documentation, the above isn't required.
+
+### Testing
+
+First, make sure you have Playwright set up properly (this is a one-time thing):
+
+```bash
+$ bunx playwright install --with-deps
+```
+
+Then, to run tests:
+
+```bash
+$ bun run test
+```
+
+If you have made any visual changes, remember to update the snapshots:
+
+```bash
+$ bun run test --update-snapshots
+```
+
+See [here](./tests/example.spec.ts) for an example test. We use [Playwright](https://playwright.dev) for end-to-end testing.
 
 ### Code style
 
