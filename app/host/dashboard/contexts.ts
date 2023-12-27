@@ -1,11 +1,11 @@
 import { createContext } from "react";
 export type Metadata = { attendence?: [number, number] };
 export type Attendee = {
-  email: string;
-  username: string;
-  metadata?: Metadata;
-  id: string;
-  group: number;
+	email: string;
+	username: string;
+	metadata?: Metadata;
+	id: string;
+	group: number;
 };
 
 export const AttendeesInClassContext = createContext<Attendee[]>([]);

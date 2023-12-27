@@ -1,14 +1,15 @@
+"use client";
 import Logo from "@/components/Logo";
 import ZymaCode from "@/components/ZymaCode";
 import { ROOT_URL } from "@/components/constants";
-import { AlertIcon, ZapIcon } from "@primer/octicons-react";
-import TimeElapsed from "./TimeElapsed";
-import { getRelativeMinuteTime } from "./utils";
-import AttendeePresenceTable from "./AttendeePresenceTable";
-import { endSession } from "./actions";
-import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
 import { v } from "@/utils";
+import { createClient } from "@/utils/supabase/client";
+import { AlertIcon, ZapIcon } from "@primer/octicons-react";
+import { useEffect, useState } from "react";
+import AttendeePresenceTable from "./AttendeePresenceTable";
+import TimeElapsed from "./TimeElapsed";
+import { endSession } from "./actions";
+import { getRelativeMinuteTime } from "./utils";
 
 async function getAttendee(uuid: string, code: string) {
 	const client = await createClient();

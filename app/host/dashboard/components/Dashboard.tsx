@@ -3,6 +3,7 @@ import Logo from "@/components/Logo";
 import SwitchTheme from "@/components/SwitchTheme.jsx";
 import { v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
+import { Tables } from "@/utils/supabase/types";
 import {
 	InfoIcon,
 	RepoIcon,
@@ -15,7 +16,6 @@ import AttendeeTable from "./AttendeeTable";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
-import { Tables } from "@/utils/supabase/types";
 
 async function getAttendee(uuid: string) {
 	const client = await createClient();
