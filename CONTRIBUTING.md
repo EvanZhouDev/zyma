@@ -63,7 +63,13 @@ First, make sure you have Playwright set up properly (this is a one-time thing):
 $ bunx playwright install --with-deps
 ```
 
-Then, to run tests:
+Before you run your tests, spin up the development server:
+
+```bash
+$ bun run dev
+```
+
+Then run the tests:
 
 ```bash
 $ bun run test
