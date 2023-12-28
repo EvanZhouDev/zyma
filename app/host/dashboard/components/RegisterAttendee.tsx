@@ -18,7 +18,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 			const data = v(
 				await client
 					.from("groups")
-					.update({ code: generateCode() })
+					.update({ code: generateCode(), joinable: true })
 					.eq("id", groupId)
 					.select("code"),
 			);
@@ -69,6 +69,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 						</form>
 					</div>
 				</div>
+				{/* TODO: Disable joinable */}
 				<form method="dialog" className="modal-backdrop">
 					<button>Close</button>
 				</form>
