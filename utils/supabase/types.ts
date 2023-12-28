@@ -51,18 +51,18 @@ export interface Database {
       attendees: {
         Row: {
           attendee: string
-          group: number
           metadata: Json | null
+          with_code: string
         }
         Insert: {
           attendee: string
-          group: number
           metadata?: Json | null
+          with_code: string
         }
         Update: {
           attendee?: string
-          group?: number
           metadata?: Json | null
+          with_code?: string
         }
         Relationships: [
           {
@@ -73,11 +73,11 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "attendees_group_fkey"
-            columns: ["group"]
+            foreignKeyName: "attendees_with_code_fkey"
+            columns: ["with_code"]
             isOneToOne: false
             referencedRelation: "groups"
-            referencedColumns: ["id"]
+            referencedColumns: ["code"]
           }
         ]
       }
@@ -113,26 +113,29 @@ export interface Database {
       groups: {
         Row: {
           admin: string
-          code: string | null
+          code: string
           config: Json | null
           created_at: string
           id: number
+          joinable: boolean
           name: string
         }
         Insert: {
           admin: string
-          code?: string | null
+          code?: string
           config?: Json | null
           created_at?: string
           id?: number
+          joinable?: boolean
           name: string
         }
         Update: {
           admin?: string
-          code?: string | null
+          code?: string
           config?: Json | null
           created_at?: string
           id?: number
+          joinable?: boolean
           name?: string
         }
         Relationships: [
