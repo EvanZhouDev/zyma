@@ -1,4 +1,5 @@
 import CodeNotFound from "@/components/CodeNotFound";
+import ErrorInfo from "@/components/ErrorInfo";
 import MainHero from "@/components/MainHero";
 import NoCodeProvided from "@/components/NoCodeProvided";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
@@ -42,10 +43,10 @@ export default async function Join({
 				</MainHero>
 			);
 		}
-		// TODO: Group not joinable
-		// Group not found
-		console.assert(error.code === "23503");
-		return <CodeNotFound code={searchParams.code} />;
+		// Group not found or the group isn't joinable.
+		// Either way it's an RLS violation
+		console.assert(error.code === "42501"); // "42501" is the error code for RLS violations
+		return <CodeNotFound code={searchParams.code} action="Join" />;
 	}
 	return (
 		<MainHero>

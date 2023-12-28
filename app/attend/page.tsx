@@ -29,7 +29,7 @@ export default async function Page({
 
 	if (error != null || data === null) {
 		console.assert(error.code === "23503", JSON.stringify(error));
-		return <CodeNotFound code={searchParams.code} />;
+		return <CodeNotFound code={searchParams.code} action="Attend" />;
 	}
 
 	return (
