@@ -1,6 +1,6 @@
 import { AlertIcon } from "@primer/octicons-react";
-import MainHero from "./MainHero";
 import { ReactNode } from "react";
+import MainHero from "./MainHero";
 
 export default function ErrorInfo({
 	title,
