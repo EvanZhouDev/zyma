@@ -45,8 +45,9 @@ export default function SignUp({
 				</button>
 				<button
 					className="underline opacity-50 text-lg mt-10"
-					formAction={async () => {
+					onClick={async (event) => {
 						nameDialog.current!.showModal();
+						event.preventDefault();
 					}}
 				>
 					No account? Sign Up
@@ -74,6 +75,7 @@ export default function SignUp({
 							<input
 								type="text"
 								name="name"
+								required
 								className="w-full input input-standard mb-5"
 							/>
 						</div>
@@ -84,6 +86,7 @@ export default function SignUp({
 							<input
 								type="email"
 								name="email"
+								required
 								className="w-full input input-standard mb-5"
 							/>
 						</div>
@@ -94,6 +97,7 @@ export default function SignUp({
 							<input
 								type="password"
 								name="password"
+								required
 								className="w-full input input-standard mb-5"
 							/>
 						</div>
