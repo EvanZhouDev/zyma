@@ -41,6 +41,7 @@ test.describe("Happy path", () => {
 				page.locator("dialog button").filter({ hasText: /^Submit$/ }),
 			).toBeEnabled();
 			await page.getByRole("button", { name: "Submit" }).click();
+			await page.waitForURL(/dashboard/);
 		}
 	});
 	test("(Host) Login Account, Create Group", async ({ page, browserName }) => {
