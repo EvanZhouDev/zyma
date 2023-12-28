@@ -16,10 +16,6 @@ jobs:
             - uses: oven-sh/setup-bun@v1
               with:
                   bun-version: latest
-            - name: Cache Docker images.
-              uses: ScribeMD/docker-cache@0.3.7
-              with:
-                  key: docker-${{ runner.os }}-${{ env.SUPABASE_VERSION }}
             - name: Setup Supabase v${{ env.SUPABASE_VERSION }}
               uses: supabase/setup-cli@v1
               with:
