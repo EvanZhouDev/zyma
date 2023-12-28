@@ -44,7 +44,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow place-items-center">
 							<form
 								className="my-10 flex justify-stretch w-full space-x-2"
-								action={addAttendee.bind(null, groupId)}
+								action={addAttendee.bind(null, code)}
 							>
 								<label className="label">
 									<span className="label-text text-base">Attendee Email: </span>
