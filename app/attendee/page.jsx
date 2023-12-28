@@ -103,6 +103,9 @@ export default function Page() {
 							<button className="btn btn-standard mt-5">Close</button>
 						</form>
 					</div>
+					<form method="dialog" className="modal-backdrop">
+						<button>Close</button>
+					</form>
 				</dialog>
 			</div>
 		</MainHero>
