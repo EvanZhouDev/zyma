@@ -1,5 +1,4 @@
 import CodeNotFound from "@/components/CodeNotFound";
-import ErrorInfo from "@/components/ErrorInfo";
 import MainHero from "@/components/MainHero";
 import NoCodeProvided from "@/components/NoCodeProvided";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
