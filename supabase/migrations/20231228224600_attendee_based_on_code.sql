@@ -22,11 +22,11 @@ alter table "public"."attendees" add constraint "attendees_with_code_fkey" FOREI
 
 alter table "public"."attendees" validate constraint "attendees_with_code_fkey";
 
-create policy "Limit attendee insertion to joinable groups"
+create policy "Limit attendee insertion to joinable groups OR admins"
 on "public"."attendees"
 as permissive
 for insert
 to authenticated
 with check ((EXISTS ( SELECT 1
    FROM groups
-  WHERE ((groups.code = attendees.with_code) AND groups.joinable))));
+  WHERE ((groups.code = attendees.with_code) AND (groups.joinable OR groups.admin = auth.uid())))));
