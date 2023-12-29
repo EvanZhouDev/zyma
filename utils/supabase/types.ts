@@ -218,6 +218,12 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      is_joinable: {
+        Args: {
+          join_code: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
