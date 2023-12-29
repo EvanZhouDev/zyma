@@ -11,6 +11,7 @@ export default function MainHero({ children, padding = 6 }) {
 					<h1 className="text-5xl font-bold">
 						<Logo size={250} />
 					</h1>
+					<p className="text-2xl font-bold opacity-40">Simply Here.</p>
 					{children}
 				</div>
 			</div>
@@ -26,10 +27,7 @@ export default function MainHero({ children, padding = 6 }) {
 					GitHub
 				</a>
 				<span className="mx-2">|</span>
-				<a
-					className="hover:text-primary transition-all"
-					href="https://github.com/EvanZhouDev/zyma"
-				>
+				<a className="hover:text-primary transition-all" href="/about">
 					<InfoIcon className="mr-1" />
 					About
 				</a>
