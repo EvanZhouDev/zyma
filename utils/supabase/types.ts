@@ -176,7 +176,42 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      attendees_with_group: {
+        Row: {
+          attendee: string | null
+          group: number | null
+          metadata: Json | null
+          with_code: string | null
+        }
+        Insert: {
+          attendee?: string | null
+          group?: never
+          metadata?: Json | null
+          with_code?: string | null
+        }
+        Update: {
+          attendee?: string | null
+          group?: never
+          metadata?: Json | null
+          with_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendees_attendee_fkey"
+            columns: ["attendee"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendees_with_code_fkey"
+            columns: ["with_code"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["code"]
+          }
+        ]
+      }
     }
     Functions: {
       delete_expired_codes: {
