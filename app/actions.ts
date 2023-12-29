@@ -22,7 +22,7 @@ export async function signIn(
 		const redirectURL = new URL(headers().get("origin")!);
 		redirectURL.searchParams.append("error", error.message);
 		if (redirectTo) {
-			redirectURL.searchParams.append("redirectTo", redirectTo);
+			redirectURL.searchParams.append("to", redirectTo);
 		}
 
 		return redirect(redirectURL.href);
@@ -42,7 +42,7 @@ export async function signUp(formData: FormData) {
 		password,
 		options: {
 			data: {
-				name: name,
+				name,
 			},
 			emailRedirectTo: `${origin}/host/dashboard`,
 		},

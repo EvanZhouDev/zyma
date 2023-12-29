@@ -7,12 +7,12 @@ import SignUp from "./components/SignUp";
 export default async function Index({
 	searchParams,
 }: {
-	searchParams: { message?: string; error?: string; redirectTo?: string };
+	searchParams: { message?: string; error?: string; to?: string };
 }) {
 	const client = getServerClient();
 
 	if ((await client.auth.getUser()).data.user != null) {
-		return redirect(searchParams.redirectTo ?? "/host/dashboard");
+		return redirect(searchParams.to ?? "/host/dashboard");
 	}
 	return (
 		<MainHero>
@@ -31,10 +31,7 @@ export default async function Index({
 					</p>
 				)}
 
-				<SignUp
-					signIn={signIn.bind(null, searchParams.redirectTo)}
-					signUp={signUp}
-				/>
+				<SignUp signIn={signIn.bind(null, searchParams.to)} signUp={signUp} />
 			</div>
 		</MainHero>
 	);
