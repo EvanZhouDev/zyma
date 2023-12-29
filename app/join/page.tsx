@@ -42,13 +42,12 @@ export default async function Join({
 		console.assert(error.code === "42501"); // "42501" is the error code for RLS violations
 		return <CodeNotFound code={searchParams.code} action="Join" />;
 	}
-	const data = v(
-		await client.from("attendees").select("groups (name)").limit(1).single(),
-	)!;
+	const data = v(await client.from("attendees").select("groups (name)"));
+	console.assert(data.length === 1);
 	return (
 		<MainHero>
 			<h1 className="my-5 text-xl">
-				Successfully joined <b>{data.groups.name}</b>
+				Successfully joined <b>{data[0]!.groups!.name}</b>
 			</h1>
 			<p className="max-w opacity-50">It is safe to close this tab.</p>
 		</MainHero>
