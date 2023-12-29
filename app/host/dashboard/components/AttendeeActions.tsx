@@ -30,6 +30,11 @@ export default function AttendeeActions({ attendee }: { attendee: Attendee }) {
 						</form>
 					</div>
 				</div>
+				<div className="modal-backdrop">
+					<form method="dialog">
+						<button>Close</button>
+					</form>
+				</div>
 			</dialog>
 			<button
 				className="btn btn-dangerous ml-2 transition-none"
