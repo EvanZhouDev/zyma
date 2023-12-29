@@ -29,7 +29,7 @@ export async function removeAttendee(group: number, attendee: string) {
 	const client = getServerClient();
 	v(
 		await client
-			.from("attendees")
+			.from("attendees_with_group")
 			.delete()
 			.eq("attendee", attendee)
 			.eq("group", group),

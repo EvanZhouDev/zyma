@@ -98,7 +98,7 @@ export default function Dashboard({
 				const client = await createClient();
 				const attendees = v(
 					await client
-						.from("attendees")
+						.from("attendees_with_group")
 						.select("profiles (username, email), metadata, attendee")
 						.eq("group", groupId),
 				);
@@ -119,7 +119,7 @@ export default function Dashboard({
 						{
 							event: "INSERT",
 							schema: "public",
-							table: "attendees",
+							table: "attendees_with_group",
 							// I hope this doesn't introduce security errors
 							filter: `group=eq.${groupId}`,
 						},
@@ -141,7 +141,7 @@ export default function Dashboard({
 						{
 							event: "UPDATE",
 							schema: "public",
-							table: "attendees",
+							table: "attendees_with_group",
 							filter: `group=eq.${groupId}`,
 						},
 						(payload) => {
@@ -158,7 +158,7 @@ export default function Dashboard({
 						{
 							event: "DELETE",
 							schema: "public",
-							table: "attendees",
+							table: "attendees_with_group",
 							filter: `group=eq.${groupId}`,
 						},
 						(payload) => {
