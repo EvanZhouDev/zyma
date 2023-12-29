@@ -42,7 +42,6 @@ export default async function Join({
 		console.assert(error.code === "42501"); // "42501" is the error code for RLS violations
 		return <CodeNotFound code={searchParams.code} action="Join" />;
 	}
-	console.log("yes");
 	const data = v(
 		await client.from("attendees").select("groups (name)").limit(1).single(),
 	)!;
