@@ -31,6 +31,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 			<button
 				className="btn btn-standard flex items-center justify-center"
 				onClick={() => {
+					// TODO: HOOK UP TO BACKEND
 					const data = {
 						Student1: {
 							attendanceHistory: {
@@ -76,6 +77,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 
 					const attendanceDates = Array.from(attendanceDatesSet);
 
+					// TODO: HOOK UP TO BACKEND
 					const advisorName = "[advisor name]";
 					const dates = "Wednesday";
 					const times = "4:00-5:00PM";
