@@ -1,12 +1,12 @@
 import { createContext } from "react";
 export type Metadata = {
-	attendanceHistory?: { [key: string]: [string, number] };
-	customProperties: { [key: string]: string | number | boolean | null };
+	attendanceHistory: { [key: string]: [string, number] };
+	customProperties: { [key: string]: string };
 };
 export type Attendee = {
 	email: string;
 	username: string;
-	metadata?: Metadata;
+	metadata: Metadata;
 	id: string;
 	group: number;
 };

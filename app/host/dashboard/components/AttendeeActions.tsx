@@ -8,7 +8,13 @@ export default function AttendeeActions({ attendee }: { attendee: Attendee }) {
 	return (
 		<div className="flex space-x-2">
 			<AttendeeInfo attendee={attendee} />
-			<MetadataEditor title="Attendee"/>
+			<MetadataEditor
+				title="Attendee"
+				originalMetadata={attendee.metadata.customProperties}
+				editRow={async (key, value) => {}}
+				addRow={async (key) => {}}
+				deleteRow={async (key) => {}}
+			/>
 			<button
 				className="btn btn-dangerous transition-none"
 				onClick={async () => {

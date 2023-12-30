@@ -1,9 +1,9 @@
 import { createClient } from "@/utils/supabase/client";
-import { GearIcon, InfoIcon, TrashIcon } from "@primer/octicons-react";
+import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { deleteClass } from "../actions";
-import GroupSettings from "./GroupSettings";
 import { Tables } from "@/utils/supabase/types";
+import MetadataEditor from "./MetadataEditor";
 
 export default function GroupActions({
 	group,
@@ -51,7 +51,12 @@ export default function GroupActions({
 						>
 							<InfoIcon size="medium" />
 						</button>
-						<GroupSettings group={group} />
+						<MetadataEditor
+							originalMetadata={group.metadata!}
+							editRow={async (key, value) => {}}
+							addRow={async (key) => {}}
+							deleteRow={async (key) => {}}
+						/>
 						{/* <dialog
             id={`my_modal_${klass.id}`}
             className="modal"
