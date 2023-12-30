@@ -17,6 +17,7 @@ import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
 import ExportButton from "./ExportButton";
+import YourLastAttendance from "./YourLastAttendance";
 
 async function getAttendee(uuid: string) {
 	const client = await createClient();
@@ -24,7 +25,7 @@ async function getAttendee(uuid: string) {
 		await client
 			.from("attendees")
 			.select("profiles (username, email), metadata")
-			.eq("attendee", uuid),
+			.eq("attendee", uuid)
 	)[0];
 }
 type Group = Tables<"groups">;
@@ -58,7 +59,7 @@ export default function Dashboard({
 					(payload) => {
 						console.log(payload);
 						setGroups((x) => [...x, payload.new as Group]);
-					},
+					}
 				)
 				.on(
 					"postgres_changes",
@@ -71,9 +72,9 @@ export default function Dashboard({
 					(payload) => {
 						console.log(payload);
 						setGroups((groups) =>
-							groups.filter((x) => (x.id === payload.new.id ? payload.new : x)),
+							groups.filter((x) => (x.id === payload.new.id ? payload.new : x))
 						);
-					},
+					}
 				)
 				.on(
 					"postgres_changes",
@@ -86,9 +87,9 @@ export default function Dashboard({
 					(payload) => {
 						console.log(payload);
 						setGroups((groups) =>
-							groups.filter((x) => x.id !== payload.old.id),
+							groups.filter((x) => x.id !== payload.old.id)
 						);
-					},
+					}
 				)
 				.subscribe(console.log);
 		})();
@@ -101,7 +102,7 @@ export default function Dashboard({
 					await client
 						.from("attendees_with_group")
 						.select("profiles (username, email), metadata, attendee")
-						.eq("group", groupId),
+						.eq("group", groupId)
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
@@ -111,7 +112,7 @@ export default function Dashboard({
 							id: x.attendee,
 							group: groupId,
 						} as Attendee;
-					}),
+					})
 				);
 				client
 					.channel("attendees-in-group")
@@ -135,7 +136,7 @@ export default function Dashboard({
 									} as Attendee,
 								]);
 							});
-						},
+						}
 					)
 					.on(
 						"postgres_changes",
@@ -149,10 +150,10 @@ export default function Dashboard({
 							console.log(payload);
 							setAttendees((attendees) =>
 								attendees.filter((x) =>
-									x.id === payload.new.id ? payload.new : x,
-								),
+									x.id === payload.new.id ? payload.new : x
+								)
 							);
-						},
+						}
 					)
 					.on(
 						"postgres_changes",
@@ -165,9 +166,9 @@ export default function Dashboard({
 						(payload) => {
 							console.log(payload);
 							setAttendees((attendees) =>
-								attendees.filter((x) => x.id !== payload.old.id),
+								attendees.filter((x) => x.id !== payload.old.id)
 							);
-						},
+						}
 					)
 					.subscribe(console.log);
 			}
@@ -355,38 +356,7 @@ export default function Dashboard({
 					</div>
 				</div>
 				<div className="bg-base-100 rounded-box outline-base-200 flex flex-col items-center outline outline-1 justify-between w-full mt-3">
-					<div className="flex flex-col items-center justify-between w-full mb-5 px-5">
-						<div className="flex justify-between items-center w-full mt-3">
-							<div className="flex flex-col">
-								<h1 className="font-bold !text-secondary-content !text-2xl">
-									Your Last Attendance:
-								</h1>
-								<p className="text-secondary-content text-xl opacity-50">
-									On 12/29/23 for 36.4k attendees
-								</p>
-							</div>
-							<button className="btn btn-standard">See Full Statistics</button>
-						</div>
-						<div className="stats w-full overflow-hidden mt-5 mb-3">
-							<div className="stat">
-								<div className="stat-title">Attendees joined</div>
-								<div className="stat-value">31K</div>
-								<div className="stat-desc">85% of total</div>
-							</div>
-
-							<div className="stat">
-								<div className="stat-title">Attendees Absent</div>
-								<div className="stat-value">4,200</div>
-								<div className="stat-desc">12% of total</div>
-							</div>
-
-							<div className="stat">
-								<div className="stat-title">Unregistered</div>
-								<div className="stat-value">1,200</div>
-								<div className="stat-desc">3% of total</div>
-							</div>
-						</div>
-					</div>
+					<YourLastAttendance />
 				</div>
 				<div className="bg-base-100 rounded-box outline-base-200 flex flex-col items-center outline outline-1 justify-between w-full mt-3">
 					<div className="flex flex-row items-center justify-between w-full mb-5 mt-5 px-5">
