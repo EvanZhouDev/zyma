@@ -5,13 +5,13 @@ import MetadataRow from "./MetadataRow";
 
 export default function MetadataEditor({
 	title,
-	originalMetadata,
+	metadata,
 	editRow,
 	addRow,
 	deleteRow,
 }: {
 	title: string;
-	originalMetadata: { [key: string]: string };
+	metadata: { [key: string]: string };
 	editRow: (key: string, value: string) => Promise<void>;
 	addRow: (key: string) => Promise<void>;
 	deleteRow: (key: string) => Promise<void>;
@@ -69,9 +69,10 @@ export default function MetadataEditor({
 							</tr>
 						</thead>
 						<tbody className="font-normal text-lg">
-							{Object.entries(originalMetadata).map(([key, value]) => (
+							{Object.entries(metadata).map(([row, value]) => (
 								<MetadataRow
-									key={key}
+									key={row}
+									row={row}
 									originalValue={value}
 									editRow={editRow}
 									deleteRow={deleteRow}

@@ -14,7 +14,7 @@ export default function AttendeeActions({ attendee }: { attendee: Attendee }) {
 			<AttendeeInfo attendee={attendee} />
 			<MetadataEditor
 				title="Attendee"
-				originalMetadata={attendee.metadata.customProperties}
+				metadata={attendee.metadata.customProperties}
 				editRow={async (key, value) => {
 					await editRowAttendeeMetadata(attendee.id, key, value);
 				}}

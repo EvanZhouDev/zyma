@@ -2,12 +2,12 @@ import { TrashIcon } from "@primer/octicons-react";
 import { useState } from "react";
 
 export default function MetadataRow({
-	key,
+	row,
 	originalValue,
 	editRow,
 	deleteRow,
 }: {
-	key: string;
+	row: string;
 	originalValue: string;
 	editRow: (key: string, value: string) => Promise<void>;
 	deleteRow: (key: string) => Promise<void>;
@@ -15,7 +15,7 @@ export default function MetadataRow({
 	const [value, setValue] = useState<string>(originalValue);
 	return (
 		<tr>
-			<td>{key}</td>
+			<td>{row}</td>
 			<td>
 				<input
 					type="text"
@@ -24,7 +24,7 @@ export default function MetadataRow({
 						setValue(event.target.value);
 					}}
 					onInput={async () => {
-						await editRow(key, value);
+						await editRow(row, value);
 					}}
 					value={value}
 					className="input input-standard w-fit max-w-xs"
@@ -35,7 +35,7 @@ export default function MetadataRow({
 					<button
 						className="btn btn-dangerous transition-none"
 						onClick={async () => {
-							await deleteRow(key);
+							await deleteRow(row);
 						}}
 					>
 						<TrashIcon size="medium" />

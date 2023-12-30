@@ -46,7 +46,7 @@ export default function GroupActions({
 						<GroupInfo group={group} />
 						<MetadataEditor
 							title="Group"
-							originalMetadata={group.metadata as { [key: string]: string }}
+							metadata={group.metadata as { [key: string]: string }}
 							editRow={async (key, value) => {
 								await editRowGroupMetadata(group.id, key, value);
 							}}
