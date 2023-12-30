@@ -31,7 +31,7 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 				const customProperties = Array.from(propertiesSet);
 
 				// TODO: HOOK UP TO BACKEND
-				const groupMetadata = Object.entries(group.config ?? {});
+				const groupMetadata = Object.entries(group.metadata ?? {});
 
 				const csv = Papa.unparse([
 					...groupMetadata,
