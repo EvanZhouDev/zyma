@@ -1,5 +1,9 @@
 import { TrashIcon } from "@primer/octicons-react";
-import { removeAttendee } from "../actions";
+import {
+	deleteRowAttendeeMetadata,
+	editRowAttendeeMetadata,
+	removeAttendee,
+} from "../actions";
 import { Attendee } from "../contexts";
 import AttendeeInfo from "./AttendeeInfo";
 import MetadataEditor from "./MetadataEditor";
@@ -11,9 +15,15 @@ export default function AttendeeActions({ attendee }: { attendee: Attendee }) {
 			<MetadataEditor
 				title="Attendee"
 				originalMetadata={attendee.metadata.customProperties}
-				editRow={async (key, value) => {}}
-				addRow={async (key) => {}}
-				deleteRow={async (key) => {}}
+				editRow={async (key, value) => {
+					await editRowAttendeeMetadata(attendee.id, key, value);
+				}}
+				addRow={async (key) => {
+					await editRowAttendeeMetadata(attendee.id, key, "");
+				}}
+				deleteRow={async (key) => {
+					await deleteRowAttendeeMetadata(attendee.id, key);
+				}}
 			/>
 			<button
 				className="btn btn-dangerous transition-none"

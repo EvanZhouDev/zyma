@@ -1,9 +1,14 @@
 import { createClient } from "@/utils/supabase/client";
-import { InfoIcon, TrashIcon } from "@primer/octicons-react";
+import { TrashIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
-import { deleteClass } from "../actions";
+import {
+	deleteClass,
+	deleteRowGroupMetadata,
+	editRowGroupMetadata,
+} from "../actions";
 import { Tables } from "@/utils/supabase/types";
 import MetadataEditor from "./MetadataEditor";
+import GroupInfo from "./GroupInfo";
 
 export default function GroupActions({
 	group,
@@ -38,46 +43,20 @@ export default function GroupActions({
 				<td>{attendeeCount ?? "--"}</td>
 				<th>
 					<div className="flex space-x-2">
-						<button
-							className="btn btn-standard"
-							onClick={
-								() => {}
-								// (
-								// 	document.getElementById(
-								// 		`my_modal_${klass.id}`,
-								// 	) as HTMLDialogElement
-								// ).showModal()
-							}
-						>
-							<InfoIcon size="medium" />
-						</button>
+						<GroupInfo group={group} />
 						<MetadataEditor
-							originalMetadata={group.metadata!}
-							editRow={async (key, value) => {}}
-							addRow={async (key) => {}}
-							deleteRow={async (key) => {}}
+							title="Group"
+							originalMetadata={group.metadata as { [key: string]: string }}
+							editRow={async (key, value) => {
+								await editRowGroupMetadata(group.id, key, value);
+							}}
+							addRow={async (key) => {
+								await editRowGroupMetadata(group.id, key, "");
+							}}
+							deleteRow={async (key) => {
+								await deleteRowGroupMetadata(group.id, key);
+							}}
 						/>
-						{/* <dialog
-            id={`my_modal_${klass.id}`}
-            className="modal"
-        >
-            <div className="modal-box">
-                <h3 className="font-bold text-lg">
-                    Group Name: "{klass.name}"
-                </h3>
-                <p className="py-4 mt-5">
-                    The ID associated with this group is {klass.id}.
-                </p>
-                <p className="py-4 font-normal">
-                    There are 0 attendees in this group currently.
-                </p>
-                <div className="modal-action">
-                    <form method="dialog">
-                        <button className="btn">Close</button>
-                    </form>
-                </div>
-            </div>
-        </dialog> */}
 						<button
 							className="btn btn-dangerous transition-none"
 							onClick={async () => {
