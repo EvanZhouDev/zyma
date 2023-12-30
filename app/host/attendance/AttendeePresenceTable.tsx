@@ -26,7 +26,7 @@ export default function AttendeePresenceTable({
 
 	// const [joined, setJoined] = useState(initialJoined);
 	const statuses = Object.fromEntries(
-		joined.map(({ attendee, status }) => [attendee, convertStatus(status)]),
+		joined.map(({ attendee, status }) => [attendee, convertStatus(status)])
 	);
 	// useEffect(() => {
 	// 	(async () => {
@@ -148,7 +148,7 @@ export default function AttendeePresenceTable({
 												{
 													hour: "2-digit",
 													minute: "2-digit",
-												},
+												}
 											)}
 										</td>
 										<td>

@@ -22,6 +22,7 @@
     "formik": "^2.4.5",
     "geist": "^1.0.0",
     "next": "latest",
+    "papaparse": "^5.4.1",
     "postcss": "^8.4.32",
     "qrcode.react": "^3.1.0",
     "react": "18.2.0",
