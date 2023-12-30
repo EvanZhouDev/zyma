@@ -37,14 +37,13 @@ export default async function Index({
 				.select("profiles (username), attendee, status, created_at")
 				.eq("code_used", data.code),
 		) ?? [];
-	const totalAttendees = (
-		v(
+	const totalAttendees =
+		(
 			await client
-				.from("attendees")
-				.select("group")
-				.eq("group", searchParams.groupId),
-		) ?? []
-	).length;
+				.from("attendees_with_group")
+				.select("*", { head: true, count: "exact" })
+				.eq("group", searchParams.groupId)
+		).count ?? 0;
 
 	return (
 		<Dashboard

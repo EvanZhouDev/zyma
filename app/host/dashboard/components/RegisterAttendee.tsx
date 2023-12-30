@@ -18,7 +18,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 			const data = v(
 				await client
 					.from("groups")
-					.update({ code: generateCode() })
+					.update({ code: generateCode(), joinable: true })
 					.eq("id", groupId)
 					.select("code"),
 			);
@@ -44,7 +44,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 						<div className="card bg-base-100 rounded-box flex h-[75vh] w-[30vw] flex-grow place-items-center">
 							<form
 								className="my-10 flex justify-stretch w-full space-x-2"
-								action={addAttendee.bind(null, groupId)}
+								action={addAttendee.bind(null, code)}
 							>
 								<label className="label">
 									<span className="label-text text-base">Attendee Email: </span>
@@ -69,6 +69,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 						</form>
 					</div>
 				</div>
+				{/* TODO: Disable joinable */}
 				<form method="dialog" className="modal-backdrop">
 					<button>Close</button>
 				</form>

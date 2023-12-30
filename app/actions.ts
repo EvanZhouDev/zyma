@@ -47,10 +47,8 @@ export async function signUp(formData: FormData) {
 			emailRedirectTo: `${origin}/host/dashboard`,
 		},
 	});
-
 	if (error) {
-		return redirect(`/?message=${error}`);
+		return redirect(`/?error=${error.message}`);
 	}
-
 	return redirect("/?message=Check email to continue sign in process");
 }

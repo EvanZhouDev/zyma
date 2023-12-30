@@ -2,15 +2,8 @@ import CodeNotFound from "@/components/CodeNotFound";
 import MainHero from "@/components/MainHero";
 import NoCodeProvided from "@/components/NoCodeProvided";
 import { v } from "@/utils";
-import {
-	ServerClient,
-	getServerClientWithRedirect,
-} from "@/utils/supabase/server";
+import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import { InfoIcon } from "@primer/octicons-react";
-async function getGroup(client: ServerClient, code: string) {
-	// What if user-passed code is null?
-	return v(await client.from("groups").select("id, name").eq("code", code))[0];
-}
 export default async function Join({
 	searchParams,
 }: {
@@ -26,13 +19,10 @@ export default async function Join({
 	if (searchParams.code === undefined) {
 		return <NoCodeProvided action="Join" />;
 	}
-	const group = await getGroup(client, searchParams.code);
-	const { error } = await client.from("attendees").insert([
-		{
-			attendee: attendeeId,
-			group: group.id,
-		},
-	]);
+	const { error } = await client.from("attendees").insert({
+		attendee: attendeeId,
+		with_code: searchParams.code,
+	});
 	if (error !== null) {
 		if (error.code === "23505") {
 			return (
@@ -46,14 +36,18 @@ export default async function Join({
 				</MainHero>
 			);
 		}
-		// Group not found
-		console.assert(error.code === "23503");
-		return <CodeNotFound code={searchParams.code} />;
+		// Group not found or the group isn't joinable.
+		// Either way it's an RLS violation
+		console.log(error);
+		console.assert(error.code === "42501"); // "42501" is the error code for RLS violations
+		return <CodeNotFound code={searchParams.code} action="Join" />;
 	}
+	const data = v(await client.from("attendees").select("groups (name)"));
+	console.assert(data.length === 1);
 	return (
 		<MainHero>
 			<h1 className="my-5 text-xl">
-				Successfully joined <b>{group.name}</b>
+				Successfully joined <b>{data[0]!.groups!.name}</b>
 			</h1>
 			<p className="max-w opacity-50">It is safe to close this tab.</p>
 		</MainHero>
