@@ -4,9 +4,13 @@ import { v } from "@/utils";
 import { getServerClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function endSession(group: number) {
+export async function endSession(code: string) {
 	"use server";
 	const client = getServerClient();
-	v(await client.from("codes").delete().eq("group", group));
+	v(
+		await client.rpc("end_session", {
+			attendance_code: code,
+		}),
+	);
 	return redirect("/host/dashboard");
 }
