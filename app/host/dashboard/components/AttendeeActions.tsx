@@ -1,5 +1,4 @@
-import { InfoIcon, TrashIcon } from "@primer/octicons-react";
-import { useRef } from "react";
+import { TrashIcon } from "@primer/octicons-react";
 import { removeAttendee } from "../actions";
 import { Attendee } from "../contexts";
 import AttendeeInfo from "./AttendeeInfo";

@@ -1,6 +1,4 @@
 import { useRef } from "react";
-import { InfoIcon, TrashIcon } from "@primer/octicons-react";
-import AttendeeActions from "./AttendeeActions";
 
 export default function YourLastAttendance() {
     const lastAttendanceDialog = useRef(null);

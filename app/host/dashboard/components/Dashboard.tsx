@@ -366,7 +366,7 @@ export default function Dashboard({
 
 							<a
 								className="mx-5"
-								href="https://github.com/EvanZhouDev/zyma/issues"
+								href="https://github.com/EvanZhouDev/zyma/issues/new/choose"
 								title="Report an issue"
 								target="_blank"
 								rel="noreferrer"
