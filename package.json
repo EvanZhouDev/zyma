@@ -36,6 +36,7 @@
     "@biomejs/biome": "1.4.1",
     "@playwright/test": "^1.40.1",
     "@types/node": "20.3.1",
+    "@types/papaparse": "^5.3.14",
     "@types/react": "18.2.8",
     "@types/react-dom": "18.2.5",
     "dotenv": "^16.3.1",

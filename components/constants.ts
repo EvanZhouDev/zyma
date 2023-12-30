@@ -1,3 +1,12 @@
+export const STATUS_TO_NUMBER = {
+	Present: 0,
+	Doctor: 1,
+	Family: 2,
+	Clubs: 3,
+	Homework: 4,
+	Other: 5,
+	Absent: 6,
+};
 export function convertStatus(status: number) {
 	switch (status) {
 		case 0:

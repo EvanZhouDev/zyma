@@ -1,56 +1,33 @@
 import Papa from "papaparse";
 import { UploadIcon } from "@primer/octicons-react";
+import { useContext } from "react";
+import { AttendeesInClassContext } from "../contexts";
+import { STATUS_TO_NUMBER } from "@/components/constants";
 
 export default function ExportButton() {
+	const attendees = useContext(AttendeesInClassContext);
 	return (
 		<button
 			className="btn btn-standard flex items-center justify-center"
 			onClick={() => {
-				// TODO: HOOK UP TO BACKEND
-				const data = {
-					Student1: {
-						attendanceHistory: {
-							[new Date("12/29/2023 08:01").toISOString()]: [
-								new Date("12/29/2023 08:02").toISOString(),
-								0,
-							],
-							[new Date("12/30/2023 08:01").toISOString()]: [
-								new Date("12/30/2023 08:02").toISOString(),
-								0,
-							],
-						},
-					},
-					Student2: {
-						attendanceHistory: {
-							[new Date("12/29/2023 08:01").toISOString()]: [
-								new Date("12/29/2023 08:05").toISOString(),
-								0,
-							],
-							[new Date("12/30/2023 08:01").toISOString()]: [
-								new Date("12/30/2023 08:10").toISOString(),
-								1,
-							],
-							[new Date("12/31/2023 08:01").toISOString()]: [
-								new Date("12/31/2023 08:10").toISOString(),
-								0,
-							],
-						},
-					},
-				};
-
-				const students = Object.keys(data);
-
-				const attendanceDatesSet = new Set();
-
-				for (const [student, { attendanceHistory }] of Object.entries(data)) {
-					console.log(Object.keys(attendanceHistory));
-					for (const date of Object.keys(attendanceHistory)) {
-						attendanceDatesSet.add(date);
+				const attendanceDatesSet = new Set<string>();
+				const propertiesSet = new Set<string>();
+				for (const { metadata } of attendees) {
+					if (metadata?.attendanceHistory) {
+						const attendanceHistory = metadata.attendanceHistory;
+						for (const date of Object.keys(attendanceHistory)) {
+							attendanceDatesSet.add(date);
+						}
 					}
-					console.log(student, attendanceHistory);
+					if (metadata?.customProperties) {
+						for (const property of Object.keys(metadata.customProperties)) {
+							propertiesSet.add(property);
+						}
+					}
 				}
-
+				// A list of unique dates that we have taken attendance on
 				const attendanceDates = Array.from(attendanceDatesSet);
+				const customProperties = Array.from(propertiesSet);
 
 				// TODO: HOOK UP TO BACKEND
 				const advisorName = "[advisor name]";
@@ -62,22 +39,29 @@ export default function ExportButton() {
 					[`Dates: ${dates}`, ...new Array(attendanceDates.length + 1)],
 					[`Times: ${times}`, ...new Array(attendanceDates.length + 1)],
 					[
-						"Student Name",
-						"Grade",
+						"Attendee Name",
+						...customProperties,
 						...attendanceDates.map((x) =>
 							new Date(x).toLocaleDateString("en-US", {
 								month: "2-digit",
 								day: "2-digit",
-							})
+							}),
 						),
 					],
-					...students.map((student) => [
-						student,
-						"DO GRADE",
+					...attendees.map((student) => [
+						student.username,
+						...customProperties.map(
+							(property) =>
+								student.metadata?.customProperties?.[property] ?? "--",
+						),
 						...attendanceDates.map((date) => {
-							const attendanceHistory = data[student].attendanceHistory;
-							console.log(date, attendanceHistory[date]);
-							if (attendanceHistory[date] && attendanceHistory[date][1] === 0)
+							const attendanceHistory =
+								student.metadata?.attendanceHistory ?? {};
+
+							if (
+								attendanceHistory[date] &&
+								attendanceHistory[date][1] === STATUS_TO_NUMBER.Present
+							)
 								return "X";
 						}),
 					]),
