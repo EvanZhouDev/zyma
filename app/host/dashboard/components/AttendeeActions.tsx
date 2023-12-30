@@ -22,7 +22,8 @@ export default function AttendeeActions({ attendee }: { attendee: Attendee }) {
 						The Email associated with this group is {attendee.email}.
 					</p>
 					<p className="py-4 font-normal">
-						Attendance: {attendee?.metadata?.attendence}
+						Attendance:{" "}
+						{JSON.stringify(attendee?.metadata?.attendanceHistory ?? {})}
 					</p>
 					<div className="modal-action">
 						<form method="dialog">
