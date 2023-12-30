@@ -10,6 +10,7 @@ export default function SignUp({
 	signIn: (formData: FormData) => Promise<void>;
 }) {
 	const nameDialog = useRef<HTMLDialogElement>(null);
+
 	const [role, setRole] = useState("host");
 
 	return (
