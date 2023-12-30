@@ -138,6 +138,9 @@ export default function SignUp({
 						</button>
 					</div>
 				</form>
+				<form method="dialog" className="modal-backdrop">
+					<button>Close</button>
+				</form>
 			</dialog>
 		</>
 	);

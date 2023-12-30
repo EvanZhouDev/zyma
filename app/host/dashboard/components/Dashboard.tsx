@@ -24,7 +24,7 @@ async function getAttendee(uuid: string) {
 		await client
 			.from("attendees")
 			.select("profiles (username, email), metadata")
-			.eq("attendee", uuid)
+			.eq("attendee", uuid),
 	)[0];
 }
 type Group = Tables<"groups">;
@@ -58,7 +58,7 @@ export default function Dashboard({
 					(payload) => {
 						console.log(payload);
 						setGroups((x) => [...x, payload.new as Group]);
-					}
+					},
 				)
 				.on(
 					"postgres_changes",
@@ -71,9 +71,9 @@ export default function Dashboard({
 					(payload) => {
 						console.log(payload);
 						setGroups((groups) =>
-							groups.filter((x) => (x.id === payload.new.id ? payload.new : x))
+							groups.filter((x) => (x.id === payload.new.id ? payload.new : x)),
 						);
-					}
+					},
 				)
 				.on(
 					"postgres_changes",
@@ -86,9 +86,9 @@ export default function Dashboard({
 					(payload) => {
 						console.log(payload);
 						setGroups((groups) =>
-							groups.filter((x) => x.id !== payload.old.id)
+							groups.filter((x) => x.id !== payload.old.id),
 						);
-					}
+					},
 				)
 				.subscribe(console.log);
 		})();
@@ -101,7 +101,7 @@ export default function Dashboard({
 					await client
 						.from("attendees_with_group")
 						.select("profiles (username, email), metadata, attendee")
-						.eq("group", groupId)
+						.eq("group", groupId),
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
@@ -111,7 +111,7 @@ export default function Dashboard({
 							id: x.attendee,
 							group: groupId,
 						} as Attendee;
-					})
+					}),
 				);
 				client
 					.channel("attendees-in-group")
@@ -135,7 +135,7 @@ export default function Dashboard({
 									} as Attendee,
 								]);
 							});
-						}
+						},
 					)
 					.on(
 						"postgres_changes",
@@ -149,10 +149,10 @@ export default function Dashboard({
 							console.log(payload);
 							setAttendees((attendees) =>
 								attendees.filter((x) =>
-									x.id === payload.new.id ? payload.new : x
-								)
+									x.id === payload.new.id ? payload.new : x,
+								),
 							);
-						}
+						},
 					)
 					.on(
 						"postgres_changes",
@@ -165,9 +165,9 @@ export default function Dashboard({
 						(payload) => {
 							console.log(payload);
 							setAttendees((attendees) =>
-								attendees.filter((x) => x.id !== payload.old.id)
+								attendees.filter((x) => x.id !== payload.old.id),
 							);
-						}
+						},
 					)
 					.subscribe(console.log);
 			}
@@ -235,7 +235,7 @@ export default function Dashboard({
 												placeholder="Search Attendees..."
 												className="input input-standard mr-2 flex-grow"
 											/>
-											<ExportButton />
+											<ExportButton group={groups[groupId]} />
 											<RegisterAttendee groupId={groupId} />
 										</div>
 										<div>

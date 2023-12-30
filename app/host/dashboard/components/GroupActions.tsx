@@ -1,12 +1,14 @@
 import { createClient } from "@/utils/supabase/client";
-import { InfoIcon, TrashIcon } from "@primer/octicons-react";
+import { GearIcon, InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { deleteClass } from "../actions";
+import GroupSettings from "./GroupSettings";
+import { Tables } from "@/utils/supabase/types";
 
 export default function GroupActions({
-	klass,
+	group,
 }: {
-	klass: { name: string; id: number };
+	group: Tables<"groups">;
 }) {
 	const [attendeeCount, setAttendeeCount] = useState<number>();
 	useEffect(() => {
@@ -18,7 +20,7 @@ export default function GroupActions({
 				// `"planned"`: Approximated but fast count algorithm. Uses the Postgres statistics under the hood.
 				// `"estimated"`: Uses exact count for low numbers and planned count for high numbers.
 				.select("*", { head: true, count: "exact" })
-				.eq("group", klass.id);
+				.eq("group", group.id);
 			// If count is null, it means that there are no entires
 			setAttendeeCount(count ?? 0);
 		})();
@@ -29,15 +31,15 @@ export default function GroupActions({
 				<td>
 					<div className="flex items-center gap-3">
 						<div>
-							<div className="font-bold">{klass.name}</div>
+							<div className="font-bold">{group.name}</div>
 						</div>
 					</div>
 				</td>
 				<td>{attendeeCount ?? "--"}</td>
 				<th>
-					<div className="flex">
+					<div className="flex space-x-2">
 						<button
-							className="btn btn-standard ml-2"
+							className="btn btn-standard"
 							onClick={
 								() => {}
 								// (
@@ -49,6 +51,7 @@ export default function GroupActions({
 						>
 							<InfoIcon size="medium" />
 						</button>
+						<GroupSettings group={group} />
 						{/* <dialog
             id={`my_modal_${klass.id}`}
             className="modal"
@@ -71,9 +74,9 @@ export default function GroupActions({
             </div>
         </dialog> */}
 						<button
-							className="btn btn-dangerous ml-2 transition-none"
+							className="btn btn-dangerous transition-none"
 							onClick={async () => {
-								await deleteClass(klass.id);
+								await deleteClass(group.id);
 							}}
 						>
 							<TrashIcon size="medium" />

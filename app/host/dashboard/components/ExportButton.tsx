@@ -3,8 +3,9 @@ import { UploadIcon } from "@primer/octicons-react";
 import { useContext } from "react";
 import { AttendeesInClassContext } from "../contexts";
 import { STATUS_TO_NUMBER } from "@/components/constants";
+import { Tables } from "@/utils/supabase/types";
 
-export default function ExportButton() {
+export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 	const attendees = useContext(AttendeesInClassContext);
 	return (
 		<button
@@ -30,14 +31,10 @@ export default function ExportButton() {
 				const customProperties = Array.from(propertiesSet);
 
 				// TODO: HOOK UP TO BACKEND
-				const advisorName = "[advisor name]";
-				const dates = "Wednesday";
-				const times = "4:00-5:00PM";
+				const groupMetadata = Object.entries(group.config ?? {});
 
 				const csv = Papa.unparse([
-					[`Advisor: ${advisorName}`, ...new Array(attendanceDates.length + 1)],
-					[`Dates: ${dates}`, ...new Array(attendanceDates.length + 1)],
-					[`Times: ${times}`, ...new Array(attendanceDates.length + 1)],
+					...groupMetadata,
 					[
 						"Attendee Name",
 						...customProperties,

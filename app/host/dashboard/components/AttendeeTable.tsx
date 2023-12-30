@@ -38,7 +38,9 @@ export default function AttendeeTable() {
 								</div>
 							</td>
 							<td>{attendee.email}</td>
-							<td>{attendee?.metadata?.attendence}</td>
+							<td>
+								{JSON.stringify(attendee?.metadata?.attendanceHistory ?? {})}
+							</td>
 							<th>
 								<AttendeeActions attendee={attendee} />
 							</th>
