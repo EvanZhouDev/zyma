@@ -10,11 +10,12 @@ export default function SignUp({
 	signIn: (formData: FormData) => Promise<void>;
 }) {
 	const nameDialog = useRef<HTMLDialogElement>(null);
+	const usernameEmailForm = useRef<HTMLFormElement>(null);
 	const [username, setUsername] = useState("");
 	return (
 		<>
 			<form
-				id="account"
+				ref={usernameEmailForm}
 				className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
 			>
 				<div className="w-full">
@@ -73,16 +74,16 @@ export default function SignUp({
 						/>
 					</div>
 					<div className="modal-action">
+						{/* if there is a button in form, it will close the modal */}
 						<form method="dialog">
-							{/* if there is a button in form, it will close the modal */}
 							<button className="btn btn-standard">Close</button>
 							<button
-								form="account"
-								type="submit"
 								className="btn btn-standard ml-3"
 								disabled={username.length === 0}
-								formAction={async (formData: FormData) => {
+								onClick={async (event) => {
+									event.preventDefault();
 									nameDialog.current!.close();
+									const formData = new FormData(usernameEmailForm.current!);
 									formData.set("name", username);
 									await signUp(formData);
 								}}

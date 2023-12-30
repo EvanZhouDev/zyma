@@ -29,7 +29,7 @@ export async function signIn(
 	}
 	return redirect(redirectTo ?? "/host/dashboard");
 }
-export async function signUp(formData: FormData) {
+export async function signUp(formData: FormData, trial = 3): Promise<never> {
 	const origin = headers().get("origin");
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
@@ -48,6 +48,19 @@ export async function signUp(formData: FormData) {
 		},
 	});
 	if (error) {
+		console.log(error, JSON.stringify(error));
+		// Random glitch
+		if (error.name === "AuthRetryableFetchError") {
+			if (trial === 0) {
+				console.log("OUT OF RETRIES");
+				return redirect(
+					`/?error=${encodeURIComponent(
+						"AuthRetryableFetchError: Please try again later",
+					)}`,
+				);
+			}
+			return await signUp(formData, trial - 1);
+		}
 		return redirect(`/?error=${error.message}`);
 	}
 	return redirect("/?message=Check email to continue sign in process");

@@ -1,4 +1,6 @@
 import { Page, expect, test } from "@playwright/test";
+
+const GROUP_NAME = "Example Group";
 async function login(page: Page, name: string) {
 	await page.goto("/");
 	await page.locator('input[name="email"]').fill(name);
@@ -6,6 +8,22 @@ async function login(page: Page, name: string) {
 	await page.locator('input[name="password"]').fill("123456");
 	await page.getByRole("button", { name: /Sign In/g }).click();
 	await page.waitForURL(/dashboard/);
+}
+async function getCode(page: Page) {
+	const code = await page
+		.locator(
+			"xpath=.//div[contains(., 'Alternatively, enter the Passcode')]/following-sibling::div/div/text()/..",
+		)
+		.textContent();
+	await expect(code).not.toBeNull();
+	return code!;
+}
+async function removeStudent(page: Page) {
+	await page
+		.locator(
+			':is([aria-label="Manage Attendees"] + div) .btn-dangerous:not(dialog .btn-dangerous)',
+		)
+		.click();
 }
 test.describe("Happy path", () => {
 	// These tests are inherently serial because they share the same account
@@ -53,7 +71,7 @@ test.describe("Happy path", () => {
 		await expect(
 			page.getByRole("button", { name: "Create Group" }),
 		).toBeDisabled();
-		await page.getByPlaceholder("Group name...").fill("Example Group");
+		await page.getByPlaceholder("Group name...").fill(GROUP_NAME);
 		await expect(
 			page.getByRole("button", { name: "Create Group" }),
 		).toBeEnabled();
@@ -85,5 +103,74 @@ test.describe("Happy path", () => {
 		await page.locator("select").selectOption("Absent");
 		await page.locator("select").selectOption("All Statuses");
 		await page.getByRole("button", { name: "End Session" }).click();
+	});
+	test("Join group + leave group", async ({ browser, browserName }) => {
+		const hostContext = await browser.newContext();
+		const attendeeContext = await browser.newContext();
+		const hostPage = await hostContext.newPage();
+		const attendeePage = await attendeeContext.newPage();
+		await login(hostPage, `host.${browserName}@acme.org`);
+		// Assert that a Group exists
+		await expect(hostPage.getByRole("tabpanel")).toContainText(
+			"No attendees registered.",
+		);
+		await hostPage.goto("/host/dashboard"); // Just in case the codes can work fine
+		await hostPage.getByRole("button", { name: "Register Attendees" }).click();
+		await hostPage.goto("/host/dashboard"); // Just in case the codes can work fine
+		await hostPage.getByRole("button", { name: "Register Attendees" }).click();
+		const code = await getCode(hostPage);
+		// Join class
+		await login(attendeePage, `attendee.${browserName}@acme.org`);
+		await attendeePage.goto(`/join?code=${code}`);
+		await expect(attendeePage).toHaveScreenshot("attendee-success.png");
+		await expect(attendeePage.getByText(/Successfully joined/)).toBeVisible();
+		// See student
+		await hostPage.goto("/host/dashboard"); // XXX: Realtime
+		await expect(hostPage).toHaveScreenshot("dashboard-attendee-joined.png");
+		await expect(
+			hostPage
+				.getByRole("cell", { name: `attendee.${browserName}@acme.org` })
+				.first(),
+		).toBeVisible();
+		// Remove student
+		await removeStudent(hostPage);
+		await hostPage.goto("/host/dashboard"); // XXX: Realtime
+		await expect(hostPage.getByRole("tabpanel")).toContainText(
+			"No attendees registered.",
+		);
+	});
+	test("Join group (manual) + leave group", async ({
+		browser,
+		browserName,
+	}) => {
+		const hostContext = await browser.newContext();
+		const attendeeContext = await browser.newContext();
+		const hostPage = await hostContext.newPage();
+		const attendeePage = await attendeeContext.newPage();
+		await login(hostPage, `host.${browserName}@acme.org`);
+		// Assert that a Group exists
+		await expect(hostPage.getByRole("tabpanel")).toContainText(
+			"No attendees registered.",
+		);
+		await hostPage.getByRole("button", { name: "Register Attendees" }).click();
+		const code = await getCode(hostPage);
+		// Join class
+		await hostPage
+			.locator('input[name="email"]')
+			.fill(`attendee.${browserName}@acme.org`);
+		await hostPage.getByText("Add Attendee").click();
+		await login(attendeePage, `attendee.${browserName}@acme.org`);
+		await attendeePage.goto(`/join?code=${code}`);
+		await expect(attendeePage).toHaveScreenshot("attendee-already-joined.png");
+		await expect(
+			attendeePage.getByText(/You already joined this group/),
+		).toBeVisible();
+		// Remove student
+		await hostPage.goto("/host/dashboard"); // XXX: Realtime
+		await removeStudent(hostPage);
+		await hostPage.goto("/host/dashboard"); // XXX: Realtime
+		await expect(hostPage.getByRole("tabpanel")).toContainText(
+			"No attendees registered.",
+		);
 	});
 });
