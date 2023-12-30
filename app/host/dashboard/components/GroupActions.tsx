@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/client";
 import { InfoIcon, TrashIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { deleteClass } from "../actions";
+import AddAdmin from "./AddAdmin";
 
 export default function GroupActions({
 	klass,
@@ -34,10 +35,10 @@ export default function GroupActions({
 					</div>
 				</td>
 				<td>{attendeeCount ?? "--"}</td>
-				<th>
-					<div className="flex">
+				<td>
+					<div className="flex space-x-2">
 						<button
-							className="btn btn-standard ml-2"
+							className="btn btn-standard"
 							onClick={
 								() => {}
 								// (
@@ -71,15 +72,16 @@ export default function GroupActions({
             </div>
         </dialog> */}
 						<button
-							className="btn btn-dangerous ml-2 transition-none"
+							className="btn btn-dangerous transition-none"
 							onClick={async () => {
 								await deleteClass(klass.id);
 							}}
 						>
 							<TrashIcon size="medium" />
 						</button>
+						<AddAdmin groupName={klass.name} />
 					</div>
-				</th>
+				</td>
 			</tr>
 		</>
 	);

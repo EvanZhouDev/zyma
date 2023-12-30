@@ -13,7 +13,7 @@ export async function getServerClientWithRedirect(currentRoute: string) {
 	const client = getServerClient();
 	const attendeeId = (await client.auth.getUser()).data?.user?.id;
 	if (attendeeId == null) {
-		redirect(`/?redirectTo=${encodeURIComponent(currentRoute)}`);
+		redirect(`/?to=${encodeURIComponent(currentRoute)}`);
 	}
 	return { client, attendeeId };
 }
