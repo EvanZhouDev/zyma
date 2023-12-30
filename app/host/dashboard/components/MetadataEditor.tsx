@@ -43,6 +43,7 @@ export default function MetadataEditor({
 						<input
 							type="text"
 							placeholder="Key..."
+							value={newKey}
 							onChange={(event) => {
 								setNewKey(event.target.value);
 							}}
@@ -50,8 +51,10 @@ export default function MetadataEditor({
 						/>
 						<button
 							className="btn btn-standard flex items-center justify-center"
+							disabled={newKey.length === 0}
 							onClick={async () => {
 								await addRow(newKey);
+								setNewKey("");
 							}}
 							aria-label="Add Row with Key"
 						>
