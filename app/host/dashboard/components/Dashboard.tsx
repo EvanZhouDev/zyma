@@ -183,7 +183,7 @@ export default function Dashboard({
 						type="radio"
 						name="my_tabs_2"
 						role="tab"
-						className="tab h-10 !w-[15vw]"
+						className="tab h-10 !w-[200px]"
 						aria-label="Manage Attendees"
 						defaultChecked
 					/>
@@ -253,7 +253,7 @@ export default function Dashboard({
 						name="my_tabs_2"
 						ref={manageClasses}
 						role="tab"
-						className="tab h-10 !w-[15vw]"
+						className="tab h-10 !w-[200px]"
 						aria-label="Manage Your Groups"
 					/>
 					<div
