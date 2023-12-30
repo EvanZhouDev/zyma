@@ -7,7 +7,7 @@ import SignUp from "./components/SignUp";
 export default async function Index({
 	searchParams,
 }: {
-	searchParams: { message: string; redirectTo?: string };
+	searchParams: { message?: string; error?: string; redirectTo?: string };
 }) {
 	const client = getServerClient();
 
@@ -16,16 +16,14 @@ export default async function Index({
 	}
 	return (
 		<MainHero>
-			<div className="flex-1 flex flex-col items-center px-8 min-w-[450px] text-left mb-10">
+			<div className="flex-1 flex flex-col items-center px-8 min-w-[25vw] text-left mb-10">
 				{searchParams?.message ? (
-					<p
-						className={`alert ${
-							searchParams.message.includes("Could not authenticate")
-								? "alert-error"
-								: "alert-info"
-						} !h-15 !my-2 !mt-5 bg-foreground/10 text-foreground rounded-lg flex flex-col items-center`}
-					>
+					<p className="alert alert-info !h-15 !my-2 !mt-5 bg-foreground/10 text-foreground rounded-lg flex flex-col items-center">
 						{searchParams.message}
+					</p>
+				) : searchParams?.error ? (
+					<p className="alert alert-error !h-15 !my-2 !mt-5 bg-foreground/10 text-foreground rounded-lg flex flex-col items-center">
+						{searchParams.error}
 					</p>
 				) : (
 					<p className="alert h-15 my-2 mt-5 bg-base-100 border-none flex flex-col items-center">

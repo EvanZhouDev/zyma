@@ -7,8 +7,8 @@ import { useLocalStorage } from "usehooks-ts";
 const SwitchTheme = () => {
 	// Function to get the initial theme value from the local storage
 	const getInitialTheme = () => {
-		const savedTheme = window.localStorage.getItem("theme");
-		return savedTheme ? savedTheme : "github";
+		const savedTheme = global?.localStorage?.getItem("theme");
+		return savedTheme ?? "github";
 	};
 
 	// We store the theme in localStorage to preserve the state on next visit
@@ -25,12 +25,17 @@ const SwitchTheme = () => {
 	}, [theme]);
 
 	return (
-		<button onClick={toggleTheme}>
-			{theme === "github" ? (
-				<SunIcon className="fill-current w-8 h-8 mx-5" />
-			) : (
-				<MoonIcon className="fill-current w-8 h-8 mx-5" />
-			)}
+		<button onClick={toggleTheme} className="swap">
+			<SunIcon
+				className={`fill-current w-8 h-8 mx-5 ${
+					theme === "githubDark" ? "swap-on" : "swap-off"
+				}`}
+			/>
+			<MoonIcon
+				className={`fill-current w-8 h-8 mx-5 ${
+					theme === "github" ? "swap-on" : "swap-off"
+				}`}
+			/>
 		</button>
 	);
 };

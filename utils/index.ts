@@ -8,3 +8,6 @@ export function v<T, E>({
 	}
 	return data!;
 }
+export function generateCode() {
+	return crypto.randomUUID();
+}

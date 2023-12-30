@@ -133,7 +133,7 @@ export default function SignUp({
 						</div>
 
 						<button type="submit" className="btn btn-standard">
-							Submit
+							Sign Up
 						</button>
 					</div>
 				</form>

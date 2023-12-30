@@ -1,29 +1,38 @@
+import CodeNotFound from "@/components/CodeNotFound";
 import MainHero from "@/components/MainHero";
+import NoCodeProvided from "@/components/NoCodeProvided";
 import { v } from "@/utils";
-import { getServerClientWithRedirect } from "@/utils/supabase/server";
-import { AlertIcon, InfoIcon } from "@primer/octicons-react";
-
+import {
+	ServerClient,
+	getServerClientWithRedirect,
+} from "@/utils/supabase/server";
+import { InfoIcon } from "@primer/octicons-react";
+async function getGroup(client: ServerClient, code: string) {
+	// What if user-passed code is null?
+	return v(await client.from("groups").select("id, name").eq("code", code))[0];
+}
 export default async function Join({
 	searchParams,
 }: {
-	searchParams: { group?: number };
+	searchParams: { code?: string };
 }) {
-	const { client, attendeeId } = await getServerClientWithRedirect("/join");
-	if (searchParams.group === undefined) {
-		return (
-			<MainHero padding={10}>
-				<div className="mt-5">Could not Join this group.</div>
-				<div role="alert" className="alert alert-error mt-10 mb-10">
-					<AlertIcon size="medium" />
-					<span>No code provided.</span>
-				</div>
-				Please try again, ensuring you entered the code correctly.
-			</MainHero>
-		);
+	const { client, attendeeId } = await getServerClientWithRedirect(
+		`/join${
+			searchParams.code !== undefined
+				? `?code=${encodeURIComponent(searchParams.code)}`
+				: ""
+		}`,
+	);
+	if (searchParams.code === undefined) {
+		return <NoCodeProvided action="Join" />;
 	}
-	const { error } = await client
-		.from("attendees")
-		.insert([{ attendee: attendeeId, group: searchParams.group }]);
+	const group = await getGroup(client, searchParams.code);
+	const { error } = await client.from("attendees").insert([
+		{
+			attendee: attendeeId,
+			group: group.id,
+		},
+	]);
 	if (error !== null) {
 		if (error.code === "23505") {
 			return (
@@ -39,26 +48,12 @@ export default async function Join({
 		}
 		// Group not found
 		console.assert(error.code === "23503");
-		return (
-			<MainHero padding={10}>
-				<div className="mt-5">Could not Attend this group.</div>
-				<div role="alert" className="alert alert-error my-10">
-					<AlertIcon size="medium" />
-					<span>
-						Group <b>{searchParams.group}</b> not found.
-					</span>
-				</div>
-				Please try again, ensuring you entered the code correctly.
-			</MainHero>
-		);
+		return <CodeNotFound code={searchParams.code} />;
 	}
-	const data = v(
-		await client.from("groups").select("name").eq("id", searchParams.group),
-	)[0].name;
 	return (
 		<MainHero>
 			<h1 className="my-5 text-xl">
-				Successfully joined <b>{data}</b>
+				Successfully joined <b>{group.name}</b>
 			</h1>
 			<p className="max-w opacity-50">It is safe to close this tab.</p>
 		</MainHero>

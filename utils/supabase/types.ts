@@ -86,28 +86,25 @@ export interface Database {
           code: string
           created_at: string
           group: number
-          id: number
           metadata: Json
         }
         Insert: {
           code?: string
           created_at?: string
           group: number
-          id?: number
           metadata?: Json
         }
         Update: {
           code?: string
           created_at?: string
           group?: number
-          id?: number
           metadata?: Json
         }
         Relationships: [
           {
             foreignKeyName: "codes_group_fkey"
             columns: ["group"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "groups"
             referencedColumns: ["id"]
           }
@@ -116,6 +113,7 @@ export interface Database {
       groups: {
         Row: {
           admin: string
+          code: string | null
           config: Json | null
           created_at: string
           id: number
@@ -123,6 +121,7 @@ export interface Database {
         }
         Insert: {
           admin: string
+          code?: string | null
           config?: Json | null
           created_at?: string
           id?: number
@@ -130,6 +129,7 @@ export interface Database {
         }
         Update: {
           admin?: string
+          code?: string | null
           config?: Json | null
           created_at?: string
           id?: number

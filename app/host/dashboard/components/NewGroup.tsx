@@ -7,6 +7,7 @@ export default function NewGroup() {
 	const handle = async () => {
 		const { error } = await createClass(className);
 		if (error == null) {
+			setClassName("");
 			modal.current!.close();
 		} else {
 			console.error(error);

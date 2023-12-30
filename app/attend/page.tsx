@@ -1,6 +1,7 @@
+import CodeNotFound from "@/components/CodeNotFound";
 import MainHero from "@/components/MainHero";
+import NoCodeProvided from "@/components/NoCodeProvided";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
-import { AlertIcon } from "@primer/octicons-react";
 import Excuse from "./components/Excuse";
 
 export default async function Page({
@@ -8,18 +9,15 @@ export default async function Page({
 }: {
 	searchParams: { code?: string };
 }) {
-	const { client, attendeeId } = await getServerClientWithRedirect("/attend");
+	const { client, attendeeId } = await getServerClientWithRedirect(
+		`/attend${
+			searchParams.code !== undefined
+				? `?code=${encodeURIComponent(searchParams.code)}`
+				: ""
+		}`,
+	);
 	if (searchParams.code === undefined) {
-		return (
-			<MainHero padding={10}>
-				<div className="mt-5">Could not Attend this group.</div>
-				<div role="alert" className="alert alert-error mt-10 mb-10">
-					<AlertIcon size="medium" />
-					<span>No code provided.</span>
-				</div>
-				Please try again, ensuring you entered the code correctly.
-			</MainHero>
-		);
+		return <NoCodeProvided action="Attend" />;
 	}
 	const { data, error } = await client
 		.from("attendance")
@@ -31,18 +29,7 @@ export default async function Page({
 
 	if (error != null || data === null) {
 		console.assert(error.code === "23503", JSON.stringify(error));
-		return (
-			<MainHero padding={10}>
-				<div className="mt-5">Could not Attend this group.</div>
-				<div role="alert" className="alert alert-error mt-10 mb-10">
-					<AlertIcon size="medium" />
-					<span>
-						Code <b>{searchParams.code}</b> not found.
-					</span>
-				</div>
-				Please try again, ensuring you entered the code correctly.
-			</MainHero>
-		);
+		return <CodeNotFound code={searchParams.code} />;
 	}
 
 	return (
