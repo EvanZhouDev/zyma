@@ -11,7 +11,7 @@ export default function SignUp({
 }) {
 	const nameDialog = useRef<HTMLDialogElement>(null);
 
-	const [role, setRole] = useState("host");
+	const [role, setRole] = useState("HOST");
 
 	return (
 		<>
@@ -56,9 +56,7 @@ export default function SignUp({
 			</form>
 			<dialog ref={nameDialog} className="modal">
 				<form
-					onSubmit={async (event) => {
-						event.preventDefault();
-						const formData = new FormData(event.currentTarget);
+					action={async (formData) => {
 						await signUp(formData);
 						nameDialog.current!.close();
 					}}
@@ -102,18 +100,18 @@ export default function SignUp({
 								className="w-full input input-standard mb-5"
 							/>
 						</div>
-						<div className="h-min">
+						<div className="flex space-x-2">
 							<label className="label">
 								<span className="text-base label-text">Who are You?</span>
 							</label>
 							<select
-								className="select input-standard w-full"
+								className="select input-standard w-fit"
 								name="role"
 								value={role}
 								onChange={(e) => setRole(e.target.value)}
 							>
-								<option value="host">Host</option>
-								<option value="attendee">Attendee</option>
+								<option value="HOST">Host</option>
+								<option value="ATTENDEE">Attendee</option>
 							</select>
 
 							{role === "host" && (
@@ -132,11 +130,15 @@ export default function SignUp({
 								</div>
 							)}
 						</div>
-
-						<button type="submit" className="btn btn-standard">
-							Sign Up
-						</button>
+						<div className="modal-action">
+							<button type="submit" className="btn btn-standard">
+								Sign Up
+							</button>
+						</div>
 					</div>
+				</form>
+				<form method="dialog" className="modal-backdrop">
+					<button>close</button>
 				</form>
 			</dialog>
 		</>

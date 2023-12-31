@@ -1,5 +1,6 @@
 "use server";
 
+import { convertRole } from "@/components/constants";
 import { getServerClient } from "@/utils/supabase/server";
 
 import { headers } from "next/headers";
@@ -34,6 +35,7 @@ export async function signUp(formData: FormData, trial = 3): Promise<never> {
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
 	const name = formData.get("name") as string;
+	const role = convertRole(formData.get("role") as string);
 
 	const client = getServerClient();
 
@@ -42,7 +44,8 @@ export async function signUp(formData: FormData, trial = 3): Promise<never> {
 		password,
 		options: {
 			data: {
-				name: name,
+				name,
+				role,
 			},
 			emailRedirectTo: `${origin}/host/dashboard`,
 		},

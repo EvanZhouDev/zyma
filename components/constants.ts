@@ -16,6 +16,15 @@ export function convertStatus(status: number) {
 			return "Absent";
 	}
 }
+export function convertRole(role: string): 0 | 1 {
+	if (role === "HOST") {
+		return 0;
+	}
+	if (role === "ATTENDEE") {
+		return 1;
+	}
+	throw new Error("Invalid role");
+}
 export const ROOT_URL = process.env.NEXT_PUBLIC_SITE_URL
 	? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
 	: "http://localhost:3000";
