@@ -11,3 +11,7 @@ export function v<T, E>({
 export function generateCode() {
 	return crypto.randomUUID();
 }
+export function isValidCode(code: string) {
+	// for now, validate that it is a uuid using regex
+	return /^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$/i.test(code);
+}

@@ -1,5 +1,6 @@
 "use server";
 
+import { convertRole } from "@/components/constants";
 import { getServerClient } from "@/utils/supabase/server";
 
 import { headers } from "next/headers";
@@ -13,7 +14,7 @@ export async function signIn(
 	const password = formData.get("password") as string;
 	const client = getServerClient();
 
-	const { error } = await client.auth.signInWithPassword({
+	const { data, error } = await client.auth.signInWithPassword({
 		email,
 		password,
 	});
@@ -27,13 +28,19 @@ export async function signIn(
 
 		return redirect(redirectURL.href);
 	}
-	return redirect(redirectTo ?? "/host/dashboard");
+	const user = data.user;
+	return redirect(
+		redirectTo ?? user.user_metadata.role === 0
+			? "/host/dashboard"
+			: "/attendee",
+	);
 }
 export async function signUp(formData: FormData, trial = 3): Promise<never> {
 	const origin = headers().get("origin");
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
 	const name = formData.get("name") as string;
+	const role = convertRole(formData.get("role") as string);
 
 	const client = getServerClient();
 
@@ -42,9 +49,11 @@ export async function signUp(formData: FormData, trial = 3): Promise<never> {
 		password,
 		options: {
 			data: {
-				name: name,
+				name,
+				role,
 			},
-			emailRedirectTo: `${origin}/host/dashboard`,
+			emailRedirectTo:
+				role === 0 ? `${origin}/host/dashboard` : `${origin}/attendee`,
 		},
 	});
 	if (error) {

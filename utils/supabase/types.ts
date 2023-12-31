@@ -153,16 +153,19 @@ export interface Database {
       }
       profiles: {
         Row: {
+          account_type: number
           email: string
           id: string
           username: string
         }
         Insert: {
+          account_type: number
           email: string
           id: string
           username: string
         }
         Update: {
+          account_type?: number
           email?: string
           id?: string
           username?: string

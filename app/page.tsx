@@ -10,9 +10,14 @@ export default async function Index({
 	searchParams: { message?: string; error?: string; redirectTo?: string };
 }) {
 	const client = getServerClient();
+	const user = (await client.auth.getUser()).data.user;
 
-	if ((await client.auth.getUser()).data.user != null) {
-		return redirect(searchParams.redirectTo ?? "/host/dashboard");
+	if (user != null) {
+		return redirect(
+			searchParams.redirectTo ?? user.user_metadata.role === 0
+				? "/host/dashboard"
+				: "/attendee",
+		);
 	}
 	return (
 		<MainHero>

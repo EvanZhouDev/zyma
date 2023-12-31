@@ -109,7 +109,7 @@ export default function Dashboard({
 				</div>
 				<ZymaCode
 					code={data.code}
-					url={`${ROOT_URL}/attend?code=${data.code}`}
+					url={`${ROOT_URL}/attendee/attend?code=${data.code}`}
 				/>
 				<div className="flex flex-col items-center mb-4">
 					<div className="text-3xl opacity-50">
