@@ -121,7 +121,7 @@ test.describe("Happy path", () => {
 		const code = await getCode(hostPage);
 		// Join class
 		await login(attendeePage, `attendee.${browserName}@acme.org`);
-		await attendeePage.goto(`/join?code=${code}`);
+		await attendeePage.goto(`/attendee/join?code=${code}`);
 		await expect(attendeePage).toHaveScreenshot("attendee-success.png");
 		await expect(attendeePage.getByText(/Successfully joined/)).toBeVisible();
 		// See student
@@ -160,7 +160,7 @@ test.describe("Happy path", () => {
 			.fill(`attendee.${browserName}@acme.org`);
 		await hostPage.getByText("Add Attendee").click();
 		await login(attendeePage, `attendee.${browserName}@acme.org`);
-		await attendeePage.goto(`/join?code=${code}`);
+		await attendeePage.goto(`/attendee/join?code=${code}`);
 		await expect(attendeePage).toHaveScreenshot("attendee-already-joined.png");
 		await expect(
 			attendeePage.getByText(/You already joined this group/),

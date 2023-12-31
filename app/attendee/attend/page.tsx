@@ -10,7 +10,7 @@ export default async function Page({
 	searchParams: { code?: string };
 }) {
 	const { client, attendeeId } = await getServerClientWithRedirect(
-		`/attend${
+		`/attendee/attend${
 			searchParams.code !== undefined
 				? `?code=${encodeURIComponent(searchParams.code)}`
 				: ""
