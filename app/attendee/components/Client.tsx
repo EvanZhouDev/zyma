@@ -1,15 +1,78 @@
 "use client";
 import MainHero from "@/components/MainHero";
-import { useRef } from "react";
-import {
-	TrashIcon,
-	InfoIcon,
-	GearIcon,
-	SignOutIcon,
-} from "@primer/octicons-react";
+import { useEffect, useRef, useState } from "react";
+import { GearIcon, SignOutIcon } from "@primer/octicons-react";
 import { createClient } from "@/utils/supabase/client";
-export default function Client() {
-	const classDialog = useRef(null);
+import { isValidCode, v } from "@/utils";
+import GroupTable from "./GroupTable";
+import { Tables } from "@/utils/supabase/types";
+async function getGroup(groupId: number) {
+	return v(
+		await (await createClient()).from("groups").select("*").eq("id", groupId),
+	)[0];
+}
+export default function Client({
+	initialGroups,
+	attendeeId,
+}: { initialGroups: Tables<"groups">[]; attendeeId: string }) {
+	const [groups, setGroups] = useState(initialGroups);
+	const classDialog = useRef<HTMLDialogElement>(null);
+	const [attendCode, setAttendCode] = useState("");
+	const [joinCode, setJoinCode] = useState("");
+	useEffect(() => {
+		(async () => {
+			const client = await createClient();
+			client
+				.channel("attendees-in-group")
+				.on(
+					"postgres_changes",
+					{
+						event: "INSERT",
+						schema: "public",
+						table: "attendees_with_group",
+						// I hope this doesn't introduce security errors
+						filter: `attendee=eq.${attendeeId}`,
+					},
+					(payload) => {
+						getGroup(payload.new.group).then((group) => {
+							setGroups((groups) => [...groups, group]);
+						});
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "UPDATE",
+						schema: "public",
+						table: "attendees_with_group",
+						filter: `attendee=eq.${attendeeId}`,
+					},
+					(payload) => {
+						getGroup(payload.new.group).then((group) => {
+							setGroups((groups) =>
+								groups.filter((x) => (x.id === payload.new.group ? group : x)),
+							);
+						});
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "DELETE",
+						schema: "public",
+						table: "attendees_with_group",
+						filter: `attendee=eq.${attendeeId}`,
+					},
+					(payload) => {
+						console.log(payload);
+						setGroups((groups) =>
+							groups.filter((x) => x.id !== payload.old.group),
+						);
+					},
+				)
+				.subscribe(console.log);
+		})();
+	}, [attendeeId]);
 	return (
 		<MainHero padding={3}>
 			<div className="flex-1 flex flex-col items-center px-8 min-w-[450px] text-left mb-10">
@@ -18,31 +81,35 @@ export default function Client() {
 				</b>
 				<br />
 				Alternatively, enter the Passcode below.
-				<form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground mt-10 mb-10">
+				<div className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground mt-10 mb-10">
 					<input
 						required
 						type="text"
 						name="groupCode"
+						value={attendCode}
+						onChange={(e) => setAttendCode(e.target.value)}
 						placeholder="Group Passcode..."
 						className="w-full input input-standard flex-grow form-input"
 					/>
-					<button
-						className="btn btn-standard !rounded-lg"
-						formAction={() => {}}
+					<a
+						className={`btn btn-standard !rounded-lg ${
+							!isValidCode(attendCode) && "btn-disabled"
+						}`}
+						href={`/attendee/attend?code=${attendCode}`}
 					>
 						Attend Session
-					</button>
-				</form>
+					</a>
+				</div>
 
 				<div className="flex items-center justify-between">
 					<button
 						className="btn btn-standard !rounded-lg mr-2"
 						onClick={(e) => {
 							e.preventDefault();
-							classDialog.current.showModal();
+							classDialog.current!.showModal();
 						}}
 					>
-						<GearIcon verticalAlign="center" size="medium" />
+						<GearIcon size="medium" />
 						Manage Your Groups
 					</button>
 					<button
@@ -63,60 +130,30 @@ export default function Client() {
 						<div className="w-full flex flex-row text-2xl font-bold mb-5">
 							Your Groups
 						</div>
-						<form className="w-full flex flex-row items-center justify-center">
+						<div className="w-full flex flex-row items-center justify-center">
 							<label className="label-text text-xl h-full">Join a Group:</label>
 							<input
 								type="text"
+								value={joinCode}
+								onChange={(e) => setJoinCode(e.target.value)}
 								placeholder="Group Code..."
 								className="input input-standard flex-grow ml-5 mr-3"
 							/>
-							<button
-								className="btn btn-standard !rounded-lg"
-								formAction={() => {}}
+							<a
+								className={`btn btn-standard !rounded-lg ${
+									!isValidCode(joinCode) && "btn-disabled"
+								}`}
+								href={`/attendee/join?code=${joinCode}`}
 							>
 								Join Group
-							</button>
-						</form>
-						<div className="mb-10 mt-5 opacity-50">
+							</a>
+						</div>
+						<div className="mb-5 mt-5 opacity-50">
 							Registering for a group lets the Host automagically get attendance
 							statistics. You may also be required to register for the Group to
 							Attend.
 						</div>
-						<table className="mt-10 table">
-							<thead>
-								<tr>
-									<th>Class Name</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<div className="flex items-center gap-3">
-											<div>
-												<div className="font-bold">Test Class 1</div>
-											</div>
-										</div>
-									</td>
-									<th>
-										<div className="flex">
-											<button
-												className="btn btn-standard ml-2"
-												onClick={() => {}}
-											>
-												<InfoIcon size="medium" />
-											</button>
-											<button
-												className="btn btn-dangerous ml-2 transition-none"
-												onClick={async () => {}}
-											>
-												<TrashIcon size="medium" />
-											</button>
-										</div>
-									</th>
-								</tr>
-							</tbody>
-						</table>
+						<GroupTable groups={groups} attendeeId={attendeeId} />
 						<form method="dialog" className="self-end">
 							<button className="btn btn-standard mt-5">Close</button>
 						</form>
