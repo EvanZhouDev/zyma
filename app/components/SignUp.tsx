@@ -67,39 +67,39 @@ export default function SignUp({
 							We need a little bit of information before we can start taking
 							attendance.
 						</p>
-						<div>
-							<label className="label">
+						<label>
+							<div className="label">
 								<span className="text-base label-text">Name</span>
-							</label>
+							</div>
 							<input
 								type="text"
 								name="name"
 								required
 								className="w-full input input-standard mb-5"
 							/>
-						</div>
-						<div>
-							<label className="label">
+						</label>
+						<label>
+							<div className="label">
 								<span className="text-base label-text">Email</span>
-							</label>
+							</div>
 							<input
 								type="email"
 								name="email"
 								required
 								className="w-full input input-standard mb-5"
 							/>
-						</div>
-						<div>
-							<label className="label">
+						</label>
+						<label>
+							<div className="label">
 								<span className="text-base label-text">Password</span>
-							</label>
+							</div>
 							<input
 								type="password"
 								name="password"
 								required
 								className="w-full input input-standard mb-5"
 							/>
-						</div>
+						</label>
 
 						<label className="label flex space-x-2">
 							<span className="text-base label-text">Who are You?</span>
