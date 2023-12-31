@@ -14,7 +14,7 @@ export async function signIn(
 	const password = formData.get("password") as string;
 	const client = getServerClient();
 
-	const { error } = await client.auth.signInWithPassword({
+	const { data, error } = await client.auth.signInWithPassword({
 		email,
 		password,
 	});
@@ -28,7 +28,12 @@ export async function signIn(
 
 		return redirect(redirectURL.href);
 	}
-	return redirect(redirectTo ?? "/host/dashboard");
+	const user = data.user;
+	return redirect(
+		redirectTo ?? user.user_metadata.role === 0
+			? "/host/dashboard"
+			: "/attendee",
+	);
 }
 export async function signUp(formData: FormData, trial = 3): Promise<never> {
 	const origin = headers().get("origin");
@@ -47,7 +52,8 @@ export async function signUp(formData: FormData, trial = 3): Promise<never> {
 				name,
 				role,
 			},
-			emailRedirectTo: `${origin}/host/dashboard`,
+			emailRedirectTo:
+				role === 0 ? `${origin}/host/dashboard` : `${origin}/attendee`,
 		},
 	});
 	if (error) {
