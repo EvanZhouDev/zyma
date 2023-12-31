@@ -1,7 +1,8 @@
 "use client";
 import MainHero from "@/components/MainHero";
 import { useRef } from "react";
-import { TrashIcon, InfoIcon, GearIcon } from "@primer/octicons-react";
+import { TrashIcon, InfoIcon, GearIcon, SignOutIcon } from "@primer/octicons-react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Page() {
 	const classDialog = useRef(null);
@@ -14,7 +15,7 @@ export default function Page() {
 				</b>
 				<br />
 				Alternatively, enter the Passcode below.
-				<form className="animate-in flex-1 flex flex-row w-full justify-center gap-2 text-foreground mt-10 mb-10">
+				<form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground mt-10 mb-10">
 					<input
 						required
 						type="text"
@@ -24,22 +25,36 @@ export default function Page() {
 					/>
 					<button
 						className="btn btn-standard !rounded-lg"
-						formAction={() => {}}
+						formAction={() => { }}
 					>
 						Attend Session
 					</button>
 				</form>
 
-				<button
-					className="btn btn-standard !rounded-lg !mt-15 w-full"
-					onClick={(e) => {
-						e.preventDefault();
-						classDialog.current.showModal();
-					}}
-				>
-					<GearIcon verticalAlign="center" size="medium" />
-					Manage Your Registered Groups
-				</button>
+				<div className="flex items-center justify-between">
+					<button
+						className="btn btn-standard !rounded-lg mr-2"
+						onClick={(e) => {
+							e.preventDefault();
+							classDialog.current.showModal();
+						}}
+					>
+						<GearIcon verticalAlign="center" size="medium" />
+						Manage Your Groups
+					</button>
+					<button
+						className="btn btn-dangerous"
+						onClick={async (e) => {
+							e.preventDefault();
+							const supabase = await createClient();
+							await supabase.auth.signOut();
+							window.location.reload();
+						}}
+					>
+						<SignOutIcon className="w-8 h-8" />
+						Log Out
+					</button>
+				</div>
 				<dialog ref={classDialog} className="modal">
 					<div className="modal-box max-w-[50vw]">
 						<div className="w-full flex flex-row text-2xl font-bold mb-5">
@@ -54,7 +69,7 @@ export default function Page() {
 							/>
 							<button
 								className="btn btn-standard !rounded-lg"
-								formAction={() => {}}
+								formAction={() => { }}
 							>
 								Join Group
 							</button>
@@ -84,13 +99,13 @@ export default function Page() {
 										<div className="flex">
 											<button
 												className="btn btn-standard ml-2"
-												onClick={() => {}}
+												onClick={() => { }}
 											>
 												<InfoIcon size="medium" />
 											</button>
 											<button
 												className="btn btn-dangerous ml-2 transition-none"
-												onClick={async () => {}}
+												onClick={async () => { }}
 											>
 												<TrashIcon size="medium" />
 											</button>
