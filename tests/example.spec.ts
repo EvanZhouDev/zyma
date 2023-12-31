@@ -3,6 +3,7 @@ import { Page, expect, test } from "@playwright/test";
 const GROUP_NAME = "Example Group";
 async function login(page: Page, name: string) {
 	await page.goto("/");
+	await expect(page).toHaveScreenshot("login.png");
 	await page.locator('input[name="email"]:not(dialog *)').fill(name);
 	await page.locator('input[name="password"]:not(dialog *)').click();
 	await page.locator('input[name="password"]:not(dialog *)').fill("123456");
@@ -56,6 +57,7 @@ test.describe("Happy path", () => {
 			await page.locator('dialog input[name="password"]').fill("123456");
 			await page.getByLabel(/who/i).selectOption(name);
 			await page.locator('input[name="name"]').fill(name);
+			await expect(page).toHaveScreenshot(`${name}-signup.png`);
 			await page.locator("dialog button", { hasText: "Sign Up" }).click();
 			await page.waitForURL(new RegExp(name.toLowerCase()));
 		}

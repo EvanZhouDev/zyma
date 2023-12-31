@@ -114,22 +114,6 @@ export default function SignUp({
 							</select>
 						</label>
 
-						{role === "HOST" && (
-							<div className="ml-1 mt-2 mb-10">
-								Hosts cannot join Groups or Attend.
-								<br />
-								<b>You will not be able to change your role later.</b>
-							</div>
-						)}
-
-						{role === "ATTENDEE" && (
-							<div className="ml-1 mt-2 mb-10">
-								Attendees cannot host Sessions.
-								<br />
-								<b>You will not be able to change your role later.</b>
-							</div>
-						)}
-
 						<div className="modal-action">
 							<button type="submit" className="btn btn-standard">
 								Sign Up
