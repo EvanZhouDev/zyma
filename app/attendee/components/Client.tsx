@@ -1,11 +1,11 @@
 "use client";
 import MainHero from "@/components/MainHero";
-import { useEffect, useRef, useState } from "react";
-import { GearIcon, SignOutIcon } from "@primer/octicons-react";
-import { createClient } from "@/utils/supabase/client";
 import { isValidCode, v } from "@/utils";
-import GroupTable from "./GroupTable";
+import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/types";
+import { GearIcon, SignOutIcon } from "@primer/octicons-react";
+import { useEffect, useRef, useState } from "react";
+import GroupTable from "./GroupTable";
 async function getGroup(groupId: number) {
 	return v(
 		await (await createClient()).from("groups").select("*").eq("id", groupId),

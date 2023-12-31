@@ -1,6 +1,6 @@
 import { removeAttendee } from "@/app/host/dashboard/actions";
 import { Tables } from "@/utils/supabase/types";
-import { InfoIcon, TrashIcon } from "@primer/octicons-react";
+import { TrashIcon } from "@primer/octicons-react";
 
 export default function GroupTable({
 	groups,

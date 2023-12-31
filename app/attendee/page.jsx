@@ -1,6 +1,6 @@
+import { v } from "@/utils";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import Client from "./components/Client";
-import { v } from "@/utils";
 
 export default async function Page() {
 	const { client, attendeeId } = await getServerClientWithRedirect("/attendee");
