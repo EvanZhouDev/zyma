@@ -101,10 +101,12 @@ export default function SignUp({
 							/>
 						</label>
 
-						<label className="label flex space-x-2">
-							<span className="text-base label-text">Who are You?</span>
+						<label>
+							<div className="label">
+								<span className="text-base label-text">Who are You?</span>
+							</div>
 							<select
-								className="select input-standard w-fit"
+								className="select input-standard w-full"
 								name="role"
 								value={role}
 								onChange={(e) => setRole(e.target.value)}
@@ -113,6 +115,20 @@ export default function SignUp({
 								<option value="ATTENDEE">Attendee</option>
 							</select>
 						</label>
+
+						{role === "HOST" ? (
+							<p className="mt-2">
+								<b>Hosts create Attendance Groups to track attendance.</b>
+								<br />
+								Be aware that hosts are not able to attend groups.
+							</p>
+						) : (
+							<p className="mt-2">
+								<b>Guest accounts join attendance groups.</b>
+								<br />
+								Be aware that attendees are not able to host groups.
+							</p>
+						)}
 
 						<div className="modal-action">
 							<button type="submit" className="btn btn-standard">
