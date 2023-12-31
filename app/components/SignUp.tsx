@@ -100,10 +100,9 @@ export default function SignUp({
 								className="w-full input input-standard mb-5"
 							/>
 						</div>
-						<div className="flex space-x-2">
-							<label className="label">
-								<span className="text-base label-text">Who are You?</span>
-							</label>
+
+						<label className="label flex space-x-2">
+							<span className="text-base label-text">Who are You?</span>
 							<select
 								className="select input-standard w-fit"
 								name="role"
@@ -113,23 +112,24 @@ export default function SignUp({
 								<option value="HOST">Host</option>
 								<option value="ATTENDEE">Attendee</option>
 							</select>
+						</label>
 
-							{role === "host" && (
-								<div className="ml-1 mt-2 mb-10">
-									Hosts cannot join Groups or Attend.
-									<br />
-									<b>You will not be able to change your role later.</b>
-								</div>
-							)}
+						{role === "HOST" && (
+							<div className="ml-1 mt-2 mb-10">
+								Hosts cannot join Groups or Attend.
+								<br />
+								<b>You will not be able to change your role later.</b>
+							</div>
+						)}
 
-							{role === "attendee" && (
-								<div className="ml-1 mt-2 mb-10">
-									Attendees cannot host Sessions.
-									<br />
-									<b>You will not be able to change your role later.</b>
-								</div>
-							)}
-						</div>
+						{role === "ATTENDEE" && (
+							<div className="ml-1 mt-2 mb-10">
+								Attendees cannot host Sessions.
+								<br />
+								<b>You will not be able to change your role later.</b>
+							</div>
+						)}
+
 						<div className="modal-action">
 							<button type="submit" className="btn btn-standard">
 								Sign Up

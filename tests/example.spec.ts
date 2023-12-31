@@ -3,11 +3,11 @@ import { Page, expect, test } from "@playwright/test";
 const GROUP_NAME = "Example Group";
 async function login(page: Page, name: string) {
 	await page.goto("/");
-	await page.locator('input[name="email"]').fill(name);
-	await page.locator('input[name="password"]').click();
-	await page.locator('input[name="password"]').fill("123456");
+	await page.locator('input[name="email"]:not(dialog *)').fill(name);
+	await page.locator('input[name="password"]:not(dialog *)').click();
+	await page.locator('input[name="password"]:not(dialog *)').fill("123456");
 	await page.getByRole("button", { name: /Sign In/g }).click();
-	await page.waitForURL(/dashboard/);
+	await page.waitForURL(new RegExp(name.split(".")[0]));
 }
 async function getCode(page: Page) {
 	const code = await page
@@ -44,22 +44,20 @@ test.describe("Happy path", () => {
 			const [page, name] = tuple as [Page, string];
 			await page.goto("/");
 			await expect(page).toHaveScreenshot("login.png");
-			await page
-				.locator('input[name="email"]')
-				.fill(`${name}.${browserName}@acme.org`);
-			await page.locator('input[name="password"]').click();
-			await page.locator('input[name="password"]').fill("123456");
-			await page.getByRole("button", { name: /Sign Up/ }).click();
+			await page.getByRole("button", { name: /No account/ }).click();
 			await expect(page.getByRole("dialog")).toBeVisible();
 			await expect(
-				page.locator("dialog button").filter({ hasText: /^Submit$/ }),
-			).toBeDisabled();
+				page.locator("dialog button", { hasText: /^Sign Up$/ }),
+			).toBeVisible();
+			await page
+				.locator('dialog input[name="email"]')
+				.fill(`${name}.${browserName}@acme.org`);
+			await page.locator('dialog input[name="password"]').click();
+			await page.locator('dialog input[name="password"]').fill("123456");
+			await page.getByLabel(/who/i).selectOption(name);
 			await page.locator('input[name="name"]').fill(name);
-			await expect(
-				page.locator("dialog button").filter({ hasText: /^Submit$/ }),
-			).toBeEnabled();
-			await page.getByRole("button", { name: "Submit" }).click();
-			await page.waitForURL(/dashboard/);
+			await page.locator("dialog button", { hasText: "Sign Up" }).click();
+			await page.waitForURL(new RegExp(name.toLowerCase()));
 		}
 	});
 	test("(Host) Login Account, Create Group", async ({ page, browserName }) => {
