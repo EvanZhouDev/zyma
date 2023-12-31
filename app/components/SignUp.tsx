@@ -118,15 +118,15 @@ export default function SignUp({
 
 						{role === "HOST" ? (
 							<p className="mt-2">
-								<b>Hosts create Attendance Groups to track attendance.</b>
+								<b>Hosts create Groups to track attendance.</b>
 								<br />
-								Be aware that hosts are not able to attend groups.
+								Be aware that hosts are <b>unable</b> to attend groups.
 							</p>
 						) : (
 							<p className="mt-2">
-								<b>Guest accounts join attendance groups.</b>
+								<b>Guest accounts join Groups.</b>
 								<br />
-								Be aware that attendees are not able to host groups.
+								Be aware that attendees are <b>unable</b> to host groups.
 							</p>
 						)}
 
