@@ -21,7 +21,7 @@ export default function MetadataRow({
 		(async () => {
 			await editRow(row, debouncedValue);
 		})();
-	}, [debouncedValue]);
+	}, [editRow, row, debouncedValue]);
 	return (
 		<tr>
 			<td>{row}</td>

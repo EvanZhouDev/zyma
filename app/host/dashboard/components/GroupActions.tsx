@@ -1,14 +1,14 @@
 import { createClient } from "@/utils/supabase/client";
+import { Tables } from "@/utils/supabase/types";
 import { TrashIcon } from "@primer/octicons-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
 	deleteClass,
 	deleteRowGroupMetadata,
 	editRowGroupMetadata,
 } from "../actions";
-import { Tables } from "@/utils/supabase/types";
-import MetadataEditor from "./MetadataEditor";
 import GroupInfo from "./GroupInfo";
+import MetadataEditor from "./MetadataEditor";
 
 export default function GroupActions({
 	group,
@@ -30,6 +30,24 @@ export default function GroupActions({
 			setAttendeeCount(count ?? 0);
 		})();
 	});
+	const editRow = useCallback(
+		async (key: string, value: string) => {
+			await editRowGroupMetadata(group.id, key, value);
+		},
+		[group.id],
+	);
+	const addRow = useCallback(
+		async (key: string) => {
+			await editRowGroupMetadata(group.id, key, "");
+		},
+		[group.id],
+	);
+	const deleteRow = useCallback(
+		async (key: string) => {
+			await deleteRowGroupMetadata(group.id, key);
+		},
+		[group.id],
+	);
 	return (
 		<>
 			<tr>
@@ -47,15 +65,9 @@ export default function GroupActions({
 						<MetadataEditor
 							title="Group"
 							metadata={group.metadata as { [key: string]: string }}
-							editRow={async (key, value) => {
-								await editRowGroupMetadata(group.id, key, value);
-							}}
-							addRow={async (key) => {
-								await editRowGroupMetadata(group.id, key, "");
-							}}
-							deleteRow={async (key) => {
-								await deleteRowGroupMetadata(group.id, key);
-							}}
+							editRow={editRow}
+							addRow={addRow}
+							deleteRow={deleteRow}
 						/>
 						<button
 							className="btn btn-dangerous transition-none"

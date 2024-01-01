@@ -4,9 +4,9 @@ import { isValidCode, v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/types";
 import { GearIcon, SignOutIcon } from "@primer/octicons-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import GroupTable from "./GroupTable";
-import { useRouter } from "next/navigation";
 async function getGroup(groupId: number) {
 	return v(
 		await (await createClient()).from("groups").select("*").eq("id", groupId),
@@ -52,7 +52,7 @@ export default function Client({
 					(payload) => {
 						getGroup(payload.new.group).then((group) => {
 							setGroups((groups) =>
-								groups.filter((x) => (x.id === payload.new.group ? group : x)),
+								groups.map((x) => (x.id === payload.new.group ? group : x)),
 							);
 						});
 					},

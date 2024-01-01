@@ -80,7 +80,12 @@ export default function Excuse({
 					</div>
 				</>
 			)}
-			<p className="pt-5 max-w opacity-50">It is safe to close this tab. <a className="underline" href="/attendee">Return home.</a></p>
+			<p className="pt-5 max-w opacity-50">
+				It is safe to close this tab.{" "}
+				<a className="underline" href="/attendee">
+					Return home.
+				</a>
+			</p>
 		</div>
 	);
 }

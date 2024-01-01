@@ -1,6 +1,6 @@
+import { Tables } from "@/utils/supabase/types";
 import { InfoIcon } from "@primer/octicons-react";
 import GroupActions from "./GroupActions";
-import { Tables } from "@/utils/supabase/types";
 
 export default function GroupTable({
 	groups,

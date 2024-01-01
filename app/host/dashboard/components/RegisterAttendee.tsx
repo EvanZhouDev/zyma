@@ -20,7 +20,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 					.from("groups")
 					.update({ code: generateCode(), joinable: true })
 					.eq("id", groupId)
-					.select("code")
+					.select("code"),
 			);
 			setCode(data[0].code!);
 		})();

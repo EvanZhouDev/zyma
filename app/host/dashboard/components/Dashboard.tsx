@@ -10,15 +10,15 @@ import {
 	ReportIcon,
 	SignOutIcon,
 } from "@primer/octicons-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Attendee, AttendeesInClassContext } from "../contexts";
 import AttendeeTable from "./AttendeeTable";
+import ExportButton from "./ExportButton";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
-import ExportButton from "./ExportButton";
 import YourLastAttendance from "./YourLastAttendance";
-import { useRouter } from "next/navigation";
 
 async function getAttendee(uuid: string) {
 	const client = await createClient();
@@ -87,7 +87,9 @@ export default function Dashboard({
 					(payload) => {
 						console.log(payload);
 						setGroups((groups) =>
-							groups.map((x) => (x.id === payload.new.id ? payload.new : x)),
+							groups.map((x) =>
+								x.id === payload.new.id ? (payload.new as Group) : x,
+							),
 						);
 					},
 				)
