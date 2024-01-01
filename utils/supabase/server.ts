@@ -18,7 +18,7 @@ export async function getServerClientWithRedirect(currentRoute: string) {
 	const attendeeId = user.id;
 	const role = user.user_metadata.role;
 	if (!currentRoute.startsWith(`/${role === 0 ? "host" : "attendee"}`)) {
-		redirect("/401");
+		redirect("/403");
 	}
 	return { client, attendeeId, user };
 }
