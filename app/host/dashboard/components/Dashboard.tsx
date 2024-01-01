@@ -18,13 +18,14 @@ import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
 import ExportButton from "./ExportButton";
 import YourLastAttendance from "./YourLastAttendance";
+import { useRouter } from "next/navigation";
 
 async function getAttendee(uuid: string) {
 	const client = await createClient();
 	return v(
 		await client
 			.from("attendees")
-			.select("profiles (username, email), metadata")
+			.select("profiles (username, email), metadata, attendee, groups (id)")
 			.eq("attendee", uuid),
 	)[0];
 }
@@ -39,9 +40,24 @@ export default function Dashboard({
 	const manageClasses = useRef<HTMLInputElement>(null);
 	const [selectedClass, setSelectedClass] = useState(0);
 	const [groups, setGroups] = useState(initialGroups);
+	const [groupCode, setGroupCode] = useState<string | null>(null);
 	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
+	const router = useRouter();
+	useEffect(() => {
+		(async () => {
+			if (groupId) {
+				const client = await createClient();
+				const { data: groupCode } = await client
+					.from("groups")
+					.select("code")
+					.eq("id", groupId)
+					.single();
+				setGroupCode(groupCode!.code);
+			}
+		})();
+	}, [groupId]);
 
 	useEffect(() => {
 		(async () => {
@@ -96,13 +112,16 @@ export default function Dashboard({
 	}, [admin]);
 	useEffect(() => {
 		(async () => {
-			if (groupId) {
+			if (groupCode) {
+				console.log("groupCode", groupCode);
 				const client = await createClient();
 				const attendees = v(
 					await client
-						.from("attendees_with_group")
-						.select("profiles (username, email), metadata, attendee")
-						.eq("group", groupId),
+						.from("attendees")
+						.select(
+							"profiles (username, email), metadata, attendee, groups (id)",
+						)
+						.eq("with_code", groupCode),
 				);
 				setAttendees(
 					(attendees ?? []).map((x) => {
@@ -110,7 +129,7 @@ export default function Dashboard({
 							...x.profiles!,
 							metadata: x.metadata,
 							id: x.attendee,
-							group: groupId,
+							group: x.groups!.id,
 						} as Attendee;
 					}),
 				);
@@ -121,17 +140,20 @@ export default function Dashboard({
 						{
 							event: "INSERT",
 							schema: "public",
-							table: "attendees_with_group",
+							table: "attendees",
 							// I hope this doesn't introduce security errors
-							filter: `group=eq.${groupId}`,
+							filter: `with_code=eq.${groupCode}`,
 						},
 						(payload) => {
+							console.log(payload);
 							getAttendee(payload.new.attendee).then((attendee) => {
 								console.assert(attendee.metadata === payload.new.metadata);
 								setAttendees((x) => [
 									...x,
 									{
 										...attendee.profiles!,
+										id: attendee.attendee,
+										group: attendee.groups!.id,
 										metadata: attendee.metadata,
 									} as Attendee,
 								]);
@@ -143,16 +165,26 @@ export default function Dashboard({
 						{
 							event: "UPDATE",
 							schema: "public",
-							table: "attendees_with_group",
-							filter: `group=eq.${groupId}`,
+							table: "attendees",
+							filter: `with_code=eq.${groupCode}`,
 						},
 						(payload) => {
 							console.log(payload);
-							setAttendees((attendees) =>
-								attendees.filter((x) =>
-									x.id === payload.new.id ? payload.new : x,
-								),
-							);
+							getAttendee(payload.new.attendee).then((attendee) => {
+								console.assert(attendee.metadata === payload.new.metadata);
+								setAttendees((attendees) =>
+									attendees.filter((x) =>
+										x.id === payload.new.id
+											? ({
+													...attendee.profiles!,
+													id: attendee.attendee,
+													group: attendee.groups!.id,
+													metadata: attendee.metadata,
+											  } as Attendee)
+											: x,
+									),
+								);
+							});
 						},
 					)
 					.on(
@@ -160,20 +192,20 @@ export default function Dashboard({
 						{
 							event: "DELETE",
 							schema: "public",
-							table: "attendees_with_group",
-							filter: `group=eq.${groupId}`,
+							table: "attendees",
+							filter: `with_code=eq.${groupCode}`,
 						},
 						(payload) => {
 							console.log(payload);
 							setAttendees((attendees) =>
-								attendees.filter((x) => x.id !== payload.old.id),
+								attendees.filter((x) => x.id !== payload.old.attendee),
 							);
 						},
 					)
 					.subscribe(console.log);
 			}
 		})();
-	}, [groupId]);
+	}, [groupCode]);
 
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
@@ -364,7 +396,7 @@ export default function Dashboard({
 
 							<a
 								className="mx-5"
-								href="https://github.com/EvanZhouDev/zyma/issues/new/choose"
+								href="https://github.com/EvanZhouDev/zyma/issues"
 								title="Report an issue"
 								target="_blank"
 								rel="noreferrer"
@@ -376,7 +408,7 @@ export default function Dashboard({
 								onClick={async () => {
 									const supabase = await createClient();
 									await supabase.auth.signOut();
-									window.location.reload();
+									router.push("/");
 								}}
 							>
 								<SignOutIcon className="w-8 h-8" />
