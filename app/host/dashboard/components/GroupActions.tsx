@@ -10,11 +10,7 @@ import {
 import GroupInfo from "./GroupInfo";
 import MetadataEditor from "./MetadataEditor";
 
-export default function GroupActions({
-	group,
-}: {
-	group: Tables<"groups">;
-}) {
+export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 	const [attendeeCount, setAttendeeCount] = useState<number>();
 	useEffect(() => {
 		(async () => {
