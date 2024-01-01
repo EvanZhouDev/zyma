@@ -20,12 +20,12 @@ export default function GroupActions({
 		(async () => {
 			const client = await createClient();
 			const { count } = await client
-				.from("attendees_with_group")
+				.from("attendees")
 				// `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the hood.
 				// `"planned"`: Approximated but fast count algorithm. Uses the Postgres statistics under the hood.
 				// `"estimated"`: Uses exact count for low numbers and planned count for high numbers.
 				.select("*", { head: true, count: "exact" })
-				.eq("group", group.id);
+				.eq("with_code", group.code);
 			// If count is null, it means that there are no entires
 			setAttendeeCount(count ?? 0);
 		})();

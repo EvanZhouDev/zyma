@@ -58,7 +58,6 @@ export default function Dashboard({
 			}
 		})();
 	}, [groupId]);
-
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
@@ -88,7 +87,7 @@ export default function Dashboard({
 					(payload) => {
 						console.log(payload);
 						setGroups((groups) =>
-							groups.filter((x) => (x.id === payload.new.id ? payload.new : x)),
+							groups.map((x) => (x.id === payload.new.id ? payload.new : x)),
 						);
 					},
 				)
@@ -173,7 +172,7 @@ export default function Dashboard({
 							getAttendee(payload.new.attendee).then((attendee) => {
 								console.assert(attendee.metadata === payload.new.metadata);
 								setAttendees((attendees) =>
-									attendees.filter((x) =>
+									attendees.map((x) =>
 										x.id === payload.new.id
 											? ({
 													...attendee.profiles!,
