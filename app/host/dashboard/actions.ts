@@ -22,6 +22,9 @@ export async function addAttendee(code: string, form: FormData) {
 		.insert([{ attendee, with_code: code }]);
 	if (error != null) {
 		console.error(error);
+		if (error.code === "42501") {
+			throw new Error("You cannot add hosts as an attendee");
+		}
 		throw new Error("Attendee is already in your group");
 	}
 }
