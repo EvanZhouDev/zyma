@@ -393,28 +393,26 @@ export default function Dashboard({
 						<Logo className="ml-2" size={125} />
 						<div className="flex flex-row items-center justify-between">
 							<SwitchTheme />
-
-							<a
-								className="mx-5"
-								href="https://github.com/EvanZhouDev/zyma/issues"
-								title="Report an issue"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<ReportIcon className="w-8 h-8" />
-							</a>
-							<button
-								className="btn btn-dangerous"
-								onClick={async () => {
-									const supabase = await createClient();
-									await supabase.auth.signOut();
-									router.push("/");
-								}}
-							>
-								<SignOutIcon className="w-8 h-8" />
-								Log Out
-							</button>
-						</div>
+						<a
+							className="mx-5"
+							href="https://github.com/EvanZhouDev/zyma/issues"
+							title="Report an issue"
+							target="_blank"
+							rel="noreferrer"
+						>
+							<ReportIcon className="w-8 h-8" />
+						</a>
+						<button
+							className="btn btn-dangerous"
+							onClick={async () => {
+								const supabase = await createClient();
+								await supabase.auth.signOut();
+								router.push("/");
+							}}
+						>
+							<SignOutIcon className="w-8 h-8" />
+							Log Out
+						</button>
 					</div>
 				</div>
 			</div>
