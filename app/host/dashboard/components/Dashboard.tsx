@@ -16,6 +16,7 @@ import AttendeeTable from "./AttendeeTable";
 import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
+import { useRouter } from "next/navigation";
 
 async function getAttendee(uuid: string) {
 	const client = await createClient();
@@ -40,6 +41,7 @@ export default function Dashboard({
 	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
 	const [attendees, setAttendees] = useState<Attendee[]>([]);
+	const router = useRouter();
 
 	useEffect(() => {
 		(async () => {
@@ -369,7 +371,7 @@ export default function Dashboard({
 							onClick={async () => {
 								const supabase = await createClient();
 								await supabase.auth.signOut();
-								window.location.reload();
+								router.push("/");
 							}}
 						>
 							<SignOutIcon className="w-8 h-8" />

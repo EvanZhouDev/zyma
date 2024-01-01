@@ -6,6 +6,7 @@ import { Tables } from "@/utils/supabase/types";
 import { GearIcon, SignOutIcon } from "@primer/octicons-react";
 import { useEffect, useRef, useState } from "react";
 import GroupTable from "./GroupTable";
+import { useRouter } from "next/navigation";
 async function getGroup(groupId: number) {
 	return v(
 		await (await createClient()).from("groups").select("*").eq("id", groupId),
@@ -19,6 +20,7 @@ export default function Client({
 	const classDialog = useRef<HTMLDialogElement>(null);
 	const [attendCode, setAttendCode] = useState("");
 	const [joinCode, setJoinCode] = useState("");
+	const router = useRouter();
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
@@ -118,7 +120,7 @@ export default function Client({
 							e.preventDefault();
 							const supabase = await createClient();
 							await supabase.auth.signOut();
-							window.location.reload();
+							router.push("/");
 						}}
 					>
 						<SignOutIcon className="w-8 h-8" />
