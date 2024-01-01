@@ -7,7 +7,7 @@ export default function CodeNotFound({
 	return (
 		<ErrorInfo
 			title={`Could not ${action} this group.`}
-			footer="Please try again, ensuring you entered the code correctly."
+			footer="The Attendance Session may have ended. If you are sure it hasn't, please try again, ensuring you entered the code correctly."
 		>
 			<span>
 				Code <b>{code}</b> not found.
