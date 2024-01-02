@@ -1,7 +1,7 @@
 "use client";
 import Logo from "@/components/Logo";
 import SwitchTheme from "@/components/SwitchTheme.jsx";
-import { v } from "@/utils";
+import { SelectPublic, v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/types";
 import {
@@ -19,6 +19,7 @@ import GroupTable from "./GroupTable";
 import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
 import YourLastAttendance from "./YourLastAttendance";
+import { SELECT_ATTENDEES } from "../queries";
 
 async function getAttendee(uuid: string) {
 	const client = await createClient();
@@ -29,7 +30,20 @@ async function getAttendee(uuid: string) {
 			.eq("attendee", uuid),
 	)[0];
 }
-type Group = Tables<"groups">;
+
+type Group = Tables<"groups"> & {
+	attendees: SelectPublic<"attendees", typeof SELECT_ATTENDEES>[]; // for now
+};
+function transformAttendeeResult(
+	x: SelectPublic<"attendees", typeof SELECT_ATTENDEES>,
+) {
+	return {
+		...x.profiles!,
+		metadata: x.metadata,
+		id: x.attendee,
+		group: x.groups!.id,
+	} as Attendee;
+}
 export default function Dashboard({
 	initialGroups,
 	admin,
@@ -43,7 +57,9 @@ export default function Dashboard({
 	const [groupCode, setGroupCode] = useState<string | null>(null);
 	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
-	const [attendees, setAttendees] = useState<Attendee[]>([]);
+	const [attendees, setAttendees] = useState<Attendee[]>(
+		(groups[selectedClass]?.attendees ?? []).map(transformAttendeeResult),
+	);
 	const router = useRouter();
 	useEffect(() => {
 		(async () => {
@@ -116,24 +132,6 @@ export default function Dashboard({
 			if (groupCode) {
 				console.log("groupCode", groupCode);
 				const client = await createClient();
-				const attendees = v(
-					await client
-						.from("attendees")
-						.select(
-							"profiles (username, email), metadata, attendee, groups (id)",
-						)
-						.eq("with_code", groupCode),
-				);
-				setAttendees(
-					(attendees ?? []).map((x) => {
-						return {
-							...x.profiles!,
-							metadata: x.metadata,
-							id: x.attendee,
-							group: x.groups!.id,
-						} as Attendee;
-					}),
-				);
 				client
 					.channel("attendees-in-group")
 					.on(
