@@ -40,7 +40,13 @@ export default async function Join({
 		// Either way it's an RLS violation
 		console.log(error);
 		console.assert(error.code === "42501"); // "42501" is the error code for RLS violations
-		return <CodeNotFound code={searchParams.code} action="Join" />;
+		return (
+			<CodeNotFound
+				code={searchParams.code}
+				action="Join"
+				footer="The Code may have expired."
+			/>
+		);
 	}
 	const data = v(
 		await client.from("groups").select("name").eq("code", searchParams.code),
