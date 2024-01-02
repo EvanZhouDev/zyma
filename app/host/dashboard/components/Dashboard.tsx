@@ -11,7 +11,7 @@ import {
 	SignOutIcon,
 } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Attendee, AttendeesInClassContext } from "../contexts";
 import AttendeeTable from "./AttendeeTable";
 import ExportButton from "./ExportButton";
@@ -74,15 +74,18 @@ export default function Dashboard({
 	);
 	const attendees = allAttendees[groupId] ?? [];
 	const router = useRouter();
-	const refetchAttendees = pDebounce(async (groupId: number) => {
-		const newAttendees = await getAttendees(groupId);
-		setAllAttendees((x) => {
-			return {
-				...x,
-				[groupId]: newAttendees.map(transformAttendeeResult),
-			};
-		});
-	}, 200);
+	const refetchAttendees = useCallback(
+		pDebounce(async (groupId: number) => {
+			const newAttendees = await getAttendees(groupId);
+			setAllAttendees((x) => {
+				return {
+					...x,
+					[groupId]: newAttendees.map(transformAttendeeResult),
+				};
+			});
+		}, 200),
+		[],
+	);
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
@@ -179,7 +182,7 @@ export default function Dashboard({
 				)
 				.subscribe(console.log);
 		})();
-	}, [groupId]);
+	}, [groupId, refetchAttendees]);
 
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
@@ -242,7 +245,7 @@ export default function Dashboard({
 												placeholder="Search Attendees..."
 												className="input input-standard mr-2 flex-grow"
 											/>
-											<ExportButton group={groups[groupId]} />
+											<ExportButton group={groups[selectedClass]} />
 											<RegisterAttendee groupId={groupId} />
 										</div>
 										<div>
@@ -362,9 +365,9 @@ export default function Dashboard({
 					</div>
 				</div>
 				<div className="bg-base-100 rounded-box outline-base-200 flex flex-col items-center outline outline-1 justify-between w-full mt-3">
-					{/* <AttendeesInClassContext.Provider value={attendees}>
+					<AttendeesInClassContext.Provider value={attendees}>
 						<YourLastAttendance />
-					</AttendeesInClassContext.Provider> */}
+					</AttendeesInClassContext.Provider>
 				</div>
 				<div className="bg-base-100 rounded-box outline-base-200 flex flex-col items-center outline outline-1 justify-between w-full mt-3">
 					<div className="flex flex-row items-center justify-between w-full mb-5 mt-5 px-5">
