@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/types";
 import { TrashIcon } from "@primer/octicons-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
 	deleteClass,
 	deleteRowGroupMetadata,
@@ -9,23 +9,11 @@ import {
 } from "../actions";
 import GroupInfo from "./GroupInfo";
 import MetadataEditor from "./MetadataEditor";
+import RegisterAttendee from "./RegisterAttendee";
+import { AttendeesInClassContext } from "../contexts";
 
 export default function GroupActions({ group }: { group: Tables<"groups"> }) {
-	const [attendeeCount, setAttendeeCount] = useState<number>();
-	useEffect(() => {
-		(async () => {
-			const client = await createClient();
-			const { count } = await client
-				.from("attendees")
-				// `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the hood.
-				// `"planned"`: Approximated but fast count algorithm. Uses the Postgres statistics under the hood.
-				// `"estimated"`: Uses exact count for low numbers and planned count for high numbers.
-				.select("*", { head: true, count: "exact" })
-				.eq("with_code", group.code);
-			// If count is null, it means that there are no entires
-			setAttendeeCount(count ?? 0);
-		})();
-	});
+	const attendeeCount = useContext(AttendeesInClassContext).length;
 	const editRow = useCallback(
 		async (key: string, value: string) => {
 			await editRowGroupMetadata(group.id, key, value);
@@ -56,7 +44,7 @@ export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 				</td>
 				<td>{attendeeCount ?? "--"}</td>
 				<th>
-					<div className="flex space-x-2">
+					<div className="flex space-x-2 font-normal">
 						<GroupInfo group={group} />
 						<MetadataEditor
 							title="Group"
@@ -65,6 +53,7 @@ export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 							addRow={addRow}
 							deleteRow={deleteRow}
 						/>
+						{/* <RegisterAttendee groupId={group.id} /> */}
 						<button
 							className="btn btn-dangerous transition-none"
 							onClick={async () => {

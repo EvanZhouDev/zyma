@@ -31,6 +31,11 @@ async function getAttendee(uuid: string) {
 	)[0];
 }
 
+async function getGroupId(code: string) {
+	const client = await createClient();
+	return v(await client.from("groups").select("id").eq("code", code))[0];
+}
+
 type Group = Tables<"groups"> & {
 	attendees: SelectPublic<"attendees", typeof SELECT_ATTENDEES>[]; // for now
 };
@@ -54,26 +59,20 @@ export default function Dashboard({
 	const manageClasses = useRef<HTMLInputElement>(null);
 	const [selectedClass, setSelectedClass] = useState(0);
 	const [groups, setGroups] = useState(initialGroups);
-	const [groupCode, setGroupCode] = useState<string | null>(null);
 	const groupId = groups[selectedClass]?.id;
 	const className = groups[selectedClass]?.name;
-	const [attendees, setAttendees] = useState<Attendee[]>(
-		(groups[selectedClass]?.attendees ?? []).map(transformAttendeeResult),
+	const [allAttendees, setAllAttendees] = useState<{
+		[key: number]: Attendee[];
+	}>(
+		Object.fromEntries(
+			initialGroups.map((x) => [
+				x.id,
+				(x.attendees ?? []).map(transformAttendeeResult),
+			]),
+		),
 	);
+	const attendees = allAttendees[groupId] ?? [];
 	const router = useRouter();
-	useEffect(() => {
-		(async () => {
-			if (groupId) {
-				const client = await createClient();
-				const { data: groupCode } = await client
-					.from("groups")
-					.select("code")
-					.eq("id", groupId)
-					.single();
-				setGroupCode(groupCode!.code);
-			}
-		})();
-	}, [groupId]);
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
@@ -127,84 +126,6 @@ export default function Dashboard({
 				.subscribe(console.log);
 		})();
 	}, [admin]);
-	useEffect(() => {
-		(async () => {
-			if (groupCode) {
-				console.log("groupCode", groupCode);
-				const client = await createClient();
-				client
-					.channel("attendees-in-group")
-					.on(
-						"postgres_changes",
-						{
-							event: "INSERT",
-							schema: "public",
-							table: "attendees",
-							// I hope this doesn't introduce security errors
-							filter: `with_code=eq.${groupCode}`,
-						},
-						(payload) => {
-							console.log(payload);
-							getAttendee(payload.new.attendee).then((attendee) => {
-								console.assert(attendee.metadata === payload.new.metadata);
-								setAttendees((x) => [
-									...x,
-									{
-										...attendee.profiles!,
-										id: attendee.attendee,
-										group: attendee.groups!.id,
-										metadata: attendee.metadata,
-									} as Attendee,
-								]);
-							});
-						},
-					)
-					.on(
-						"postgres_changes",
-						{
-							event: "UPDATE",
-							schema: "public",
-							table: "attendees",
-							filter: `with_code=eq.${groupCode}`,
-						},
-						(payload) => {
-							console.log(payload);
-							getAttendee(payload.new.attendee).then((attendee) => {
-								console.assert(attendee.metadata === payload.new.metadata);
-								setAttendees((attendees) =>
-									attendees.map((x) =>
-										x.id === payload.new.id
-											? ({
-													...attendee.profiles!,
-													id: attendee.attendee,
-													group: attendee.groups!.id,
-													metadata: attendee.metadata,
-											  } as Attendee)
-											: x,
-									),
-								);
-							});
-						},
-					)
-					.on(
-						"postgres_changes",
-						{
-							event: "DELETE",
-							schema: "public",
-							table: "attendees",
-							filter: `with_code=eq.${groupCode}`,
-						},
-						(payload) => {
-							console.log(payload);
-							setAttendees((attendees) =>
-								attendees.filter((x) => x.id !== payload.old.attendee),
-							);
-						},
-					)
-					.subscribe(console.log);
-			}
-		})();
-	}, [groupCode]);
 
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
@@ -296,9 +217,11 @@ export default function Dashboard({
 								<h1 className="mr-2 text-3xl font-bold">Your Groups</h1>
 								<NewGroup />
 							</div>
-							{/* <div className="mt-4 flex w-full flex-row items-center justify-between"></div> */}
-							{/* <div> */}
-							<GroupTable groups={groups} />
+							<AttendeesInClassContext.Provider value={attendees}>
+								{/* <div className="mt-4 flex w-full flex-row items-center justify-between"></div> */}
+								{/* <div> */}
+								<GroupTable groups={groups} />
+							</AttendeesInClassContext.Provider>
 							{/* </div> */}
 						</div>
 					</div>
