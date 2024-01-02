@@ -34,7 +34,7 @@ export default function MetadataEditor({
 						<h3 className="font-bold text-xl">Edit {title} Metadata</h3>
 					</div>
 					<div className="flex w-full flex-row items-center justify-between mt-2 mb-2">
-						<p className="font-normal opacity-50">
+						<p className="opacity-50">
 							You will not be able to rename the key of your property later. If
 							you need to, recreate the row with a new key.
 						</p>
