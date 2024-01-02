@@ -21,14 +21,14 @@ import RegisterAttendee from "./RegisterAttendee";
 import YourLastAttendance from "./YourLastAttendance";
 import { SELECT_ATTENDEES } from "../queries";
 
-async function getAttendee(uuid: string) {
+async function getAttendees(group: number) {
 	const client = await createClient();
 	return v(
 		await client
 			.from("attendees")
 			.select("profiles (username, email), metadata, attendee, groups (id)")
-			.eq("attendee", uuid),
-	)[0];
+			.eq("groups.id", group),
+	);
 }
 
 async function getGroupId(code: string) {
@@ -126,6 +126,71 @@ export default function Dashboard({
 				.subscribe(console.log);
 		})();
 	}, [admin]);
+	useEffect(() => {
+		(async () => {
+			const client = await createClient();
+			client
+				.channel("attendees")
+				.on(
+					"postgres_changes",
+					{
+						event: "INSERT",
+						schema: "public",
+						table: "attendees",
+					},
+					(payload) => {
+						console.log(payload);
+						getAttendees(groupId).then((newAttendees) => {
+							setAllAttendees((x) => {
+								return {
+									...x,
+									[groupId]: newAttendees.map(transformAttendeeResult),
+								};
+							});
+						});
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "UPDATE",
+						schema: "public",
+						table: "attendees",
+					},
+					(payload) => {
+						console.log(payload);
+						getAttendees(groupId).then((newAttendees) => {
+							setAllAttendees((x) => {
+								return {
+									...x,
+									[groupId]: newAttendees.map(transformAttendeeResult),
+								};
+							});
+						});
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "DELETE",
+						schema: "public",
+						table: "attendees",
+					},
+					(payload) => {
+						console.log(payload);
+						getAttendees(groupId).then((newAttendees) => {
+							setAllAttendees((x) => {
+								return {
+									...x,
+									[groupId]: newAttendees.map(transformAttendeeResult),
+								};
+							});
+						});
+					},
+				)
+				.subscribe(console.log);
+		})();
+	}, []);
 
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
