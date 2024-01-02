@@ -43,8 +43,8 @@ export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 					</div>
 				</td>
 				<td>{attendeeCount ?? "--"}</td>
-				<th>
-					<div className="flex space-x-2 font-normal">
+				<td>
+					<div className="flex space-x-2">
 						<GroupInfo group={group} />
 						<MetadataEditor
 							title="Group"
@@ -63,7 +63,7 @@ export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 							<TrashIcon size="medium" />
 						</button>
 					</div>
-				</th>
+				</td>
 			</tr>
 		</>
 	);

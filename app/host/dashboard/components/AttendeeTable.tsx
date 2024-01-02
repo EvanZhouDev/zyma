@@ -41,9 +41,9 @@ export default function AttendeeTable() {
 							<td>
 								{JSON.stringify(attendee?.metadata?.attendanceHistory ?? {})}
 							</td>
-							<th>
+							<td>
 								<AttendeeActions attendee={attendee} />
-							</th>
+							</td>
 						</tr>
 					))}
 				</tbody>
