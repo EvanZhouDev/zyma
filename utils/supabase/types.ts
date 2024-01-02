@@ -51,17 +51,17 @@ export interface Database {
       attendees: {
         Row: {
           attendee: string
-          metadata: Json | null
+          metadata: Json
           with_code: string
         }
         Insert: {
           attendee: string
-          metadata?: Json | null
+          metadata?: Json
           with_code: string
         }
         Update: {
           attendee?: string
-          metadata?: Json | null
+          metadata?: Json
           with_code?: string
         }
         Relationships: [
@@ -114,28 +114,31 @@ export interface Database {
         Row: {
           admin: string
           code: string
-          config: Json | null
+          config: Json
           created_at: string
           id: number
           joinable: boolean
+          metadata: Json
           name: string
         }
         Insert: {
           admin: string
           code?: string
-          config?: Json | null
+          config?: Json
           created_at?: string
           id?: number
           joinable?: boolean
+          metadata?: Json
           name: string
         }
         Update: {
           admin?: string
           code?: string
-          config?: Json | null
+          config?: Json
           created_at?: string
           id?: number
           joinable?: boolean
+          metadata?: Json
           name?: string
         }
         Relationships: [
@@ -217,8 +220,20 @@ export interface Database {
       }
     }
     Functions: {
+      bool2str: {
+        Args: {
+          input_bool: boolean
+        }
+        Returns: string
+      }
       delete_expired_codes: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      end_session: {
+        Args: {
+          attendance_code: string
+        }
         Returns: undefined
       }
       is_joinable: {
