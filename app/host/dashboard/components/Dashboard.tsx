@@ -126,6 +126,56 @@ export default function Dashboard({
 				.subscribe(console.log);
 		})();
 	}, [admin]);
+	useEffect(() => {
+		(async () => {
+			const client = await createClient();
+			client
+				.channel("attendees")
+				.on(
+					"postgres_changes",
+					{
+						event: "INSERT",
+						schema: "public",
+						table: "attendees",
+					},
+					(payload) => {
+						console.log(payload);
+						// setGroups((x) => [...x, payload.new as Group]);
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "UPDATE",
+						schema: "public",
+						table: "attendees",
+					},
+					(payload) => {
+						console.log(payload);
+						// setGroups((groups) =>
+						// 	groups.map((x) =>
+						// 		x.id === payload.new.id ? (payload.new as Group) : x,
+						// 	),
+						// );
+					},
+				)
+				.on(
+					"postgres_changes",
+					{
+						event: "DELETE",
+						schema: "public",
+						table: "attendees",
+					},
+					(payload) => {
+						console.log(payload);
+						// setGroups((groups) =>
+						// 	groups.filter((x) => x.id !== payload.old.id),
+						// );
+					},
+				)
+				.subscribe(console.log);
+		})();
+	}, []);
 
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
