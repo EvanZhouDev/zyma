@@ -308,9 +308,9 @@ export default function Dashboard({
 					</div>
 				</div>
 				<div className="bg-base-100 rounded-box outline-base-200 flex flex-col items-center outline outline-1 justify-between w-full mt-3">
-					<AttendeesInClassContext.Provider value={attendees}>
+					{/* <AttendeesInClassContext.Provider value={attendees}>
 						<YourLastAttendance />
-					</AttendeesInClassContext.Provider>
+					</AttendeesInClassContext.Provider> */}
 				</div>
 				<div className="bg-base-100 rounded-box outline-base-200 flex flex-col items-center outline outline-1 justify-between w-full mt-3">
 					<div className="flex flex-row items-center justify-between w-full mb-5 mt-5 px-5">
