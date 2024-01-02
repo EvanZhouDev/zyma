@@ -32,6 +32,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 				onClick={() => myModal.current!.showModal()}
 			>
 				<PersonAddIcon size="medium" verticalAlign="middle" />
+				Register Attendees
 			</button>
 			<dialog ref={myModal} className="modal">
 				<div className="modal-box bg-base-100 min-w-[90vw]">

@@ -41,7 +41,8 @@ export default function AttendeeTable() {
 							</td>
 							<td>{attendee.email}</td>
 							<td>
-								{attendee?.metadata?.attendanceHistory !== null
+								{attendee?.metadata?.attendanceHistory !== null &&
+								Object.keys(attendee.metadata.attendanceHistory).length > 0
 									? convertStatus(
 											attendee.metadata.attendanceHistory[
 												toISOStringWithoutMilliseconds(
@@ -53,7 +54,7 @@ export default function AttendeeTable() {
 												)
 											][1],
 									  )
-									: "No attendance information found"}
+									: "N/A"}
 							</td>
 							<td>
 								<AttendeeActions attendee={attendee} />

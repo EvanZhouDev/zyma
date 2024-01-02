@@ -27,7 +27,7 @@ async function getAttendees(group: number) {
 	return v(
 		await client
 			.from("attendees")
-			.select("profiles (username, email), metadata, attendee, groups (id)")
+			.select(SELECT_ATTENDEES)
 			.eq("groups.id", group),
 	);
 }
