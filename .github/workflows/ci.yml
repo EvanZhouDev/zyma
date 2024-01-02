@@ -101,6 +101,3 @@ jobs:
                   name: playwright-report
                   path: playwright-report/
                   retention-days: 30
-            - name: Fail CI if tests failed
-              if: ${{ failure() }}
-              run: exit ${{ (steps.tests.outcome == 'success' && 0) || 1 }}
