@@ -20,6 +20,7 @@ import NewGroup from "./NewGroup";
 import RegisterAttendee from "./RegisterAttendee";
 import YourLastAttendance from "./YourLastAttendance";
 import { SELECT_ATTENDEES } from "../queries";
+import pDebounce from "p-debounce";
 
 async function getAttendees(group: number) {
 	const client = await createClient();
@@ -73,6 +74,15 @@ export default function Dashboard({
 	);
 	const attendees = allAttendees[groupId] ?? [];
 	const router = useRouter();
+	const refetchAttendees = pDebounce(async (groupId: number) => {
+		const newAttendees = await getAttendees(groupId);
+		setAllAttendees((x) => {
+			return {
+				...x,
+				[groupId]: newAttendees.map(transformAttendeeResult),
+			};
+		});
+	}, 200);
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
@@ -140,14 +150,7 @@ export default function Dashboard({
 					},
 					(payload) => {
 						console.log(payload);
-						getAttendees(groupId).then((newAttendees) => {
-							setAllAttendees((x) => {
-								return {
-									...x,
-									[groupId]: newAttendees.map(transformAttendeeResult),
-								};
-							});
-						});
+						refetchAttendees(groupId);
 					},
 				)
 				.on(
@@ -159,14 +162,7 @@ export default function Dashboard({
 					},
 					(payload) => {
 						console.log(payload);
-						getAttendees(groupId).then((newAttendees) => {
-							setAllAttendees((x) => {
-								return {
-									...x,
-									[groupId]: newAttendees.map(transformAttendeeResult),
-								};
-							});
-						});
+						refetchAttendees(groupId);
 					},
 				)
 				.on(
@@ -178,19 +174,12 @@ export default function Dashboard({
 					},
 					(payload) => {
 						console.log(payload);
-						getAttendees(groupId).then((newAttendees) => {
-							setAllAttendees((x) => {
-								return {
-									...x,
-									[groupId]: newAttendees.map(transformAttendeeResult),
-								};
-							});
-						});
+						refetchAttendees(groupId);
 					},
 				)
 				.subscribe(console.log);
 		})();
-	}, []);
+	}, [groupId]);
 
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
