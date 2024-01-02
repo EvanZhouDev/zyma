@@ -26,10 +26,10 @@ async function getAttendees(group: number) {
 	const client = await createClient();
 	return v(
 		await client
-			.from("attendees")
-			.select(SELECT_ATTENDEES)
-			.eq("groups.id", group),
-	);
+			.from("groups")
+			.select(`attendees (${SELECT_ATTENDEES})`)
+			.eq("id", group),
+	)[0].attendees;
 }
 
 async function getGroupId(code: string) {

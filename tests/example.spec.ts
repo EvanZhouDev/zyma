@@ -19,12 +19,17 @@ async function getCode(page: Page) {
 	await expect(code).not.toBeNull();
 	return code!;
 }
+async function forceDashboardRefresh(page: Page) {
+	await page.goto("/");
+	await page.waitForURL(/dashboard/);
+}
 async function removeStudent(page: Page) {
 	await page
 		.locator(
 			':is([aria-label="Manage Attendees"] + div) .btn-dangerous:not(dialog .btn-dangerous)',
 		)
 		.click();
+	await forceDashboardRefresh(page);
 }
 test.describe("Happy path", () => {
 	// These tests are inherently serial because they share the same account
@@ -134,7 +139,7 @@ test.describe("Happy path", () => {
 		).toBeVisible();
 		// Remove student
 		await removeStudent(hostPage);
-		await hostPage.goto("/host/dashboard"); // XXX: Realtime
+		await expect(hostPage.locator(".alert-info:not(dialog *)")).toBeVisible();
 		await expect(hostPage.getByRole("tabpanel")).toContainText(
 			"No attendees registered.",
 		);
@@ -168,7 +173,7 @@ test.describe("Happy path", () => {
 		// Remove student
 		await hostPage.goto("/host/dashboard"); // XXX: Realtime
 		await removeStudent(hostPage);
-		await hostPage.goto("/host/dashboard"); // XXX: Realtime
+		await expect(hostPage.locator(".alert-info:not(dialog *)")).toBeVisible();
 		await expect(hostPage.getByRole("tabpanel")).toContainText(
 			"No attendees registered.",
 		);
