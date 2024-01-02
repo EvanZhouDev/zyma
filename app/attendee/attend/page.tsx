@@ -3,6 +3,7 @@ import MainHero from "@/components/MainHero";
 import NoCodeProvided from "@/components/NoCodeProvided";
 import { getServerClientWithRedirect } from "@/utils/supabase/server";
 import Excuse from "./components/Excuse";
+import { STATUS_TO_NUMBER } from "@/components/constants";
 
 export default async function Page({
 	searchParams,
@@ -24,6 +25,7 @@ export default async function Page({
 		.upsert({
 			attendee: attendeeId,
 			code_used: searchParams.code,
+			status: STATUS_TO_NUMBER.Present,
 		})
 		.select("status");
 
