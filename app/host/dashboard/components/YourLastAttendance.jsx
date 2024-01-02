@@ -2,6 +2,7 @@
 import { useRef, useContext, useState } from "react";
 import { AttendeesInClassContext } from "../contexts";
 import { convertStatus } from "@/components/constants";
+import { getLatestDate, toISOStringWithoutMilliseconds } from "@/utils";
 
 export default function YourLastAttendance() {
 	const lastAttendanceDialog = useRef(null);
@@ -28,16 +29,11 @@ export default function YourLastAttendance() {
 		);
 	}
 
-	const now = new Date();
-
 	// Find the closest date, could be O(1) lates when we stored
 	// the last attendance date on the group metadata
-	const closestDate = `${allDates
-		.reduce((a, b) => {
-			return Math.abs(b - now) < Math.abs(a - now) ? b : a;
-		})
-		.toISOString()
-		.slice(0, -5)}Z`; // Remove milliseconds because we didn't store milliseconds on the database
+	// (We remove milliseconds
+	// because we didn't store milliseconds on the database)
+	const closestDate = toISOStringWithoutMilliseconds(getLatestDate(allDates));
 
 	const lastAttendees = attendeesHistory
 		.map((x) => {

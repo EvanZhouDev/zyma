@@ -36,3 +36,18 @@ export type SelectPublic<
 	Table extends TableKeyType,
 	Query extends string = "*",
 > = RawSelect<"public", Table, Query>;
+
+// export function getClosestDate(dates: Date[], target: Date) {
+// 	return dates.reduce((prev, curr) => {
+// 		return Math.abs(curr.getTime() - target.getTime()) <
+// 			Math.abs(prev.getTime() - target.getTime())
+// 			? curr
+// 			: prev;
+// 	});
+// }
+export function getLatestDate(dates: Date[]) {
+	return new Date(Math.max(...dates.map((d) => d.getTime())));
+}
+export function toISOStringWithoutMilliseconds(date: Date) {
+	return `${date.toISOString().split(".")[0]}Z`;
+}

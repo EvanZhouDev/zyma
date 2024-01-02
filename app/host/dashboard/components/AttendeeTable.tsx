@@ -2,6 +2,8 @@ import { InfoIcon } from "@primer/octicons-react";
 import { useContext } from "react";
 import { AttendeesInClassContext } from "../contexts";
 import AttendeeActions from "./AttendeeActions";
+import { getLatestDate, toISOStringWithoutMilliseconds } from "@/utils";
+import { convertStatus } from "@/components/constants";
 export default function AttendeeTable() {
 	const attendees = useContext(AttendeesInClassContext);
 	if (attendees.length === 0) {
@@ -21,7 +23,7 @@ export default function AttendeeTable() {
 					<tr>
 						<th>Name</th>
 						<th>Email</th>
-						<th>Attendance History</th>
+						<th>Last Attendance Status</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -39,7 +41,19 @@ export default function AttendeeTable() {
 							</td>
 							<td>{attendee.email}</td>
 							<td>
-								{JSON.stringify(attendee?.metadata?.attendanceHistory ?? {})}
+								{attendee?.metadata?.attendanceHistory !== null
+									? convertStatus(
+											attendee.metadata.attendanceHistory[
+												toISOStringWithoutMilliseconds(
+													getLatestDate(
+														Object.keys(
+															attendee.metadata.attendanceHistory,
+														).map((x) => new Date(x)),
+													),
+												)
+											][1],
+									  )
+									: "No attendance information found"}
 							</td>
 							<td>
 								<AttendeeActions attendee={attendee} />
