@@ -95,7 +95,7 @@ $ supabase stop
 $ supabase start
 ```
 
-Similarly, if you see console messages of not being able to connect to the Realtime WebSockets server, you should first try `supabase stop && supabase start` before you run the "hard restart" command described above.
+Similarly, if you see console messages of not being able to connect to the Realtime WebSockets server, you should first try `supabase stop && supabase start` before you run the "hard restart" command described above. The same applies when you get "AuthRetryableFetchError"
 
 I will strive to provide better instructions as I investigate this uncommon issue.
 
