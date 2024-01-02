@@ -7,9 +7,12 @@ import { GearIcon, SignOutIcon } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import GroupTable from "./GroupTable";
-async function getGroup(groupId: number) {
+async function getGroup(groupCode: string) {
 	return v(
-		await (await createClient()).from("groups").select("*").eq("id", groupId),
+		await (await createClient())
+			.from("groups")
+			.select("*")
+			.eq("code", groupCode),
 	)[0];
 }
 export default function Client({
@@ -31,12 +34,12 @@ export default function Client({
 					{
 						event: "INSERT",
 						schema: "public",
-						table: "attendees_with_group",
+						table: "attendees",
 						// I hope this doesn't introduce security errors
 						filter: `attendee=eq.${attendeeId}`,
 					},
 					(payload) => {
-						getGroup(payload.new.group).then((group) => {
+						getGroup(payload.new.with_code).then((group) => {
 							setGroups((groups) => [...groups, group]);
 						});
 					},
@@ -46,11 +49,11 @@ export default function Client({
 					{
 						event: "UPDATE",
 						schema: "public",
-						table: "attendees_with_group",
+						table: "attendees",
 						filter: `attendee=eq.${attendeeId}`,
 					},
 					(payload) => {
-						getGroup(payload.new.group).then((group) => {
+						getGroup(payload.new.with_code).then((group) => {
 							setGroups((groups) =>
 								groups.map((x) => (x.id === payload.new.group ? group : x)),
 							);
@@ -62,7 +65,7 @@ export default function Client({
 					{
 						event: "DELETE",
 						schema: "public",
-						table: "attendees_with_group",
+						table: "attendees",
 						filter: `attendee=eq.${attendeeId}`,
 					},
 					(payload) => {
