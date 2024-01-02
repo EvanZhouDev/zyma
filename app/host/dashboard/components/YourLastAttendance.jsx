@@ -1,15 +1,21 @@
 "use client";
-import { useRef, useContext } from "react";
+import { useRef, useContext, useState } from "react";
 import { AttendeesInClassContext } from "../contexts";
+import { convertStatus } from "@/components/constants";
 
 export default function YourLastAttendance() {
 	const lastAttendanceDialog = useRef(null);
-	const attendeesHistory = useContext(AttendeesInClassContext).map(
+	const allAttendees = useContext(AttendeesInClassContext);
+	const [statusFilter, setStatusFilter] = useState("All Statuses");
+
+	const attendeesHistory = allAttendees.map(
 		(x) => x.metadata.attendanceHistory,
 	);
-	console.log(attendeesHistory.lengthHistory);
-
-	if (attendeesHistory.length === 0) {
+	// The last attendance anyone's joined
+	const allDates = attendeesHistory
+		.flatMap((attendee) => Object.keys(attendee))
+		.map((date) => new Date(date));
+	if (allDates.length === 0) {
 		return (
 			<div className="flex flex-col items-center justify-between w-full mb-5 px-5 pt-5">
 				<h1 className="font-bold !text-secondary-content !text-2xl">
@@ -24,34 +30,34 @@ export default function YourLastAttendance() {
 
 	const now = new Date();
 
-	let allDates = [];
-
-	for (const attendee of attendeesHistory) {
-		allDates = allDates.concat(Object.keys(attendee));
-	}
-
-	console.log(allDates);
-
-	const dateObjects = allDates.map((date) => new Date(date));
-
-	// Find the closest date
-	const closestDate = `${dateObjects
+	// Find the closest date, could be O(1) lates when we stored
+	// the last attendance date on the group metadata
+	const closestDate = `${allDates
 		.reduce((a, b) => {
 			return Math.abs(b - now) < Math.abs(a - now) ? b : a;
 		})
 		.toISOString()
-		.slice(0, -5)}Z`;
+		.slice(0, -5)}Z`; // Remove milliseconds because we didn't store milliseconds on the database
 
-	const attendees = attendeesHistory
+	const lastAttendees = attendeesHistory
 		.map((x) => {
 			if (x[closestDate] === undefined) return undefined;
 			return x[closestDate][1];
 		})
 		.filter((x) => x !== undefined);
 
-	const attendeesPresent = attendees.filter((x) => x === 0).length;
-	const attendeesAbsent = attendees.filter((x) => x !== 0).length;
-	const attendeesTotal = attendees.length;
+	const attendeesPresent = lastAttendees.filter((x) => x === 0).length;
+	const attendeesAbsent = lastAttendees.filter((x) => x !== 0).length;
+	const attendeesTotal = lastAttendees.length;
+	const lastAttendanceDate = new Date(closestDate);
+	const shortDateFormatter = new Intl.DateTimeFormat(navigator.language);
+	const longDateFormatter = new Intl.DateTimeFormat(navigator.language, {
+		dateStyle: "long",
+		timeStyle: "short",
+	});
+
+	const lastAttendanceDateString =
+		shortDateFormatter.format(lastAttendanceDate);
 
 	return (
 		<div className="flex flex-col items-center justify-between w-full mb-5 px-5">
@@ -61,7 +67,8 @@ export default function YourLastAttendance() {
 						Your Last Attendance:
 					</h1>
 					<p className="text-secondary-content text-xl opacity-50">
-						On 12/29/23 for {attendeesTotal} attendees
+						On {lastAttendanceDateString} for {attendeesTotal}{" "}
+						{lastAttendees.length === 1 ? "attendee" : "attendees"}
 					</p>
 				</div>
 				<button
@@ -79,7 +86,8 @@ export default function YourLastAttendance() {
 							<div className="flex flex-col justify-center">
 								<h1 className="text-2xl font-bold">Your Last Attendance:</h1>
 								<p className="text-xl opacity-50">
-									On 12/29/23 for {attendees.length} attendees
+									On {lastAttendanceDateString} for {attendeesTotal}{" "}
+									{lastAttendees.length === 1 ? "attendee" : "attendees"}
 								</p>
 							</div>
 
@@ -113,11 +121,14 @@ export default function YourLastAttendance() {
 							<label>
 								<select
 									className="select input-standard mr-2"
-									onChange={() => {}}
+									value={statusFilter}
+									onChange={(event) => {
+										setStatusFilter(event.target.value);
+									}}
 								>
 									<option defaultChecked>All Statuses</option>
 									<option>Present</option>
-									<option>Late</option>
+									{/* <option>Late</option> */}
 									<option>Absent</option>
 								</select>
 							</label>
@@ -133,21 +144,49 @@ export default function YourLastAttendance() {
 								<tr>
 									<th>Name</th>
 									<th>Email</th>
+									<th>Attendance Time</th>
 									<th>Attendance Status</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr className="border-b-0">
-									<td>
-										<div className="flex items-center gap-3">
-											<div>
-												<div className="font-bold">Hi</div>
-											</div>
-										</div>
-									</td>
-									<td>test@test.com</td>
-									<td>Absent</td>
-								</tr>
+								{allAttendees
+									.filter(
+										(attendee) =>
+											// If status filter is "All Statuses"
+											// or the corresponding filter
+											statusFilter === "All Statuses" ||
+											(statusFilter === "Present"
+												? attendee.metadata.attendanceHistory[
+														closestDate
+												  ][1] === 0
+												: attendee.metadata.attendanceHistory[
+														closestDate
+												  ][1] !== 0),
+									)
+									.map((attendee) => (
+										<tr className="border-b-0">
+											<td>
+												<div className="flex items-center gap-3">
+													<div>
+														<div className="font-bold">{attendee.username}</div>
+													</div>
+												</div>
+											</td>
+											<td>{attendee.email}</td>
+											<td>
+												{longDateFormatter.format(
+													new Date(
+														attendee.metadata.attendanceHistory[closestDate][0],
+													),
+												)}
+											</td>
+											<td>
+												{convertStatus(
+													attendee.metadata.attendanceHistory[closestDate][1],
+												)}
+											</td>
+										</tr>
+									))}
 							</tbody>
 						</table>
 						<form method="dialog" className="self-end">
