@@ -169,18 +169,32 @@ export default function YourLastAttendance() {
 												</div>
 											</td>
 											<td>{attendee.email}</td>
-											<td>
-												{longDateFormatter.format(
-													new Date(
-														attendee.metadata.attendanceHistory[closestDate][0],
-													),
-												)}
-											</td>
-											<td>
-												{convertStatus(
-													attendee.metadata.attendanceHistory[closestDate][1],
-												)}
-											</td>
+											{attendee.metadata.attendanceHistory[closestDate] !==
+											undefined ? (
+												<>
+													<td>
+														{longDateFormatter.format(
+															new Date(
+																attendee.metadata.attendanceHistory[
+																	closestDate
+																][0],
+															),
+														)}
+													</td>
+													<td>
+														{convertStatus(
+															attendee.metadata.attendanceHistory[
+																closestDate
+															][1],
+														)}
+													</td>
+												</>
+											) : (
+												<>
+													<td>N/A</td>
+													<td>Absent</td>
+												</>
+											)}
 										</tr>
 									))}
 							</tbody>
