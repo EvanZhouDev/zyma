@@ -11,7 +11,7 @@ export default function MainHero({ children, padding = 6 }) {
 					<h1 className="text-5xl font-bold">
 						<Logo size={250} />
 					</h1>
-					<p className="text-2xl font-bold opacity-40">Simply Present.</p>
+					<p className="text-2xl font-bold opacity-40 mt-5">Simply Present.</p>
 					{children}
 				</div>
 			</div>

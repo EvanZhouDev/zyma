@@ -69,13 +69,13 @@ Before you run your tests, spin up the development server:
 $ bun run dev
 ```
 
-Then run the tests:
+Then, in another tab, run the tests:
 
 ```bash
 $ bun run test
 ```
 
-If you have made any visual changes, remember to update the snapshots:
+Or, if you have made any visual changes, remember to update the snapshots:
 
 ```bash
 $ bun run test --update-snapshots
@@ -84,6 +84,20 @@ $ bun run test --update-snapshots
 If you don't use a Linux-based system, get the updated snapshots from the CI.
 
 See [here](./tests/example.spec.ts) for an example test. We use [Playwright](https://playwright.dev) for end-to-end testing.
+
+#### Troubleshooting
+
+Sometimes, after running many tests in parallel, overwhelming your Supabase instance, your dev server may show messages along the lines of **"TCP Aborted."** In that case, completely clean and restart your Supabase instance via:
+
+```bash
+$ docker kill $(docker ps -q --filter "name=zyma")
+$ supabase stop
+$ supabase start
+```
+
+Similarly, if you see console messages of not being able to connect to the Realtime WebSockets server, you should first try `supabase stop && supabase start` before you run the "hard restart" command described above. The same applies when you get "AuthRetryableFetchError"
+
+I will strive to provide better instructions as I investigate this uncommon issue.
 
 ### Code style
 

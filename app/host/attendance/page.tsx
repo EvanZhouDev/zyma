@@ -50,7 +50,6 @@ export default async function Index({
 			data={data}
 			initialJoined={joined}
 			totalAttendees={totalAttendees}
-			groupId={searchParams.groupId}
 		/>
 	);
 }

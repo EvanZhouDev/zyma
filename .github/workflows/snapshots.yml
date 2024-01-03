@@ -36,4 +36,4 @@ jobs:
               with:
                   name: Snapshots
                   path: |
-                      tests/**/*.ts-snapshots/
+                      tests/**/*.ts-snapshots/*-linux.png
