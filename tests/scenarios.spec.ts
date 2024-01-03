@@ -1,5 +1,5 @@
 import { Page, expect, test } from "@playwright/test";
-import { createAccount, createGroup, login } from "./utils";
+import { createAccount, createGroup, getCode, login } from "./utils";
 test.describe("One Group", () => {
 	// Now we have a theoretical situation consisting of 5
 	// accounts:
@@ -47,5 +47,56 @@ test.describe("One Group", () => {
 		const qrcodehaterPage = await qrcodehaterContext.newPage();
 		await login(hostPage, `teacher.${browserName}@acme.org`);
 		await hostPage.waitForURL(/host/);
+		// Create a group
+		await createGroup(hostPage, "OneGroup");
+		// Lawful joins
+		const code = await getCode(hostPage);
+		await login(lawfulPage, `lawful.${browserName}@acme.org`);
+		await lawfulPage.waitForURL(/attendee/);
+		await lawfulPage.goto(`/attendee/join?code=${code}`);
+		await expect(lawfulPage.getByText(/Successfully joined/)).toBeVisible();
+
+		// Absentminded joins
+		await absentmindedPage.goto(`/attendee/join?code=${code}`);
+		await expect(absentmindedPage).toHaveScreenshot("login.png");
+		await absentmindedPage
+			.locator('input[name="email"]:not(dialog *)')
+			.fill(`absentminded.${browserName}@acme.org`);
+		await absentmindedPage
+			.locator('input[name="password"]:not(dialog *)')
+			.click();
+		await absentmindedPage
+			.locator('input[name="password"]:not(dialog *)')
+			.fill("123456");
+		await absentmindedPage.getByRole("button", { name: /Sign In/g }).click();
+		await absentmindedPage.waitForURL(`**/attendee/join?code=${code}`);
+		// await expect(
+		// 	absentmindedPage.getByText(/Successfully joined/),
+		// ).toBeVisible();
+		// QRCodeHater joins
+		await login(qrcodehaterPage, `qrcodehater.${browserName}@acme.org`);
+		await qrcodehaterPage.waitForURL(/attendee/);
+		await qrcodehaterPage.getByText("Manage Your Groups").click();
+		await qrcodehaterPage.getByPlaceholder(/Code/).fill(code);
+		await qrcodehaterPage.getByText("Join Group").click();
+		await expect(
+			qrcodehaterPage.getByText(/Successfully joined/),
+		).toBeVisible();
+		// Manually add Unlawful
+		await hostPage
+			.locator('input[name="email"]')
+			.fill(`unlawful.${browserName}@acme.org`);
+		await hostPage.getByText("Add Attendee").click();
+		// Check for the new attendees
+		for (const attendee in [
+			`lawful.${browserName}@acme.org`,
+			`unlawful.${browserName}@acme.org`,
+			`absentminded.${browserName}@acme.org`,
+			`qrcodehater.${browserName}@acme.org`,
+		]) {
+			await expect(
+				hostPage.getByRole("cell", { name: attendee }).first(),
+			).toBeVisible();
+		}
 	});
 });
