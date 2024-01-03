@@ -14,9 +14,8 @@ export default async function Index({
 
 	if (user != null) {
 		return redirect(
-			searchParams.redirectTo ?? user.user_metadata.role === 0
-				? "/host/dashboard"
-				: "/attendee",
+			searchParams.redirectTo ??
+				(user.user_metadata.role === 0 ? "/host/dashboard" : "/attendee"),
 		);
 	}
 	return (

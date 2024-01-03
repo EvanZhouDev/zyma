@@ -30,9 +30,8 @@ export async function signIn(
 	}
 	const user = data.user;
 	return redirect(
-		redirectTo ?? user.user_metadata.role === 0
-			? "/host/dashboard"
-			: "/attendee",
+		redirectTo ??
+			(user.user_metadata.role === 0 ? "/host/dashboard" : "/attendee"),
 	);
 }
 export async function signUp(formData: FormData, trial = 3): Promise<never> {
