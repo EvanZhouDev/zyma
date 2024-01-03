@@ -49,6 +49,7 @@ test.describe("Happy path", () => {
 		// Start attendance
 		await page.getByRole("link", { name: /Start Attendance/ }).isEnabled();
 		await page.getByRole("link", { name: /Start Attendance/ }).click();
+		await page.waitForURL(/host\/attendance/);
 		await page.locator("select").selectOption("Absent");
 		await page.locator("select").selectOption("All Statuses");
 		await page.getByRole("button", { name: "End Session" }).click();
