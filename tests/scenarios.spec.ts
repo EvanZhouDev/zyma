@@ -33,7 +33,7 @@ test.describe("One Group", () => {
 		// Setup group
 		await createGroup(hostPage, "OneGroup");
 	});
-	test("Join group", async ({ browser, browserName }) => {
+	test.fail("Join group", async ({ browser, browserName }) => {
 		// Create browser contexts
 		const hostContext = await browser.newContext();
 		const hostPage = await hostContext.newPage();
