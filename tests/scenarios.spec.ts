@@ -1,4 +1,4 @@
-import { Page, expect, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { createAccount, createGroup, getCode, login } from "./utils";
 test.describe("One Group", () => {
 	// Now we have a theoretical situation consisting of 5
@@ -33,7 +33,7 @@ test.describe("One Group", () => {
 		// Setup group
 		await createGroup(hostPage, "OneGroup");
 	});
-	test.fail("Join group", async ({ browser, browserName }) => {
+	test("Join group", async ({ browser, browserName }) => {
 		// Create browser contexts
 		const hostContext = await browser.newContext();
 		const hostPage = await hostContext.newPage();
@@ -47,8 +47,6 @@ test.describe("One Group", () => {
 		const qrcodehaterPage = await qrcodehaterContext.newPage();
 		await login(hostPage, `teacher.${browserName}@acme.org`);
 		await hostPage.waitForURL(/host/);
-		// Create a group
-		await createGroup(hostPage, "OneGroup");
 		// Lawful joins
 		const code = await getCode(hostPage);
 		await login(lawfulPage, `lawful.${browserName}@acme.org`);
@@ -70,9 +68,7 @@ test.describe("One Group", () => {
 			.fill("123456");
 		await absentmindedPage.getByRole("button", { name: /Sign In/g }).click();
 		await absentmindedPage.waitForURL(`**/attendee/join?code=${code}`);
-		// await expect(
-		// 	absentmindedPage.getByText(/Successfully joined/),
-		// ).toBeVisible();
+		await expect(absentmindedPage.getByText(/joined/)).toBeVisible();
 		// QRCodeHater joins
 		await login(qrcodehaterPage, `qrcodehater.${browserName}@acme.org`);
 		await qrcodehaterPage.waitForURL(/attendee/);
@@ -89,16 +85,16 @@ test.describe("One Group", () => {
 		await hostPage.getByText("Add Attendee").click();
 		await hostPage.goto("/");
 		await hostPage.waitForURL(/host/);
-		// Check for the new attendees
-		for (const attendee of [
+
+		await expect(
+			hostPage.locator(
+				"[role=tabpanel]:first-of-type table:not(dialog *) tr > td:nth-child(2)",
+			),
+		).toHaveText([
 			`lawful.${browserName}@acme.org`,
-			`unlawful.${browserName}@acme.org`,
 			`absentminded.${browserName}@acme.org`,
 			`qrcodehater.${browserName}@acme.org`,
-		]) {
-			await expect(
-				hostPage.getByRole("cell", { name: attendee }).first(),
-			).toBeVisible();
-		}
+			`unlawful.${browserName}@acme.org`,
+		]);
 	});
 });
