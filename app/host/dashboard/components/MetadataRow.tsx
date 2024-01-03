@@ -1,6 +1,5 @@
-import { TrashIcon } from "@primer/octicons-react";
-import { useEffect, useState } from "react";
-import { useDebounce } from "usehooks-ts";
+import { CheckIcon, TrashIcon } from "@primer/octicons-react";
+import { useState } from "react";
 
 export default function MetadataRow({
 	row,
@@ -14,18 +13,10 @@ export default function MetadataRow({
 	deleteRow: (key: string) => Promise<void>;
 }) {
 	const [value, setValue] = useState<string>(originalValue);
-	const debouncedValue = useDebounce<string>(value, 500);
-	useEffect(() => {
-		// Do fetch here...
-		// Triggers when "debouncedValue" changes
-		(async () => {
-			await editRow(row, debouncedValue);
-		})();
-	}, [editRow, row, debouncedValue]);
 	return (
 		<tr>
 			<td>{row}</td>
-			<td>
+			<td className="flex flex-row">
 				<input
 					type="text"
 					placeholder="Type here"
@@ -33,8 +24,19 @@ export default function MetadataRow({
 						setValue(event.target.value);
 					}}
 					value={value}
-					className="input input-standard w-fit max-w-xs"
+					className="w-full input input-standard mr-2"
 				/>
+				<button
+					className="btn btn-standard"
+					title="Submit Changes"
+					disabled={value === originalValue}
+					onClick={async (event) => {
+						event.preventDefault();
+						await editRow(row, value);
+					}}
+				>
+					<CheckIcon size="medium" />
+				</button>
 			</td>
 			<td>
 				<div className="flex space-x-2">
