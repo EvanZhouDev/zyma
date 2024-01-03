@@ -64,10 +64,6 @@ test.describe("Happy path", () => {
 		await expect(hostPage.getByRole("tabpanel")).toContainText(
 			"No attendees registered.",
 		);
-		await hostPage.goto("/host/dashboard"); // Just in case the codes can work fine
-		await hostPage.getByRole("button", { name: "Register Attendees" }).click();
-		await hostPage.goto("/host/dashboard"); // Just in case the codes can work fine
-		await hostPage.getByRole("button", { name: "Register Attendees" }).click();
 		const code = await getCode(hostPage);
 		// Join class
 		await login(attendeePage, `attendee.${browserName}@acme.org`);
@@ -104,7 +100,6 @@ test.describe("Happy path", () => {
 		await expect(hostPage.getByRole("tabpanel")).toContainText(
 			"No attendees registered.",
 		);
-		await hostPage.getByRole("button", { name: "Register Attendees" }).click();
 		const code = await getCode(hostPage);
 		// Join class
 		await hostPage

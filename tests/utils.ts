@@ -9,6 +9,8 @@ export async function login(page: Page, name: string) {
 	await page.getByRole("button", { name: /Sign In/g }).click();
 }
 export async function getCode(page: Page) {
+	await page.goto("/host/dashboard");
+	await page.getByRole("button", { name: "Register Attendees" }).click();
 	const code = await page
 		.locator(
 			"xpath=.//div[contains(., 'Alternatively, enter the Passcode')]/following-sibling::div/div/text()/..",
