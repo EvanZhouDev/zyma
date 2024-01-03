@@ -88,7 +88,7 @@ test.describe("One Group", () => {
 			.fill(`unlawful.${browserName}@acme.org`);
 		await hostPage.getByText("Add Attendee").click();
 		// Check for the new attendees
-		for (const attendee in [
+		for (const attendee of [
 			`lawful.${browserName}@acme.org`,
 			`unlawful.${browserName}@acme.org`,
 			`absentminded.${browserName}@acme.org`,
