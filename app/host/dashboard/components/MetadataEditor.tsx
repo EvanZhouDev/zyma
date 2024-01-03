@@ -30,15 +30,11 @@ export default function MetadataEditor({
 			</button>
 			<dialog ref={modal} className="modal">
 				<div className="modal-box">
-					<div className="flex w-full flex-row items-center justify-between">
-						<h3 className="font-bold text-xl">Edit {title} Metadata</h3>
-					</div>
-					<div className="flex w-full flex-row items-center justify-between mt-2 mb-2">
-						<p className="opacity-50">
-							You will not be able to rename the key of your property later. If
-							you need to, recreate the row with a new key.
-						</p>
-					</div>
+					<h3 className="font-bold text-xl">Edit {title} Metadata</h3>
+					<p className="opacity-50 my-2">
+						You will not be able to rename the key of your property later. If
+						you need to, recreate the row with a new key.
+					</p>
 					<div className="flex w-full flex-row items-center justify-between">
 						<input
 							type="text"
