@@ -33,6 +33,7 @@ export async function removeStudent(page: Page) {
 export async function createAccount(
 	page: Page,
 	email: string,
+	name: string,
 	type: "Host" | "Attendee",
 ) {
 	await page.goto("/");
@@ -42,13 +43,13 @@ export async function createAccount(
 	await expect(
 		page.locator("dialog button", { hasText: /^Sign Up$/ }),
 	).toBeVisible();
+	await page.locator('dialog input[name="name"]').fill(name);
 	await page.locator('dialog input[name="email"]').fill(email);
 	await page.locator('dialog input[name="password"]').click();
 	await page.locator('dialog input[name="password"]').fill("123456");
 	await page.getByLabel(/who/i).selectOption(type);
-	await page.locator('input[name="name"]').fill(type);
 	await expect(page).toHaveScreenshot(
-		`${type}-${email.split("@")[0].replace(".", "-")}-signup.png`,
+		`${name}-${email.split("@")[0].replace(".", "-")}-signup.png`,
 	);
 	await page.locator("dialog button", { hasText: "Sign Up" }).click();
 	await page.waitForURL(new RegExp(type.toLowerCase()));
@@ -76,4 +77,11 @@ export async function createGroup(page: Page, groupName: string) {
 	await expect(page.getByRole("tabpanel")).toContainText(
 		"No attendees registered.",
 	);
+}
+export async function getAttendanceCode(page: Page) {
+	const code = await page
+		.locator("div:has(svg) + div .text-3xl.font-bold")
+		.textContent();
+	await expect(code).not.toBeNull();
+	return code!;
 }

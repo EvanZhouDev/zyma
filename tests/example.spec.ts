@@ -26,7 +26,7 @@ test.describe("Happy path", () => {
 			[attendeePage, "Attendee"],
 		]) {
 			const [page, name] = tuple as [Page, "Host" | "Attendee"];
-			await createAccount(page, `${name}.${browserName}@acme.org`, name);
+			await createAccount(page, `${name}.${browserName}@acme.org`, name, name);
 		}
 	});
 	test("(Host) Login Account, Create Group", async ({ page, browserName }) => {
