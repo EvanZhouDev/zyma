@@ -87,6 +87,8 @@ test.describe("One Group", () => {
 			.locator('input[name="email"]')
 			.fill(`unlawful.${browserName}@acme.org`);
 		await hostPage.getByText("Add Attendee").click();
+		await hostPage.goto("/");
+		await hostPage.waitForURL(/host/);
 		// Check for the new attendees
 		for (const attendee of [
 			`lawful.${browserName}@acme.org`,
