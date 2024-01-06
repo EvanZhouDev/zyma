@@ -1,10 +1,11 @@
+import { Tables } from "@/utils/supabase/types";
 import { InfoIcon } from "@primer/octicons-react";
 import GroupActions from "./GroupActions";
 
 export default function GroupTable({
 	groups,
 }: {
-	groups: { name: string; id: number }[];
+	groups: Tables<"groups">[];
 }) {
 	if (groups.length === 0) {
 		return (
@@ -32,8 +33,8 @@ export default function GroupTable({
 					</tr>
 				</thead>
 				<tbody>
-					{groups.map((klass) => (
-						<GroupActions klass={klass} key={klass.id} />
+					{groups.map((group) => (
+						<GroupActions group={group} key={group.id} />
 					))}
 				</tbody>
 			</table>

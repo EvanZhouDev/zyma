@@ -1,38 +1,32 @@
-import { InfoIcon, TrashIcon } from "@primer/octicons-react";
-import { useRef } from "react";
-import { removeAttendee } from "../actions";
+import { TrashIcon } from "@primer/octicons-react";
+import {
+	deleteRowAttendeeMetadata,
+	editRowAttendeeMetadata,
+	removeAttendee,
+} from "../actions";
 import { Attendee } from "../contexts";
+import AttendeeInfo from "./AttendeeInfo";
+import MetadataEditor from "./MetadataEditor";
 
 export default function AttendeeActions({ attendee }: { attendee: Attendee }) {
-	const modal = useRef<HTMLDialogElement>(null);
 	return (
-		<div className="flex">
+		<div className="flex space-x-2">
+			<AttendeeInfo attendee={attendee} />
+			<MetadataEditor
+				title="Attendee"
+				metadata={attendee.metadata.customProperties}
+				editRow={async (key, value) => {
+					await editRowAttendeeMetadata(attendee.id, key, value);
+				}}
+				addRow={async (key) => {
+					await editRowAttendeeMetadata(attendee.id, key, "");
+				}}
+				deleteRow={async (key) => {
+					await deleteRowAttendeeMetadata(attendee.id, key);
+				}}
+			/>
 			<button
-				onClick={() => modal.current!.showModal()}
-				className="btn btn-standard ml-2"
-			>
-				<InfoIcon size="medium" />
-			</button>
-			<dialog ref={modal} className="modal">
-				<div className="modal-box">
-					<h3 className="font-bold text-lg">
-						Attendee Name: {attendee.username}
-					</h3>
-					<p className="py-4 mt-5">
-						The Email associated with this group is {attendee.email}.
-					</p>
-					<p className="py-4 font-normal">
-						Attendance: {attendee?.metadata?.attendence}
-					</p>
-					<div className="modal-action">
-						<form method="dialog">
-							<button className="btn btn-standard">Close</button>
-						</form>
-					</div>
-				</div>
-			</dialog>
-			<button
-				className="btn btn-dangerous ml-2 transition-none"
+				className="btn btn-dangerous transition-none"
 				onClick={async () => {
 					await removeAttendee(attendee.group, attendee.id);
 				}}

@@ -94,8 +94,9 @@ jobs:
               run: bun run build
             - name: Run Playwright tests
               run: bun run test
+              id: tests
             - uses: actions/upload-artifact@v3
-              if: always()
+              if: ${{ !cancelled() }}
               with:
                   name: playwright-report
                   path: playwright-report/

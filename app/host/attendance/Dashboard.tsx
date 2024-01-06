@@ -25,7 +25,6 @@ export default function Dashboard({
 	data,
 	initialJoined,
 	totalAttendees,
-	groupId,
 }: {
 	data: { groups: { name: string } | null; code: string; created_at: string };
 	initialJoined: {
@@ -35,7 +34,6 @@ export default function Dashboard({
 		created_at: string;
 	}[];
 	totalAttendees: number;
-	groupId: number;
 }) {
 	const attendanceCode = data.code;
 	const [joined, setJoined] = useState(initialJoined);
@@ -111,7 +109,7 @@ export default function Dashboard({
 				</div>
 				<ZymaCode
 					code={data.code}
-					url={`${ROOT_URL}/attend?code=${data.code}`}
+					url={`${ROOT_URL}/attendee/attend?code=${data.code}`}
 				/>
 				<div className="flex flex-col items-center mb-4">
 					<div className="text-3xl opacity-50">
@@ -130,7 +128,7 @@ export default function Dashboard({
 						<h1 className="text-4xl font-bold">
 							{joined.length}/{totalAttendees} Attendees Present
 						</h1>{" "}
-						<form action={endSession.bind(null, groupId)}>
+						<form action={endSession.bind(null, attendanceCode)}>
 							<button className="btn btn-dangerous">End Session</button>{" "}
 						</form>
 					</div>

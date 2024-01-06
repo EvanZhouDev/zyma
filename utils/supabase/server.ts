@@ -11,11 +11,16 @@ export function getServerClient() {
 export type ServerClient = Awaited<ReturnType<typeof getServerClient>>;
 export async function getServerClientWithRedirect(currentRoute: string) {
 	const client = getServerClient();
-	const attendeeId = (await client.auth.getUser()).data?.user?.id;
-	if (attendeeId == null) {
+	const user = (await client.auth.getUser()).data?.user;
+	if (user == null) {
 		redirect(`/?redirectTo=${encodeURIComponent(currentRoute)}`);
 	}
-	return { client, attendeeId };
+	const attendeeId = user.id;
+	const role = user.user_metadata.role;
+	if (!currentRoute.startsWith(`/${role === 0 ? "host" : "attendee"}`)) {
+		redirect("/403");
+	}
+	return { client, attendeeId, user };
 }
 export const createClient = (cookieStore: ReturnType<typeof cookies>) => {
 	return createServerClient<Database>(

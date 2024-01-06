@@ -23,7 +23,7 @@ export default function NewGroup() {
 				<PlusIcon size="medium" verticalAlign="middle" />
 				Add Group
 			</button>
-			<dialog ref={modal} id="my_modal_3" className="modal">
+			<dialog ref={modal} className="modal">
 				<div className="modal-box">
 					<h3 className="text-lg font-bold">Create a Group</h3>
 					<p className="py-4">

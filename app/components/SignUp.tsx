@@ -10,14 +10,12 @@ export default function SignUp({
 	signIn: (formData: FormData) => Promise<void>;
 }) {
 	const nameDialog = useRef<HTMLDialogElement>(null);
-	const usernameEmailForm = useRef<HTMLFormElement>(null);
-	const [username, setUsername] = useState("");
+
+	const [role, setRole] = useState("HOST");
+
 	return (
 		<>
-			<form
-				ref={usernameEmailForm}
-				className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-			>
+			<form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
 				<div className="w-full">
 					<label className="label">
 						<span className="text-base label-text">Email</span>
@@ -48,53 +46,99 @@ export default function SignUp({
 				</button>
 				<button
 					className="underline opacity-50 text-lg mt-10 text-secondary-content"
-					formAction={async () => {
+					onClick={async (event) => {
 						nameDialog.current!.showModal();
+						event.preventDefault();
 					}}
 				>
 					No account? Sign Up
 				</button>
 			</form>
 			<dialog ref={nameDialog} className="modal">
-				<div className="modal-box">
-					<h3 className="font-bold text-lg">Hello!</h3>
-					<p className="py-4">Enter your name to continue.</p>
-					<div>
-						<label className="label">
-							<span className="text-base label-text">Name</span>
+				<form
+					action={async (formData) => {
+						await signUp(formData);
+						nameDialog.current!.close();
+					}}
+				>
+					<div className="modal-box">
+						<h3 className="font-bold text-lg">Zyma Sign Up</h3>
+						<p className="py-4">
+							We need a little bit of information before we can start taking
+							attendance.
+						</p>
+						<label>
+							<div className="label">
+								<span className="text-base label-text">Name</span>
+							</div>
+							<input
+								type="text"
+								name="name"
+								required
+								className="w-full input input-standard mb-5"
+							/>
 						</label>
-						<input
-							type="text"
-							value={username}
-							onChange={(event) => {
-								setUsername(event.target.value);
-							}}
-							name="name"
-							className="w-full input input-standard mb-10"
-						/>
-					</div>
-					<div className="modal-action">
-						{/* if there is a button in form, it will close the modal */}
-						<form method="dialog">
-							<button className="btn btn-standard">Close</button>
-							<button
-								className="btn btn-standard ml-3"
-								disabled={username.length === 0}
-								onClick={async (event) => {
-									event.preventDefault();
-									nameDialog.current!.close();
-									const formData = new FormData(usernameEmailForm.current!);
-									formData.set("name", username);
-									await signUp(formData);
-								}}
+						<label>
+							<div className="label">
+								<span className="text-base label-text">Email</span>
+							</div>
+							<input
+								type="email"
+								name="email"
+								required
+								className="w-full input input-standard mb-5"
+							/>
+						</label>
+						<label>
+							<div className="label">
+								<span className="text-base label-text">Password</span>
+							</div>
+							<input
+								type="password"
+								name="password"
+								required
+								className="w-full input input-standard mb-5"
+							/>
+						</label>
+
+						<label>
+							<div className="label">
+								<span className="text-base label-text">Who are You?</span>
+							</div>
+							<select
+								className="select input-standard w-full"
+								name="role"
+								value={role}
+								onChange={(e) => setRole(e.target.value)}
 							>
-								Submit
+								<option value="HOST">Host</option>
+								<option value="ATTENDEE">Attendee</option>
+							</select>
+						</label>
+
+						{role === "HOST" ? (
+							<p className="mt-2">
+								<b>Hosts create Groups to track attendance.</b>
+								<br />
+								Be aware that hosts are <b>unable</b> to attend groups.
+							</p>
+						) : (
+							<p className="mt-2">
+								<b>Guest accounts join Groups.</b>
+								<br />
+								Be aware that attendees are <b>unable</b> to host groups.
+							</p>
+						)}
+
+						<div className="modal-action">
+							<button type="submit" className="btn btn-standard">
+								Sign Up
 							</button>
-						</form>
+						</div>
 					</div>
-				</div>
+				</form>
 				<form method="dialog" className="modal-backdrop">
-					<button>Close</button>
+					<button>close</button>
 				</form>
 			</dialog>
 		</>

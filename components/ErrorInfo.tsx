@@ -6,7 +6,7 @@ export default function ErrorInfo({
 	title,
 	children,
 	footer,
-}: { title: string; children: ReactNode; footer: string }) {
+}: { title: string; children: ReactNode; footer: ReactNode }) {
 	return (
 		<MainHero padding={10}>
 			<div className="mt-5">{title}</div>
