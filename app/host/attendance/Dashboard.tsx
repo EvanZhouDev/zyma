@@ -149,12 +149,7 @@ export default function Dashboard({
 							</p>{" "}
 						</div>
 						<div className="flex items-center flex-row">
-							<button
-								className="btn btn-standard"
-								onClick={() => statsDialog.current!.showModal()}
-							>
-								<GraphIcon size="medium" verticalAlign="middle" />
-							</button>{" "}
+							{" "}
 							<button
 								className="btn btn-dangerous ml-2"
 								onClick={() => statsDialog.current!.showModal()}
@@ -187,7 +182,7 @@ export default function Dashboard({
 												}
 											</div>
 											<div className="stat-desc">
-												{Math.round(
+												{totalAttendees === 0 ? 0 : Math.round(
 													(getInClass(joined).filter((x) => x.status === 0)
 														.length /
 														totalAttendees) *
@@ -206,7 +201,7 @@ export default function Dashboard({
 												}
 											</div>
 											<div className="stat-desc">
-												{Math.round(
+												{totalAttendees === 0 ? 0 : Math.round(
 													(getInClass(joined).filter((x) => x.status !== 0)
 														.length /
 														totalAttendees) *
@@ -245,8 +240,26 @@ export default function Dashboard({
 														!totalAttendeesList
 															.map((y) => y.attendee)
 															.includes(x.attendee)
-												).length / totalAttendees}
-												% of total
+												).length === 0
+													? 0
+													: Math.round(
+															(getForeign(joined)
+																.filter(
+																	(x) =>
+																		!totalAttendeesList
+																			.map((y) => y.attendee)
+																			.includes(x.attendee)
+																)
+																.filter((x) => x.status === 0).length /
+																getForeign(joined).filter(
+																	(x) =>
+																		!totalAttendeesList
+																			.map((y) => y.attendee)
+																			.includes(x.attendee)
+																).length) *
+																100
+													  )}
+												% of total unregistered
 											</div>
 										</div>
 									</div>
@@ -283,6 +296,15 @@ export default function Dashboard({
 				<AttendeePresenceTable
 					joined={joined}
 					totalAttendeesList={totalAttendeesList}
+					accessories={
+						<button
+							className="btn btn-standard ml-2"
+							onClick={() => statsDialog.current!.showModal()}
+						>
+							<GraphIcon size="medium" verticalAlign="middle" />
+							Current Statistics
+						</button>
+					}
 				/>
 			</div>
 		</div>
