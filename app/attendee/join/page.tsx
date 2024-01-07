@@ -38,7 +38,7 @@ export default async function Join({
 		}
 		// Group not found or the group isn't joinable.
 		// Either way it's an RLS violation
-		console.log(error);
+		// console.log(error);
 		console.assert(error.code === "42501"); // "42501" is the error code for RLS violations
 		return (
 			<CodeNotFound

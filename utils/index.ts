@@ -8,7 +8,7 @@ export function v<T, E>({
 	error,
 }: { data: T; error: null } | { data: null; error: E }): T {
 	if (error !== null) {
-		console.log(error);
+		// console.log(error);
 		throw error;
 	}
 	return data!;

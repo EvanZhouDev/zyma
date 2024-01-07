@@ -189,7 +189,7 @@ export default function AttendeePresenceTable({
 										.map((x) => x.attendee)
 										.includes(attendee.attendee)
 								) {
-									console.log("AHH2");
+									// console.log("AHH2");
 									showType = true;
 								}
 

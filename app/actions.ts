@@ -56,11 +56,11 @@ export async function signUp(formData: FormData, trial = 3): Promise<never> {
 		},
 	});
 	if (error) {
-		console.log(error, JSON.stringify(error));
+		// console.log(error, JSON.stringify(error));
 		// Random glitch
 		if (error.name === "AuthRetryableFetchError") {
 			if (trial === 0) {
-				console.log("OUT OF RETRIES");
+				// console.log("OUT OF RETRIES");
 				return redirect(
 					`/?error=${encodeURIComponent(
 						"AuthRetryableFetchError: Please try again later",

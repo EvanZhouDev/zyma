@@ -8,7 +8,7 @@ export default async function globalSetup(_: FullConfig) {
 				console.error(`Error: ${error.message}`);
 				reject(error);
 			} else {
-				console.log(`stdout: ${stdout}`);
+				// console.log(`stdout: ${stdout}`);
 				resolve();
 			}
 		});

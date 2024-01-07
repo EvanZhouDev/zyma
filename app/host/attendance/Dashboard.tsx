@@ -18,13 +18,13 @@ async function getAttendee(uuid: string, code: string) {
 			.from("attendance")
 			.select("profiles (username), attendee, status, created_at")
 			.eq("code_used", code)
-			.eq("attendee", uuid),
+			.eq("attendee", uuid)
 	)[0];
 }
 export default function Dashboard({
 	data,
 	initialJoined,
-	totalAttendeesList,
+	attendeesInClass: totalAttendeesList,
 }: {
 	data: { groups: { name: string } | null; code: string; created_at: string };
 	initialJoined: {
@@ -33,7 +33,7 @@ export default function Dashboard({
 		status: number;
 		created_at: string;
 	}[];
-	totalAttendeesList;
+	attendeesInClass;
 }) {
 	const totalAttendees = totalAttendeesList.length;
 	const attendanceCode = data.code;
@@ -41,7 +41,7 @@ export default function Dashboard({
 	const [rtStatus, setRtStatus] = useState("");
 	const RTworking = rtStatus === "SUBSCRIBED";
 	const statsDialog = useRef<HTMLDialogElement>(null);
-	console.log(joined);
+	// console.log(joined);
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
@@ -60,9 +60,9 @@ export default function Dashboard({
 						getAttendee(payload.new.attendee, attendanceCode).then(
 							(attendee) => {
 								setJoined((x) => [...x, attendee!]);
-							},
+							}
 						);
-					},
+					}
 				)
 				.on(
 					"postgres_changes",
@@ -73,15 +73,15 @@ export default function Dashboard({
 						filter: `code_used=eq.${attendanceCode}`,
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						setJoined((x) =>
 							x.map((y) =>
 								y.attendee === payload.new.attendee
 									? { ...y, status: payload.new.status }
-									: y,
-							),
+									: y
+							)
 						);
-					},
+					}
 				)
 				.subscribe((x) => setRtStatus(x));
 		})();
@@ -89,12 +89,12 @@ export default function Dashboard({
 
 	const getInClass = (joined) => {
 		return joined.filter((x) =>
-			totalAttendeesList.map((y) => y.attendee).includes(x.attendee),
+			totalAttendeesList.map((y) => y.attendee).includes(x.attendee)
 		);
 	};
 	const getForeign = (joined) => {
 		return joined.filter(
-			(x) => !totalAttendeesList.map((y) => y.attendee).includes(x.attendee),
+			(x) => !totalAttendeesList.map((y) => y.attendee).includes(x.attendee)
 		);
 	};
 
@@ -143,10 +143,15 @@ export default function Dashboard({
 							<h1 className="text-4xl font-bold">
 								{getInClass(joined).length}/{totalAttendees} Attendees Present
 							</h1>{" "}
-							<p className="opacity-50 text-2xl mt-2">
-								{getForeign(joined).map((x) => x.status === 0).length}/
-								{getForeign(joined).length} Foreign Attendees Joined are Present
-							</p>{" "}
+							{getForeign(joined).length !== 0 ? (
+								<p className="opacity-50 text-2xl mt-2">
+									{getForeign(joined).map((x) => x.status === 0).length}/
+									{getForeign(joined).length} Foreign Attendees Joined are
+									Present
+								</p>
+							) : (
+								""
+							)}
 						</div>
 						<div className="flex items-center flex-row">
 							{" "}
@@ -188,7 +193,7 @@ export default function Dashboard({
 															(getInClass(joined).filter((x) => x.status === 0)
 																.length /
 																totalAttendees) *
-																100,
+																100
 													  )}
 												% of total
 											</div>
@@ -209,7 +214,7 @@ export default function Dashboard({
 															(getInClass(joined).filter((x) => x.status !== 0)
 																.length /
 																totalAttendees) *
-																100,
+																100
 													  )}
 												% of total
 											</div>
@@ -224,7 +229,7 @@ export default function Dashboard({
 															(x) =>
 																!totalAttendeesList
 																	.map((y) => y.attendee)
-																	.includes(x.attendee),
+																	.includes(x.attendee)
 														)
 														.filter((x) => x.status === 0).length
 												}
@@ -234,7 +239,7 @@ export default function Dashboard({
 														(x) =>
 															!totalAttendeesList
 																.map((y) => y.attendee)
-																.includes(x.attendee),
+																.includes(x.attendee)
 													).length
 												}
 											</div>
@@ -243,7 +248,7 @@ export default function Dashboard({
 													(x) =>
 														!totalAttendeesList
 															.map((y) => y.attendee)
-															.includes(x.attendee),
+															.includes(x.attendee)
 												).length === 0
 													? 0
 													: Math.round(
@@ -252,16 +257,16 @@ export default function Dashboard({
 																	(x) =>
 																		!totalAttendeesList
 																			.map((y) => y.attendee)
-																			.includes(x.attendee),
+																			.includes(x.attendee)
 																)
 																.filter((x) => x.status === 0).length /
 																getForeign(joined).filter(
 																	(x) =>
 																		!totalAttendeesList
 																			.map((y) => y.attendee)
-																			.includes(x.attendee),
+																			.includes(x.attendee)
 																).length) *
-																100,
+																100
 													  )}
 												% of total unregistered
 											</div>
@@ -290,9 +295,7 @@ export default function Dashboard({
 										<button className="btn btn-standard">Close</button>{" "}
 									</form>
 									<form action={endSession.bind(null, attendanceCode)}>
-										<button className="btn btn-dangerous">
-											End Session
-										</button>{" "}
+										<button className="btn btn-dangerous">End Session</button>{" "}
 									</form>
 								</div>
 							</div>

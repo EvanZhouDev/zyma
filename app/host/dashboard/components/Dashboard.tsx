@@ -101,7 +101,7 @@ export default function Dashboard({
 						filter: `admin=eq.${admin}`,
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						setGroups((x) => [...x, payload.new as Group]);
 					},
 				)
@@ -114,7 +114,7 @@ export default function Dashboard({
 						filter: `admin=eq.${admin}`,
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						setGroups((groups) =>
 							groups.map((x) =>
 								x.id === payload.new.id ? (payload.new as Group) : x,
@@ -131,13 +131,13 @@ export default function Dashboard({
 						filter: `admin=eq.${admin}`,
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						setGroups((groups) =>
 							groups.filter((x) => x.id !== payload.old.id),
 						);
 					},
 				)
-				.subscribe(console.log);
+				;
 		})();
 	}, [admin]);
 	useEffect(() => {
@@ -153,7 +153,7 @@ export default function Dashboard({
 						table: "attendees",
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						refetchAttendees(groupId);
 					},
 				)
@@ -165,7 +165,7 @@ export default function Dashboard({
 						table: "attendees",
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						refetchAttendees(groupId);
 					},
 				)
@@ -181,7 +181,7 @@ export default function Dashboard({
 						refetchAttendees(groupId);
 					},
 				)
-				.subscribe(console.log);
+				;
 		})();
 	}, [groupId, refetchAttendees]);
 
