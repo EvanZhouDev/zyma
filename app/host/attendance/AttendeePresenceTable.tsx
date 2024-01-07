@@ -6,7 +6,6 @@ import {
 	IssueDraftIcon,
 	IssueClosedIcon,
 	RepoIcon,
-	RepoDeletedIcon,
 	RepoTemplateIcon,
 } from "@primer/octicons-react";
 
@@ -23,19 +22,15 @@ export default function AttendeePresenceTable({
 }: {
 	joined: AttendeeInAttendance[];
 }) {
-	const [selectedFilter, setSelectedFilter] = useState("All Statuses");
 	const [searchContent, setSearchContent] = useState("");
 
-	const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
-		setSelectedFilter(event.target.value);
-	};
 	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSearchContent(event.target.value);
 	};
 
 	// const [joined, setJoined] = useState(initialJoined);
 	const statuses = Object.fromEntries(
-		joined.map(({ attendee, status }) => [attendee, convertStatus(status)])
+		joined.map(({ attendee, status }) => [attendee, convertStatus(status)]),
 	);
 	// useEffect(() => {
 	// 	(async () => {
@@ -220,7 +215,7 @@ export default function AttendeePresenceTable({
 												{
 													hour: "2-digit",
 													minute: "2-digit",
-												}
+												},
 											)}
 										</td>
 										<td>

@@ -18,7 +18,7 @@ async function getAttendee(uuid: string, code: string) {
 			.from("attendance")
 			.select("profiles (username), attendee, status, created_at")
 			.eq("code_used", code)
-			.eq("attendee", uuid)
+			.eq("attendee", uuid),
 	)[0];
 }
 export default function Dashboard({
@@ -60,9 +60,9 @@ export default function Dashboard({
 						getAttendee(payload.new.attendee, attendanceCode).then(
 							(attendee) => {
 								setJoined((x) => [...x, attendee!]);
-							}
+							},
 						);
-					}
+					},
 				)
 				.on(
 					"postgres_changes",
@@ -78,10 +78,10 @@ export default function Dashboard({
 							x.map((y) =>
 								y.attendee === payload.new.attendee
 									? { ...y, status: payload.new.status }
-									: y
-							)
+									: y,
+							),
 						);
-					}
+					},
 				)
 				.subscribe((x) => setRtStatus(x));
 		})();
@@ -89,12 +89,12 @@ export default function Dashboard({
 
 	const getInClass = (joined) => {
 		return joined.filter((x) =>
-			totalAttendeesList.map((y) => y.attendee).includes(x.attendee)
+			totalAttendeesList.map((y) => y.attendee).includes(x.attendee),
 		);
 	};
 	const getForeign = (joined) => {
 		return joined.filter(
-			(x) => !totalAttendeesList.map((y) => y.attendee).includes(x.attendee)
+			(x) => !totalAttendeesList.map((y) => y.attendee).includes(x.attendee),
 		);
 	};
 
@@ -182,12 +182,14 @@ export default function Dashboard({
 												}
 											</div>
 											<div className="stat-desc">
-												{totalAttendees === 0 ? 0 : Math.round(
-													(getInClass(joined).filter((x) => x.status === 0)
-														.length /
-														totalAttendees) *
-														100
-												)}
+												{totalAttendees === 0
+													? 0
+													: Math.round(
+															(getInClass(joined).filter((x) => x.status === 0)
+																.length /
+																totalAttendees) *
+																100,
+													  )}
 												% of total
 											</div>
 										</div>
@@ -201,12 +203,14 @@ export default function Dashboard({
 												}
 											</div>
 											<div className="stat-desc">
-												{totalAttendees === 0 ? 0 : Math.round(
-													(getInClass(joined).filter((x) => x.status !== 0)
-														.length /
-														totalAttendees) *
-														100
-												)}
+												{totalAttendees === 0
+													? 0
+													: Math.round(
+															(getInClass(joined).filter((x) => x.status !== 0)
+																.length /
+																totalAttendees) *
+																100,
+													  )}
 												% of total
 											</div>
 										</div>
@@ -220,7 +224,7 @@ export default function Dashboard({
 															(x) =>
 																!totalAttendeesList
 																	.map((y) => y.attendee)
-																	.includes(x.attendee)
+																	.includes(x.attendee),
 														)
 														.filter((x) => x.status === 0).length
 												}
@@ -230,7 +234,7 @@ export default function Dashboard({
 														(x) =>
 															!totalAttendeesList
 																.map((y) => y.attendee)
-																.includes(x.attendee)
+																.includes(x.attendee),
 													).length
 												}
 											</div>
@@ -239,7 +243,7 @@ export default function Dashboard({
 													(x) =>
 														!totalAttendeesList
 															.map((y) => y.attendee)
-															.includes(x.attendee)
+															.includes(x.attendee),
 												).length === 0
 													? 0
 													: Math.round(
@@ -248,16 +252,16 @@ export default function Dashboard({
 																	(x) =>
 																		!totalAttendeesList
 																			.map((y) => y.attendee)
-																			.includes(x.attendee)
+																			.includes(x.attendee),
 																)
 																.filter((x) => x.status === 0).length /
 																getForeign(joined).filter(
 																	(x) =>
 																		!totalAttendeesList
 																			.map((y) => y.attendee)
-																			.includes(x.attendee)
+																			.includes(x.attendee),
 																).length) *
-																100
+																100,
 													  )}
 												% of total unregistered
 											</div>
@@ -286,7 +290,9 @@ export default function Dashboard({
 										<button className="btn btn-standard">Close</button>{" "}
 									</form>
 									<form action={endSession.bind(null, attendanceCode)}>
-										<button className="btn btn-dangerous">End Session</button>{" "}
+										<button className="btn btn-dangerous">
+											End Session
+										</button>{" "}
 									</form>
 								</div>
 							</div>

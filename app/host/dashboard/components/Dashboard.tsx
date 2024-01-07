@@ -9,7 +9,7 @@ import {
 	RepoIcon,
 	ReportIcon,
 	SignOutIcon,
-	AlertIcon
+	AlertIcon,
 } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -33,10 +33,10 @@ async function getAttendees(group: number) {
 	)[0].attendees;
 }
 
-async function getGroupId(code: string) {
-	const client = await createClient();
-	return v(await client.from("groups").select("id").eq("code", code))[0];
-}
+// async function getGroupId(code: string) {
+// 	const client = await createClient();
+// 	return v(await client.from("groups").select("id").eq("code", code))[0];
+// }
 
 type Group = Tables<"groups"> & {
 	attendees: SelectPublic<"attendees", typeof SELECT_ATTENDEES>[]; // for now
@@ -322,7 +322,7 @@ export default function Dashboard({
 								Configure Your Attendance Session:
 							</h1>
 							<div role="alert" className="alert alert-warning">
-								<AlertIcon size="medium" verticalAlign="middle"/>
+								<AlertIcon size="medium" verticalAlign="middle" />
 								<span>
 									Currently, configuring your attendance session is not
 									implemented

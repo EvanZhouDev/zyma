@@ -1,7 +1,6 @@
-import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/types";
 import { TrashIcon } from "@primer/octicons-react";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext } from "react";
 import {
 	deleteClass,
 	deleteRowGroupMetadata,
@@ -9,7 +8,6 @@ import {
 } from "../actions";
 import GroupInfo from "./GroupInfo";
 import MetadataEditor from "./MetadataEditor";
-import RegisterAttendee from "./RegisterAttendee";
 import { AttendeesInClassContext } from "../contexts";
 import toast from "react-hot-toast";
 
@@ -58,7 +56,7 @@ export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 						<button
 							className="btn btn-dangerous transition-none"
 							onClick={async () => {
-								toast.success(`Deleted class "${group.name}"`)
+								toast.success(`Deleted class "${group.name}"`);
 								await deleteClass(group.id);
 							}}
 						>
