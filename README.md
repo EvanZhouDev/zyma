@@ -1,10 +1,17 @@
 # Zyma
+**_Simply Present_**
 
-> Originally [built in a 12-hour hackathon](https://github.com/EvanZhouDev/codeforcause-hackathon)
+> Attendance for the 21st century.
+
+![](./assets/zymaAttendDashboardDemo.jpeg)
 
 Zyma is a simple attendance tracker for anyone to use, built specifically for high school club or program managers.
 
-## Usage and how to host
+> Originally [built in a 12-hour hackathon](https://github.com/EvanZhouDev/codeforcause-hackathon)
+
+## Usage
+
+![](./assets/zymaHostDashboardDemo.jpeg)
 
 We have a deployment at [https://zyma.vercel.app](https://zyma.vercel.app).
 
