@@ -1,4 +1,4 @@
-# Zyma
+# <img src="./assets/Zyma.png" alt="Zyma" width="50"/> Zyma
 
 **_Simply Present_**
 
