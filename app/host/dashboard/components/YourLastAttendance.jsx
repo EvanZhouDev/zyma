@@ -1,10 +1,11 @@
 "use client";
-import { useRef, useContext, useState } from "react";
+import { useRef, useContext, useState, useEffect } from "react";
 import { AttendeesInClassContext } from "../contexts";
 import { convertStatus } from "@/components/constants";
 import { getLatestDate, toISOStringWithoutMilliseconds } from "@/utils";
 
 export default function YourLastAttendance() {
+
 	const lastAttendanceDialog = useRef(null);
 	const allAttendees = useContext(AttendeesInClassContext);
 	const [statusFilter, setStatusFilter] = useState("All Statuses");
@@ -29,11 +30,19 @@ export default function YourLastAttendance() {
 		);
 	}
 
+
+
 	// Find the closest date, could be O(1) lates when we stored
 	// the last attendance date on the group metadata
 	// (We remove milliseconds
 	// because we didn't store milliseconds on the database)
 	const closestDate = toISOStringWithoutMilliseconds(getLatestDate(allDates));
+
+	const [viewingAttendance, setViewingAttendance] = useState(closestDate);
+	const [viewingAttendees, setLastAttendees] = useState([]);
+	const [attendeesPresent, setAttendeesPresent] = useState(0);
+	const [attendeesAbsent, setAttendeesAbsent] = useState(0);
+	const [attendeesTotal, setAttendeesTotal] = useState(0);
 
 	const lastAttendees = attendeesHistory
 		.map((x) => {
@@ -41,10 +50,25 @@ export default function YourLastAttendance() {
 			return x[closestDate][1];
 		})
 		.filter((x) => x !== undefined);
+	const lastAttendeesPresent = lastAttendees.filter((x) => x === 0).length
+	const lastAttendeesAbsent = lastAttendees.filter((x) => x !== 0).length
+	const lastAttendeesTotal = lastAttendees.length
 
-	const attendeesPresent = lastAttendees.filter((x) => x === 0).length;
-	const attendeesAbsent = lastAttendees.filter((x) => x !== 0).length;
-	const attendeesTotal = lastAttendees.length;
+
+	useEffect(() => {
+		const lastAttendees = attendeesHistory
+			.map((x) => {
+				if (x[viewingAttendance] === undefined) return undefined;
+				return x[viewingAttendance][1];
+			})
+			.filter((x) => x !== undefined);
+
+		setLastAttendees(lastAttendees);
+		setAttendeesPresent(lastAttendees.filter((x) => x === 0).length);
+		setAttendeesAbsent(lastAttendees.filter((x) => x !== 0).length);
+		setAttendeesTotal(lastAttendees.length);
+	}, [viewingAttendance]);
+
 	const lastAttendanceDate = new Date(closestDate);
 	const shortDateFormatter = new Intl.DateTimeFormat(navigator.language);
 	const longDateFormatter = new Intl.DateTimeFormat(navigator.language, {
@@ -55,6 +79,7 @@ export default function YourLastAttendance() {
 	const lastAttendanceDateString =
 		shortDateFormatter.format(lastAttendanceDate);
 
+
 	return (
 		<div className="flex flex-col items-center justify-between w-full mb-5 px-5">
 			<div className="flex justify-between items-center w-full mt-3">
@@ -63,7 +88,7 @@ export default function YourLastAttendance() {
 						Your Last Attendance:
 					</h1>
 					<p className="text-secondary-content text-xl opacity-50">
-						On {lastAttendanceDateString} for {attendeesTotal}{" "}
+						On {lastAttendanceDateString} for {lastAttendeesTotal}{" "}
 						{lastAttendees.length === 1 ? "attendee" : "attendees"}
 					</p>
 				</div>
@@ -74,16 +99,25 @@ export default function YourLastAttendance() {
 						lastAttendanceDialog.current.showModal();
 					}}
 				>
-					See Full Statistics
+					All Past Attendances
 				</button>
 				<dialog ref={lastAttendanceDialog} className="modal">
 					<div className="modal-box max-w-[75vw]">
 						<div className="w-full flex flex-row justify-between items-center">
 							<div className="flex flex-col justify-center">
-								<h1 className="text-2xl font-bold">Your Last Attendance:</h1>
-								<p className="text-xl opacity-50">
-									On {lastAttendanceDateString} for {attendeesTotal}{" "}
-									{lastAttendees.length === 1 ? "attendee" : "attendees"}
+								<h1 className="text-2xl font-bold">View Past Attendances:</h1>
+								<select
+									className="select input-standard mr-2 mt-2"
+									value={viewingAttendance}
+									onChange={e => setViewingAttendance(e.target.value)}
+								>
+									{allDates.map((date) => (
+										<option value={toISOStringWithoutMilliseconds(date)}>{longDateFormatter.format(date)}</option>
+									))}
+								</select>
+								<p className="text-xl opacity-50 mt-2">
+									For {attendeesTotal}{" "}
+									{viewingAttendees.length === 1 ? "attendee" : "attendees"}
 								</p>
 							</div>
 
@@ -132,7 +166,7 @@ export default function YourLastAttendance() {
 								type="text"
 								placeholder="Search Attendees..."
 								className="input input-standard ml-1 flex-grow"
-								onChange={() => {}}
+								onChange={() => { }}
 							/>
 						</div>
 						<table className="table mt-5 w-full outline outline-base-200 outline-1 text-[#24292F] rounded-lg">
@@ -153,11 +187,11 @@ export default function YourLastAttendance() {
 											statusFilter === "All Statuses" ||
 											(statusFilter === "Present"
 												? attendee.metadata.attendanceHistory[
-														closestDate
-												  ][1] === 0
+												viewingAttendance
+												][1] === 0
 												: attendee.metadata.attendanceHistory[
-														closestDate
-												  ][1] !== 0),
+												viewingAttendance
+												][1] !== 0),
 									)
 									.map((attendee) => (
 										<tr className="border-b-0">
@@ -169,14 +203,14 @@ export default function YourLastAttendance() {
 												</div>
 											</td>
 											<td>{attendee.email}</td>
-											{attendee.metadata.attendanceHistory[closestDate] !==
-											undefined ? (
+											{attendee.metadata.attendanceHistory[viewingAttendance] !==
+												undefined ? (
 												<>
 													<td>
 														{longDateFormatter.format(
 															new Date(
 																attendee.metadata.attendanceHistory[
-																	closestDate
+																viewingAttendance
 																][0],
 															),
 														)}
@@ -184,7 +218,7 @@ export default function YourLastAttendance() {
 													<td>
 														{convertStatus(
 															attendee.metadata.attendanceHistory[
-																closestDate
+															viewingAttendance
 															][1],
 														)}
 													</td>
@@ -211,17 +245,17 @@ export default function YourLastAttendance() {
 			<div className="stats w-full overflow-hidden mt-5 mb-3">
 				<div className="stat">
 					<div className="stat-title">Attendees Present</div>
-					<div className="stat-value">{attendeesPresent}</div>
+					<div className="stat-value">{lastAttendeesPresent}</div>
 					<div className="stat-desc">
-						{Math.round((attendeesPresent / attendeesTotal) * 100)}% of total
+						{Math.round((lastAttendeesPresent / lastAttendeesTotal) * 100)}% of total
 					</div>
 				</div>
 
 				<div className="stat">
 					<div className="stat-title">Attendees Absent</div>
-					<div className="stat-value">{attendeesAbsent}</div>
+					<div className="stat-value">{lastAttendeesAbsent}</div>
 					<div className="stat-desc">
-						{Math.round((attendeesAbsent / attendeesTotal) * 100)}% of total
+						{Math.round((lastAttendeesAbsent / lastAttendeesTotal) * 100)}% of total
 					</div>
 				</div>
 			</div>

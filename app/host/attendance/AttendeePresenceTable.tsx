@@ -87,7 +87,6 @@ export default function AttendeePresenceTable({
 					>
 						<option defaultChecked>All Statuses</option>
 						<option>Present</option>
-						{/* <option>Late</option> */}
 						<option>Absent</option>
 					</select>
 				</label>
