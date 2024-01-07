@@ -8,14 +8,14 @@ export default async function Index({
 	searchParams: { groupId: number };
 }) {
 	const { client } = await getServerClientWithRedirect(
-		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`,
+		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`
 	);
 	const CODE_SELECT = "groups (name), code, created_at";
 	const existingCode = v(
 		await client
 			.from("codes")
 			.select(CODE_SELECT)
-			.eq("group", searchParams.groupId),
+			.eq("group", searchParams.groupId)
 	);
 	let data: (typeof existingCode)[0];
 	//XXX: Can't I just do an UPSERT?
@@ -26,7 +26,7 @@ export default async function Index({
 			await client
 				.from("codes")
 				.insert([{ group: searchParams.groupId }])
-				.select(CODE_SELECT),
+				.select(CODE_SELECT)
 		)[0];
 	}
 
@@ -35,21 +35,21 @@ export default async function Index({
 			await client
 				.from("attendance")
 				.select("profiles (username), attendee, status, created_at")
-				.eq("code_used", data.code),
+				.eq("code_used", data.code)
 		) ?? [];
 	const totalAttendees =
-		(
+		v(
 			await client
 				.from("attendees_with_group")
-				.select("*", { head: true, count: "exact" })
+				.select("*")
 				.eq("group", searchParams.groupId)
-		).count ?? 0;
-
+		) ?? [];
+	console.log(totalAttendees)
 	return (
 		<Dashboard
 			data={data}
 			initialJoined={joined}
-			totalAttendees={totalAttendees}
+			totalAttendeesList={totalAttendees}
 		/>
 	);
 }

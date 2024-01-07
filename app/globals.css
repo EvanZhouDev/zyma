@@ -231,6 +231,12 @@ body {
 	@apply text-secondary-content;
 }
 
+.alert-warning {
+	border: 1.5px solid #FFBE00;
+	background-color: #FFBE0040;
+	@apply text-secondary-content;
+}
+
 .alert-info {
 	border: 1.5px solid #0a69da;
 	background-color: #0a69da40;

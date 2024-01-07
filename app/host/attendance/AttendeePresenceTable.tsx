@@ -11,6 +11,7 @@ type AttendeeInAttendance = {
 };
 export default function AttendeePresenceTable({
 	joined,
+	totalAttendeesList,
 }: {
 	joined: AttendeeInAttendance[];
 }) {
@@ -26,7 +27,7 @@ export default function AttendeePresenceTable({
 
 	// const [joined, setJoined] = useState(initialJoined);
 	const statuses = Object.fromEntries(
-		joined.map(({ attendee, status }) => [attendee, convertStatus(status)]),
+		joined.map(({ attendee, status }) => [attendee, convertStatus(status)])
 	);
 	// useEffect(() => {
 	// 	(async () => {
@@ -141,14 +142,21 @@ export default function AttendeePresenceTable({
 								return (
 									<tr key={attendee.attendee}>
 										<th>{i + 1}</th>
-										<td>{attendee.profiles!.username}</td>
+										<td>
+											{attendee.profiles!.username}
+											{!totalAttendeesList
+												.map((x) => x.attendee)
+												.includes(attendee.attendee) && (
+												<p className="opacity-50">(Unregistered)</p>
+											)}
+										</td>
 										<td>
 											{new Date(attendee.created_at ?? "").toLocaleTimeString(
 												[],
 												{
 													hour: "2-digit",
 													minute: "2-digit",
-												},
+												}
 											)}
 										</td>
 										<td>
