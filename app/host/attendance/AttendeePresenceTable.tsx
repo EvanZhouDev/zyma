@@ -30,7 +30,7 @@ export default function AttendeePresenceTable({
 
 	// const [joined, setJoined] = useState(initialJoined);
 	const statuses = Object.fromEntries(
-		joined.map(({ attendee, status }) => [attendee, convertStatus(status)]),
+		joined.map(({ attendee, status }) => [attendee, convertStatus(status)])
 	);
 	// useEffect(() => {
 	// 	(async () => {
@@ -158,44 +158,50 @@ export default function AttendeePresenceTable({
 					<tbody>
 						{joined
 							.filter((attendee, _i) => {
-								let show = false;
+								let showStatus = false;
 								if (
 									isPresentSelected &&
 									statuses[attendee.attendee] === "Present"
 								) {
-									show = true;
+									showStatus = true;
 								}
 								if (
 									isAbsentSelected &&
 									statuses[attendee.attendee] !== "Present"
 								) {
-									show = true;
+									showStatus = true;
 								}
+
+								let showType = false;
+
 								if (
 									isForeignSelected &&
 									!totalAttendeesList
 										.map((x) => x.attendee)
 										.includes(attendee.attendee)
 								) {
-									show = true;
+									showType = true;
 								}
+
 								if (
 									isRegisteredSelected &&
 									totalAttendeesList
 										.map((x) => x.attendee)
 										.includes(attendee.attendee)
 								) {
-									show = true;
+									console.log("AHH2");
+									showType = true;
 								}
 
 								if (
 									!attendee
 										.profiles!.username.toLowerCase()
 										.includes(searchContent.toLowerCase())
-								)
-									show = true;
+								) {
+									showStatus = false;
+								}
 
-								return show;
+								return showStatus && showType;
 							})
 							.map((attendee, i) => {
 								return (
@@ -215,7 +221,7 @@ export default function AttendeePresenceTable({
 												{
 													hour: "2-digit",
 													minute: "2-digit",
-												},
+												}
 											)}
 										</td>
 										<td>
