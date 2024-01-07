@@ -1,4 +1,4 @@
-# <img src="./assets/Zyma.png" alt="Zyma" width="50"/> Zyma
+# <img src="./assets/Zyma.png" alt="Zyma" width="25"/> Zyma
 
 **_Simply Present_**
 
