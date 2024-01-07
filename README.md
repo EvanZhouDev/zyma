@@ -1,6 +1,6 @@
 <picture>
 <source srcset="./public/zymaDark.svg" media="(prefers-color-scheme: dark)">
-<img src="./public/zyma.svg" alt="Host Dashboard: Create and host attendance for Groups">
+<img src="./public/zyma.svg" alt="Host Dashboard: Create and host attendance for Groups" style="width: 50%;">
 </picture>
 
 **_Simply Present_**
