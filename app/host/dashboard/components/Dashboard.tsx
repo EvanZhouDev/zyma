@@ -136,8 +136,7 @@ export default function Dashboard({
 							groups.filter((x) => x.id !== payload.old.id),
 						);
 					},
-				)
-				;
+				);
 		})();
 	}, [admin]);
 	useEffect(() => {
@@ -152,7 +151,7 @@ export default function Dashboard({
 						schema: "public",
 						table: "attendees",
 					},
-					(payload) => {
+					() => {
 						// console.log(payload);
 						refetchAttendees(groupId);
 					},
@@ -164,7 +163,7 @@ export default function Dashboard({
 						schema: "public",
 						table: "attendees",
 					},
-					(payload) => {
+					() => {
 						// console.log(payload);
 						refetchAttendees(groupId);
 					},
@@ -177,11 +176,10 @@ export default function Dashboard({
 						table: "attendees",
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						refetchAttendees(groupId);
 					},
-				)
-				;
+				);
 		})();
 	}, [groupId, refetchAttendees]);
 

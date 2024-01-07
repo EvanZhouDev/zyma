@@ -17,7 +17,7 @@ type AttendeeInAttendance = {
 };
 export default function AttendeePresenceTable({
 	joined,
-	totalAttendeesList,
+	attendeesIncClass,
 	accessories,
 }: {
 	joined: AttendeeInAttendance[];
@@ -30,7 +30,7 @@ export default function AttendeePresenceTable({
 
 	// const [joined, setJoined] = useState(initialJoined);
 	const statuses = Object.fromEntries(
-		joined.map(({ attendee, status }) => [attendee, convertStatus(status)])
+		joined.map(({ attendee, status }) => [attendee, convertStatus(status)]),
 	);
 	// useEffect(() => {
 	// 	(async () => {
@@ -176,7 +176,7 @@ export default function AttendeePresenceTable({
 
 								if (
 									isForeignSelected &&
-									!totalAttendeesList
+									!attendeesIncClass
 										.map((x) => x.attendee)
 										.includes(attendee.attendee)
 								) {
@@ -185,7 +185,7 @@ export default function AttendeePresenceTable({
 
 								if (
 									isRegisteredSelected &&
-									totalAttendeesList
+									attendeesIncClass
 										.map((x) => x.attendee)
 										.includes(attendee.attendee)
 								) {
@@ -209,7 +209,7 @@ export default function AttendeePresenceTable({
 										<th>{i + 1}</th>
 										<td>
 											{attendee.profiles!.username}
-											{!totalAttendeesList
+											{!attendeesIncClass
 												.map((x) => x.attendee)
 												.includes(attendee.attendee) && (
 												<p className="opacity-50">(Unregistered)</p>
@@ -221,7 +221,7 @@ export default function AttendeePresenceTable({
 												{
 													hour: "2-digit",
 													minute: "2-digit",
-												}
+												},
 											)}
 										</td>
 										<td>

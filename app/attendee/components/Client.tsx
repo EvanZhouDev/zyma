@@ -74,8 +74,7 @@ export default function Client({
 							groups.filter((x) => x.id !== payload.old.group),
 						);
 					},
-				)
-				;
+				);
 		})();
 	}, [attendeeId]);
 	return (
