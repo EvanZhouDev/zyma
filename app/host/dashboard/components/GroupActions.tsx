@@ -11,6 +11,7 @@ import GroupInfo from "./GroupInfo";
 import MetadataEditor from "./MetadataEditor";
 import RegisterAttendee from "./RegisterAttendee";
 import { AttendeesInClassContext } from "../contexts";
+import toast from "react-hot-toast";
 
 export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 	const attendeeCount = useContext(AttendeesInClassContext).length;
@@ -57,6 +58,7 @@ export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 						<button
 							className="btn btn-dangerous transition-none"
 							onClick={async () => {
+								toast.success(`Deleted class "${group.name}"`)
 								await deleteClass(group.id);
 							}}
 						>

@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 
 import { GearIcon, PlusIcon } from "@primer/octicons-react";
 import MetadataRow from "./MetadataRow";
+import toast from "react-hot-toast";
 
 export default function MetadataEditor({
 	title,
@@ -51,6 +52,7 @@ export default function MetadataEditor({
 							onClick={async () => {
 								await addRow(newKey);
 								setNewKey("");
+								toast.success(`Added new row with key ${newKey}`);
 							}}
 							aria-label="Add Row with Key"
 						>
