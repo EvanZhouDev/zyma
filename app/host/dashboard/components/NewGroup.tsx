@@ -2,9 +2,11 @@
 import { PlusIcon } from "@primer/octicons-react";
 import { useRef, useState } from "react";
 import { createClass } from "../actions";
+import toast from "react-hot-toast";
 export default function NewGroup() {
 	const [className, setClassName] = useState<string>("");
 	const handle = async () => {
+		toast.success(`Created new group "${className}"`);
 		const { error } = await createClass(className);
 		if (error == null) {
 			setClassName("");

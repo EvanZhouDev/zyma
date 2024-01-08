@@ -37,19 +37,19 @@ export default async function Index({
 				.select("profiles (username), attendee, status, created_at")
 				.eq("code_used", data.code),
 		) ?? [];
-	const totalAttendees =
-		(
+	const attendeesInClass =
+		v(
 			await client
 				.from("attendees_with_group")
-				.select("*", { head: true, count: "exact" })
-				.eq("group", searchParams.groupId)
-		).count ?? 0;
-
+				.select("*")
+				.eq("group", searchParams.groupId),
+		) ?? [];
+	// console.log(totalAttendees);
 	return (
 		<Dashboard
 			data={data}
 			initialJoined={joined}
-			totalAttendees={totalAttendees}
+			attendeesInClass={attendeesInClass}
 		/>
 	);
 }

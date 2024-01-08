@@ -14,7 +14,7 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 	useEffect(() => {
 		(async () => {
 			const client = await createClient();
-			console.log("lol");
+			// console.log("lol");
 			const data = v(
 				await client
 					.from("groups")

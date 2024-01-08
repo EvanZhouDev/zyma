@@ -9,6 +9,7 @@ import {
 	RepoIcon,
 	ReportIcon,
 	SignOutIcon,
+	AlertIcon,
 } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -32,10 +33,10 @@ async function getAttendees(group: number) {
 	)[0].attendees;
 }
 
-async function getGroupId(code: string) {
-	const client = await createClient();
-	return v(await client.from("groups").select("id").eq("code", code))[0];
-}
+// async function getGroupId(code: string) {
+// 	const client = await createClient();
+// 	return v(await client.from("groups").select("id").eq("code", code))[0];
+// }
 
 type Group = Tables<"groups"> & {
 	attendees: SelectPublic<"attendees", typeof SELECT_ATTENDEES>[]; // for now
@@ -100,7 +101,7 @@ export default function Dashboard({
 						filter: `admin=eq.${admin}`,
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						setGroups((x) => [...x, payload.new as Group]);
 					},
 				)
@@ -113,7 +114,7 @@ export default function Dashboard({
 						filter: `admin=eq.${admin}`,
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						setGroups((groups) =>
 							groups.map((x) =>
 								x.id === payload.new.id ? (payload.new as Group) : x,
@@ -130,13 +131,13 @@ export default function Dashboard({
 						filter: `admin=eq.${admin}`,
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						setGroups((groups) =>
 							groups.filter((x) => x.id !== payload.old.id),
 						);
 					},
 				)
-				.subscribe(console.log);
+				.subscribe((x) => console.log(x));
 		})();
 	}, [admin]);
 	useEffect(() => {
@@ -151,8 +152,8 @@ export default function Dashboard({
 						schema: "public",
 						table: "attendees",
 					},
-					(payload) => {
-						console.log(payload);
+					() => {
+						// console.log(payload);
 						refetchAttendees(groupId);
 					},
 				)
@@ -163,8 +164,8 @@ export default function Dashboard({
 						schema: "public",
 						table: "attendees",
 					},
-					(payload) => {
-						console.log(payload);
+					() => {
+						// console.log(payload);
 						refetchAttendees(groupId);
 					},
 				)
@@ -176,11 +177,10 @@ export default function Dashboard({
 						table: "attendees",
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						refetchAttendees(groupId);
 					},
-				)
-				.subscribe(console.log);
+				);
 		})();
 	}, [groupId, refetchAttendees]);
 
@@ -321,19 +321,7 @@ export default function Dashboard({
 								Configure Your Attendance Session:
 							</h1>
 							<div role="alert" className="alert alert-warning">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="stroke-current shrink-0 h-6 w-6"
-									fill="none"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-									/>
-								</svg>
+								<AlertIcon size="medium" verticalAlign="middle" />
 								<span>
 									Currently, configuring your attendance session is not
 									implemented

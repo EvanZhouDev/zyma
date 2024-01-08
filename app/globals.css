@@ -222,12 +222,36 @@ body {
 }
 
 .zyma-code-bg {
-	background: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
+	position: relative;
+	overflow: hidden;
 }
 
+.zyma-code-bg::before {
+	content: "";
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: conic-gradient(#9f71c3, #3b93dd, #ef8357, #d1657f, #9673ce);
+	transform: rotate(0deg);
+	animation: rotate 5s linear infinite;
+}
+
+@keyframes rotate {
+	100% {
+		transform: rotate(1turn);
+	}
+}
 .alert-error {
 	border: 1.5px solid #cf212e;
 	background-color: #cf212e40;
+	@apply text-secondary-content;
+}
+
+.alert-warning {
+	border: 1.5px solid #ffbe00;
+	background-color: #ffbe0040;
 	@apply text-secondary-content;
 }
 
@@ -235,4 +259,14 @@ body {
 	border: 1.5px solid #0a69da;
 	background-color: #0a69da40;
 	@apply text-secondary-content;
+}
+
+.pill-select {
+	@apply flex-grow text-xl outline outline-base-200 p-2 rounded-full px-5 flex justify-center items-center cursor-pointer;
+}
+
+.pill-select-filled {
+	@apply outline-primary;
+
+	background-color: oklch(var(--p) / 0.25);
 }
