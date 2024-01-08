@@ -159,7 +159,7 @@ export default function Dashboard({
 							</button>{" "}
 						</div>
 						<dialog ref={statsDialog} className="modal">
-							<div className="modal-box !min-w-[90vw] h-[90vh]">
+							<div className="modal-box min-w-fit">
 								<div className="w-full flex flex-row justify-between items-center">
 									<div className="flex flex-col justify-center">
 										<h1 className="text-2xl font-bold">
@@ -288,7 +288,7 @@ export default function Dashboard({
 								/>
 								{/* <div className="flex flex-row items-center w-full justify-between mt-4"></div> */}
 
-								<div className="flex flex-row justify-between mt-5">
+								<div className="modal-action">
 									<form method="dialog">
 										<button className="btn btn-standard">Close</button>{" "}
 									</form>
@@ -299,6 +299,9 @@ export default function Dashboard({
 									</form>
 								</div>
 							</div>
+							<form method="dialog" className="modal-backdrop">
+								<button>Close</button>
+							</form>
 						</dialog>
 					</div>
 				</div>

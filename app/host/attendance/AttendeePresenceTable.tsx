@@ -254,7 +254,7 @@ export default function AttendeePresenceTable({
 					<tfoot className="border-none outline-none" />
 				</table>
 				{joined.length === 0 ? (
-					<h1 className="text-center font-bold mt-5 text-xl opacity-50">
+					<h1 className="text-center font-bold my-10 text-xl opacity-50">
 						Waiting for attendees to join...
 					</h1>
 				) : (
