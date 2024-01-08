@@ -136,7 +136,8 @@ export default function Dashboard({
 							groups.filter((x) => x.id !== payload.old.id),
 						);
 					},
-				);
+				)
+				.subscribe((x) => console.log(x));
 		})();
 	}, [admin]);
 	useEffect(() => {

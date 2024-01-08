@@ -2,14 +2,14 @@
 import Logo from "@/components/Logo";
 import ZymaCode from "@/components/ZymaCode";
 import { ROOT_URL } from "@/components/constants";
-import { v } from "@/utils";
+import { SelectPublic, v } from "@/utils";
 import { createClient } from "@/utils/supabase/client";
 import { AlertIcon, ZapIcon, GraphIcon } from "@primer/octicons-react";
 import { useEffect, useState, useRef } from "react";
 import AttendeePresenceTable from "./AttendeePresenceTable";
 import TimeElapsed from "./TimeElapsed";
 import { endSession } from "./actions";
-import { getRelativeMinuteTime } from "./utils";
+import { AttendeeInAttendance, getRelativeMinuteTime } from "./utils";
 
 async function getAttendee(uuid: string, code: string) {
 	const client = await createClient();
@@ -21,21 +21,17 @@ async function getAttendee(uuid: string, code: string) {
 			.eq("attendee", uuid),
 	)[0];
 }
+
 export default function Dashboard({
 	data,
 	initialJoined,
-	attendeesInClass: attendeesIncClass,
+	attendeesInClass,
 }: {
 	data: { groups: { name: string } | null; code: string; created_at: string };
-	initialJoined: {
-		profiles: { username: string } | null;
-		attendee: string;
-		status: number;
-		created_at: string;
-	}[];
-	attendeesInClass;
+	initialJoined: AttendeeInAttendance[];
+	attendeesInClass: SelectPublic<"attendees_with_group", "*">[];
 }) {
-	const totalAttendees = attendeesIncClass.length;
+	const totalAttendees = attendeesInClass.length;
 	const attendanceCode = data.code;
 	const [joined, setJoined] = useState(initialJoined);
 	const [rtStatus, setRtStatus] = useState("");
@@ -87,14 +83,14 @@ export default function Dashboard({
 		})();
 	}, [attendanceCode]);
 
-	const getInClass = (joined) => {
+	const getInClass = (joined: AttendeeInAttendance[]) => {
 		return joined.filter((x) =>
-			attendeesIncClass.map((y) => y.attendee).includes(x.attendee),
+			attendeesInClass.map((y) => y.attendee).includes(x.attendee),
 		);
 	};
-	const getForeign = (joined) => {
+	const getForeign = (joined: AttendeeInAttendance[]) => {
 		return joined.filter(
-			(x) => !attendeesIncClass.map((y) => y.attendee).includes(x.attendee),
+			(x) => !attendeesInClass.map((y) => y.attendee).includes(x.attendee),
 		);
 	};
 
@@ -173,7 +169,9 @@ export default function Dashboard({
 											For {totalAttendees} registered{" "}
 											{totalAttendees === 1 ? "attendee" : "attendees"} and{" "}
 											{getForeign(joined).length} foreign{" "}
-											{getForeign(joined) === 1 ? "attendee" : "attendees"}
+											{getForeign(joined).length === 1
+												? "attendee"
+												: "attendees"}
 										</p>
 									</div>
 
@@ -227,7 +225,7 @@ export default function Dashboard({
 													getForeign(joined)
 														.filter(
 															(x) =>
-																!attendeesIncClass
+																!attendeesInClass
 																	.map((y) => y.attendee)
 																	.includes(x.attendee),
 														)
@@ -237,7 +235,7 @@ export default function Dashboard({
 												{
 													getForeign(joined).filter(
 														(x) =>
-															!attendeesIncClass
+															!attendeesInClass
 																.map((y) => y.attendee)
 																.includes(x.attendee),
 													).length
@@ -246,7 +244,7 @@ export default function Dashboard({
 											<div className="stat-desc">
 												{getForeign(joined).filter(
 													(x) =>
-														!attendeesIncClass
+														!attendeesInClass
 															.map((y) => y.attendee)
 															.includes(x.attendee),
 												).length === 0
@@ -255,14 +253,14 @@ export default function Dashboard({
 															(getForeign(joined)
 																.filter(
 																	(x) =>
-																		!attendeesIncClass
+																		!attendeesInClass
 																			.map((y) => y.attendee)
 																			.includes(x.attendee),
 																)
 																.filter((x) => x.status === 0).length /
 																getForeign(joined).filter(
 																	(x) =>
-																		!attendeesIncClass
+																		!attendeesInClass
 																			.map((y) => y.attendee)
 																			.includes(x.attendee),
 																).length) *
@@ -286,7 +284,7 @@ export default function Dashboard({
 
 								<AttendeePresenceTable
 									joined={joined}
-									attendeesIncClass={attendeesIncClass}
+									attendeesInClass={attendeesInClass}
 								/>
 								{/* <div className="flex flex-row items-center w-full justify-between mt-4"></div> */}
 
@@ -306,7 +304,7 @@ export default function Dashboard({
 				</div>
 				<AttendeePresenceTable
 					joined={joined}
-					attendeesIncClass={attendeesIncClass}
+					attendeesInClass={attendeesInClass}
 					accessories={
 						<button
 							className="btn btn-standard ml-2"

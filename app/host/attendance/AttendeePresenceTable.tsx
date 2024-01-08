@@ -1,26 +1,24 @@
 "use client";
 
 import { convertStatus } from "@/components/constants";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, ReactNode, useState } from "react";
 import {
 	IssueDraftIcon,
 	IssueClosedIcon,
 	RepoIcon,
 	RepoTemplateIcon,
 } from "@primer/octicons-react";
+import { SelectPublic } from "@/utils";
+import { AttendeeInAttendance } from "./utils";
 
-type AttendeeInAttendance = {
-	profiles: { username: string } | null;
-	attendee: string;
-	status: number;
-	created_at?: string;
-};
 export default function AttendeePresenceTable({
 	joined,
-	attendeesIncClass,
+	attendeesInClass,
 	accessories,
 }: {
 	joined: AttendeeInAttendance[];
+	attendeesInClass: SelectPublic<"attendees_with_group", "*">[];
+	accessories?: ReactNode;
 }) {
 	const [searchContent, setSearchContent] = useState("");
 
@@ -176,7 +174,7 @@ export default function AttendeePresenceTable({
 
 								if (
 									isForeignSelected &&
-									!attendeesIncClass
+									!attendeesInClass
 										.map((x) => x.attendee)
 										.includes(attendee.attendee)
 								) {
@@ -185,7 +183,7 @@ export default function AttendeePresenceTable({
 
 								if (
 									isRegisteredSelected &&
-									attendeesIncClass
+									attendeesInClass
 										.map((x) => x.attendee)
 										.includes(attendee.attendee)
 								) {
@@ -209,7 +207,7 @@ export default function AttendeePresenceTable({
 										<th>{i + 1}</th>
 										<td>
 											{attendee.profiles!.username}
-											{!attendeesIncClass
+											{!attendeesInClass
 												.map((x) => x.attendee)
 												.includes(attendee.attendee) && (
 												<p className="opacity-50">(Unregistered)</p>
