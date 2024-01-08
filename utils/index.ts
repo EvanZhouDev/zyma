@@ -23,17 +23,20 @@ export function isValidCode(code: string) {
 
 type SchemaKeyType = keyof Database;
 type TableKeyType = keyof Database[keyof Database]["Tables"];
+type ViewKeyType = keyof Database[keyof Database]["Views"];
 export type RawSelect<
 	SchemaName extends SchemaKeyType,
-	TableName extends TableKeyType,
+	TableName extends TableKeyType | ViewKeyType,
 	Query extends string = "*",
 	Schema extends GenericSchema = Database[SchemaName],
-	Table extends GenericTable = Schema["Tables"][TableName],
+	Table extends Pick<GenericTable, "Row"> = TableName extends TableKeyType
+		? Schema["Tables"][TableName]
+		: Schema["Views"][TableName],
 	Relationships = Table extends { Relationships: infer R } ? R : unknown,
 > = GetResult<Schema, Table["Row"], TableName, Relationships, Query>;
 
 export type SelectPublic<
-	Table extends TableKeyType,
+	Table extends TableKeyType | ViewKeyType,
 	Query extends string = "*",
 > = RawSelect<"public", Table, Query>;
 
