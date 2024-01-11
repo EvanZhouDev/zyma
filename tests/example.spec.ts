@@ -50,9 +50,15 @@ test.describe("Happy path", () => {
 		await page.getByRole("link", { name: /Start Attendance/ }).isEnabled();
 		await page.getByRole("link", { name: /Start Attendance/ }).click();
 		await page.waitForURL(/host\/attendance/);
-		await page.locator("select").selectOption("Absent");
-		await page.locator("select").selectOption("All Statuses");
-		await page.getByRole("button", { name: "End Session" }).click();
+		await page.locator("label:has(input[name='absent']):not(dialog *)").click();
+		await page
+			.locator("label:has(input[name='foreign']):not(dialog *)")
+			.click();
+		await page.getByRole("button", { name: "End Session" }).first().click();
+		await page
+			.getByRole("dialog")
+			.getByRole("button", { name: "End Session" })
+			.click();
 	});
 	test("Join group + leave group", async ({ browser, browserName }) => {
 		const hostContext = await browser.newContext();
@@ -82,6 +88,7 @@ test.describe("Happy path", () => {
 		).toBeVisible();
 		// Remove student
 		await removeStudent(hostPage);
+		await hostPage.goto("/host/dashboard"); // XXX: Realtime
 		await expect(hostPage.locator(".alert-info:not(dialog *)")).toBeVisible();
 		await expect(hostPage.getByRole("tabpanel")).toContainText(
 			"No attendees registered.",
@@ -117,6 +124,7 @@ test.describe("Happy path", () => {
 		// Remove student
 		await hostPage.goto("/host/dashboard"); // XXX: Realtime
 		await removeStudent(hostPage);
+		await hostPage.goto("/host/dashboard"); // XXX: Realtime
 		await expect(hostPage.locator(".alert-info:not(dialog *)")).toBeVisible();
 		await expect(hostPage.getByRole("tabpanel")).toContainText(
 			"No attendees registered.",

@@ -104,43 +104,66 @@ export default function AttendeePresenceTable({
 				/>
 				{accessories}
 			</div>
+			{/* Opacity 0 instead of hidden because we want that space padding */}
 			<div className="flex flex-row gap-2 w-full mt-7 items-center justify-center">
-				<span
+				<label
 					className={`pill-select ${
 						isPresentSelected ? "pill-select-filled" : ""
 					}`}
-					onClick={() => setIsPresentSelected(!isPresentSelected)}
 				>
 					<IssueClosedIcon verticalAlign="middle" size="medium" />
-					<span className="ml-2">Present</span>
-				</span>
-				<span
-					className={`pill-select ${
+					<input
+						type="checkbox"
+						className="opacity-0"
+						name="present"
+						onChange={() => setIsPresentSelected(!isPresentSelected)}
+					/>
+					Present
+				</label>
+				<label
+					className={`pill-select ml-2 ${
 						isAbsentSelected ? "pill-select-filled" : ""
 					}`}
-					onClick={() => setIsAbsentSelected(!isAbsentSelected)}
 				>
 					<IssueDraftIcon verticalAlign="middle" size="medium" />
-					<span className="ml-2">Absent</span>
-				</span>
-				<span
-					className={`pill-select ${
+					<input
+						type="checkbox"
+						className="opacity-0"
+						name="absent"
+						onChange={() => setIsAbsentSelected(!isAbsentSelected)}
+					/>
+					Absent
+				</label>
+				<label
+					className={`pill-select ml-2 ${
 						isForeignSelected ? "pill-select-filled" : ""
 					}`}
-					onClick={() => setIsForeignSelected(!isForeignSelected)}
 				>
 					<RepoTemplateIcon verticalAlign="middle" size="medium" />
-					<span className="ml-2">Foreign</span>
-				</span>
-				<span
-					className={`pill-select ${
+					<input
+						type="checkbox"
+						className="opacity-0"
+						name="foreign"
+						onChange={() => {
+							setIsForeignSelected(!isForeignSelected);
+						}}
+					/>
+					Foreign
+				</label>
+				<label
+					className={`pill-select ml-2 ${
 						isRegisteredSelected ? "pill-select-filled" : ""
 					}`}
-					onClick={() => setIsRegisteredSelected(!isRegisteredSelected)}
 				>
 					<RepoIcon verticalAlign="middle" size="medium" />
-					<span className="ml-2">Registered</span>
-				</span>
+					<input
+						type="checkbox"
+						className="opacity-0"
+						name="registered"
+						onChange={() => setIsRegisteredSelected(!isRegisteredSelected)}
+					/>
+					Registered
+				</label>
 			</div>
 			<div className="flex-grow w-full">
 				<table className="table mt-5 w-full outline outline-base-200 outline-1 text-[#24292F] rounded-lg">
