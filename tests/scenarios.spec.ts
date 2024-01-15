@@ -51,8 +51,8 @@ test.describe("One Group", () => {
 		const hostPage = await hostContext.newPage();
 		const lawfulContext = await browser.newContext();
 		const lawfulPage = await lawfulContext.newPage();
-		const unlawfulContext = await browser.newContext();
-		const unlawfulPage = await unlawfulContext.newPage();
+		// const unlawfulContext = await browser.newContext();
+		// const unlawfulPage = await unlawfulContext.newPage();
 		const absentmindedContext = await browser.newContext();
 		const absentmindedPage = await absentmindedContext.newPage();
 		const qrcodehaterContext = await browser.newContext();
@@ -183,12 +183,15 @@ test.describe("One Group", () => {
 			.getByRole("button", { name: /Actually here/ })
 			.click();
 		await expect(qrcodehaterPage.getByText(/Successfully Absent/)).toBeHidden();
-		await expect(hostPage.getByRole("cell", { name: "Lawful" })).toBeVisible();
+		await hostPage.reload(); // XXX: Realtime
 		await expect(
-			hostPage.getByRole("cell", { name: "Absentminded" }),
+			hostPage.getByRole("cell", { name: "Lawful" }).nth(1),
 		).toBeVisible();
 		await expect(
-			hostPage.getByRole("cell", { name: "Qrcodehater" }),
+			hostPage.getByRole("cell", { name: "Absentminded" }).nth(1),
+		).toBeVisible();
+		await expect(
+			hostPage.getByRole("cell", { name: "Qrcodehater" }).nth(1),
 		).toBeVisible();
 	});
 });

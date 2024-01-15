@@ -1,4 +1,11 @@
 "use client";
+
+import { SelectPublic } from "@/utils";
+
+export type AttendeeInAttendance = SelectPublic<
+	"attendance",
+	"profiles (username), attendee, status, created_at"
+>;
 export function getRelativeMinuteTime(time1: string, time2: string) {
 	// Convert both times to Date objects
 	const date1 = new Date(time1);

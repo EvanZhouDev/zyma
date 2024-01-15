@@ -69,13 +69,12 @@ export default function Client({
 						filter: `attendee=eq.${attendeeId}`,
 					},
 					(payload) => {
-						console.log(payload);
+						// console.log(payload);
 						setGroups((groups) =>
 							groups.filter((x) => x.id !== payload.old.group),
 						);
 					},
-				)
-				.subscribe(console.log);
+				);
 		})();
 	}, [attendeeId]);
 	return (

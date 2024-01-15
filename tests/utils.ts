@@ -29,6 +29,11 @@ export async function removeStudent(page: Page) {
 			':is([aria-label="Manage Attendees"] + div) .btn-dangerous:not(dialog .btn-dangerous)',
 		)
 		.click();
+	await page
+		.getByRole("dialog")
+		.getByRole("button", { name: "Delete" })
+		.nth(1)
+		.click();
 }
 export async function createAccount(
 	page: Page,
