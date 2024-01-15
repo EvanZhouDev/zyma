@@ -193,7 +193,7 @@ export default function Dashboard({
 																totalAttendees) *
 																100,
 													  )}
-												% of total
+												% attendance
 											</div>
 										</div>
 
@@ -214,12 +214,12 @@ export default function Dashboard({
 																totalAttendees) *
 																100,
 													  )}
-												% of total
+												% absence
 											</div>
 										</div>
 
 										<div className="stat">
-											<div className="stat-title">Unregistered</div>
+											<div className="stat-title">Foreign</div>
 											<div className="stat-value">
 												{
 													getForeign(joined)
@@ -266,7 +266,7 @@ export default function Dashboard({
 																).length) *
 																100,
 													  )}
-												% of total unregistered
+												% foreign attendance
 											</div>
 										</div>
 									</div>
@@ -276,8 +276,8 @@ export default function Dashboard({
 									<AlertIcon size="medium" />
 									<div>
 										<p className="text-lg">
-											Unregistered attendee data is irreversibly discarded.
-											Ensure to copy the data now if you need it.
+											Foreign attendee data is irreversibly discarded. Ensure to
+											copy the data now if you need it.
 										</p>
 									</div>
 								</div>

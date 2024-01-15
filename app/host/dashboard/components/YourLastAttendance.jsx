@@ -138,7 +138,7 @@ export default function YourLastAttendance() {
 								</div>
 								{/* 
 								<div className="stat">
-									<div className="stat-title">Unregistered</div>
+									<div className="stat-title">Foreign</div>
 									<div className="stat-value">1,200</div>
 									<div className="stat-desc">3% of total</div>
 								</div> */}

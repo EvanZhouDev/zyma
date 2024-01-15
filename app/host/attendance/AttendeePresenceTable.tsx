@@ -233,7 +233,7 @@ export default function AttendeePresenceTable({
 											{!attendeesInClass
 												.map((x) => x.attendee)
 												.includes(attendee.attendee) && (
-												<p className="opacity-50">(Unregistered)</p>
+												<span className="opacity-50"> (Foreign)</span>
 											)}
 										</td>
 										<td>
