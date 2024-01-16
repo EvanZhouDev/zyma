@@ -65,7 +65,6 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 								],
 								...attendees
 									.sort((a, b) => {
-										console.log(selectedOption)
 										if (selectedOption === "alphabeticalName") {
 											return a.username.localeCompare(b.username);
 										}
@@ -73,7 +72,6 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 											return a.email.localeCompare(b.email);
 										}
 										if (selectedOption === "custom") {
-											console.log(customOrder)
 											const orderArray = customOrder;
 											const indexA = orderArray.indexOf(a.username);
 											const indexB = orderArray.indexOf(b.username);
@@ -192,6 +190,9 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 						</div>
 					)}
 				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button>Close</button>
+				</form>
 			</dialog>
 			<button
 				className="btn btn-standard flex items-center justify-center"
