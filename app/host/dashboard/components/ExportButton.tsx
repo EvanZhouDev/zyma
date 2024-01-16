@@ -84,7 +84,7 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 			}}
 		>
 			<UploadIcon size="medium" verticalAlign="middle" />
-			Export Students
+			Export Attendees
 		</button>
 	);
 }
