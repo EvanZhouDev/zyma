@@ -18,19 +18,19 @@ export default function GroupActions({ group }: { group: Tables<"groups"> }) {
 		async (key: string, value: string) => {
 			await editRowGroupMetadata(group.id, key, value);
 		},
-		[group.id]
+		[group.id],
 	);
 	const addRow = useCallback(
 		async (key: string) => {
 			await editRowGroupMetadata(group.id, key, "");
 		},
-		[group.id]
+		[group.id],
 	);
 	const deleteRow = useCallback(
 		async (key: string) => {
 			await deleteRowGroupMetadata(group.id, key);
 		},
-		[group.id]
+		[group.id],
 	);
 	return (
 		<>

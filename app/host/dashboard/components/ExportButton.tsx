@@ -39,7 +39,7 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 								}
 								if (metadata?.customProperties) {
 									for (const property of Object.keys(
-										metadata.customProperties
+										metadata.customProperties,
 									)) {
 										propertiesSet.add(property);
 									}
@@ -60,7 +60,7 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 										new Date(x).toLocaleDateString("en-US", {
 											month: "2-digit",
 											day: "2-digit",
-										})
+										}),
 									),
 								],
 								...attendees
@@ -88,7 +88,7 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 										student.username,
 										...customProperties.map(
 											(property) =>
-												student.metadata?.customProperties?.[property] ?? "--"
+												student.metadata?.customProperties?.[property] ?? "--",
 										),
 										...attendanceDates.map((date) => {
 											const attendanceHistory =
