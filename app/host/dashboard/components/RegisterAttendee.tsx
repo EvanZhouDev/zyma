@@ -30,9 +30,9 @@ export default function RegisterAttendee({ groupId }: { groupId: number }) {
 			<button
 				className="ml-2 btn btn-standard flex items-center justify-center"
 				onClick={() => myModal.current!.showModal()}
+				aria-label="Register Attendees"
 			>
 				<PersonAddIcon size="medium" verticalAlign="middle" />
-				Register Attendees
 			</button>
 			<dialog ref={myModal} className="modal">
 				<div className="modal-box bg-base-100 min-w-[90vw]">

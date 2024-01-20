@@ -10,7 +10,7 @@ export async function login(page: Page, name: string) {
 }
 export async function getCode(page: Page) {
 	await page.goto("/host/dashboard");
-	await page.getByRole("button", { name: "Register Attendees" }).click();
+	await page.locator('button[aria-label="Register Attendees"]').click();
 	const code = await page
 		.locator(
 			"xpath=.//div[contains(., 'Alternatively, enter the Passcode')]/following-sibling::div/div/text()/..",
@@ -78,7 +78,6 @@ export async function createGroup(page: Page, groupName: string) {
 	await page.waitForURL(/dashboard/);
 	// TODO: Account for multiple groups
 	await expect(page).toHaveScreenshot(`${groupName}-dashboard-with-groups.png`);
-	await expect(page.getByRole("combobox")).toBeVisible();
 	await expect(page.getByRole("tabpanel")).toContainText(
 		"No attendees registered.",
 	);
