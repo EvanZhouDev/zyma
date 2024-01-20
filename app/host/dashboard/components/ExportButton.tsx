@@ -5,6 +5,7 @@ import Papa from "papaparse";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AttendeesInClassContext } from "../contexts";
 import toast from "react-hot-toast";
+import { setGroupOrder } from "../actions";
 
 export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 	const exportDialog = useRef<HTMLDialogElement>(null);
@@ -16,7 +17,18 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 
 	// ! SHOULD BE SYNCED TO DB
 	const [selectedOption, setSelectedOption] = useState("alphabeticalName");
-	const [customOrder, setCustomOrder] = useState<null | string[]>(null);
+	// We use null because it may not be safe to have a mutable object
+	// as a default for useState
+	const [customOrder, setCustomOrder] = useState<null | string[]>(
+		group.order as null | string[],
+	);
+	useEffect(() => {
+		(async () => {
+			if (customOrder) {
+				await setGroupOrder(group.id, customOrder);
+			}
+		})();
+	}, [customOrder, group.id]);
 	const updateFile = (newFile: null | File = null) => {
 		const file = newFile ?? fileInput.current!.files![0];
 		if (file !== undefined) {
@@ -83,7 +95,7 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 											return a.email.localeCompare(b.email);
 										}
 										if (selectedOption === "custom") {
-											const orderArray = customOrder;
+											const orderArray = customOrder ?? [];
 											const indexA = orderArray.indexOf(a.username);
 											const indexB = orderArray.indexOf(b.username);
 

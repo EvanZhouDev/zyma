@@ -84,6 +84,15 @@ async function getGroupMetadata(groupId: number) {
 	return v(await client.from("groups").select("metadata").eq("id", groupId))[0]
 		.metadata as { [key: string]: string };
 }
+export async function setGroupOrder(groupId: number, newOrder: string[]) {
+	const client = getServerClient();
+	v(await client.from("groups").update({ order: newOrder }).eq("id", groupId));
+}
+export async function getGroupOrder(groupId: number) {
+	const client = getServerClient();
+	return v(await client.from("groups").select("order").eq("id", groupId))[0]
+		.order as null | string[];
+}
 
 export async function editRowAttendeeMetadata(
 	attendee: string,
