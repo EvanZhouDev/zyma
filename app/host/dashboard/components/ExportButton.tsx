@@ -8,19 +8,30 @@ import toast from "react-hot-toast";
 
 export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 	const exportDialog = useRef<HTMLDialogElement>(null);
+	const fileInput = useRef<HTMLInputElement>(null);
 	const attendees = useContext(AttendeesInClassContext);
-	useEffect(() => {
-		exportDialog.current!.showModal();
-	}, []);
+	// useEffect(() => {
+	// 	exportDialog.current!.showModal();
+	// }, []);
 
 	// ! SHOULD BE SYNCED TO DB
 	const [selectedOption, setSelectedOption] = useState("alphabeticalName");
-	const [customOrder, setCustomOrder] = useState(null);
-
+	const [customOrder, setCustomOrder] = useState<null | string[]>(null);
+	const updateFile = (newFile: null | File = null) => {
+		const file = newFile ?? fileInput.current!.files![0];
+		if (file !== undefined) {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const content = e.target!.result as string;
+				setCustomOrder(content.split(","));
+			};
+			reader.readAsText(file);
+		}
+	};
 	return (
 		<>
 			<dialog ref={exportDialog} className="modal">
-				<div className="modal-box max-w-[40vw] flex flex-col">
+				<div className="modal-box w-md flex flex-col">
 					<button
 						className={`btn btn-standard flex items-center justify-center mb-5 ${
 							selectedOption === "custom" &&
@@ -136,12 +147,12 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 						<option value="custom">Custom Order</option>
 					</select>
 					{selectedOption === "custom" && (
-						<div className="my-5">
+						<div className="mt-5">
 							<p className="font-bold text-xl">Custom Name Order</p>
-							<div role="alert" className="alert alert-info my-5">
+							<div role="alert" className="alert alert-info my-5 max-w-lg">
 								<InfoIcon size="medium" />
 								<div>
-									<ul className="!list-disc pl-5">
+									<ul className="list-disc pl-5">
 										<li>Extra names in the CSV will be ignored.</li>
 										<li>
 											Names in your list not on the CSV will be put at the end,
@@ -150,37 +161,80 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 									</ul>
 								</div>
 							</div>
-							{customOrder ? (
-								<div className="my-2">
-									A CSV has already been loaded previously. Upload a new one to
-									replace the current Custom Order.
-								</div>
-							) : (
-								<div className="my-2">
-									Import a CSV of the order of the names you want.
-								</div>
-							)}
+							<div role="tablist" className="tabs tabs-lifted">
+								<input
+									type="radio"
+									name="csv_type"
+									role="tab"
+									className="tab"
+									aria-label="File"
+									defaultChecked
+								/>
+								<div
+									role="tabpanel"
+									className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+								>
+									{customOrder ? (
+										<div className="my-2 max-w-md">
+											A CSV has already been loaded previously. Upload a new one
+											to replace the current Custom Order.
+										</div>
+									) : (
+										<div className="my-2 max-w-md">
+											Import a CSV of the order of the names you want.
+										</div>
+									)}
 
-							<input
-								type="file"
-								className="file-input-standard w-full max-w-xs"
-								onChange={(event) => {
-									const file = event.target.files[0];
-									if (file.name.split(".").at(-1) === "csv") {
-										if (file) {
-											const reader = new FileReader();
-											reader.onload = (e) => {
-												const content = e.target.result;
-												setCustomOrder(content.split(","));
-											};
-											reader.readAsText(file);
-										}
-									} else {
-										alert("Please input a CSV.");
-										event.target.value = "";
-									}
-								}}
-							/>
+									<input
+										type="file"
+										className="file-input-standard w-full max-w-xs"
+										accept="text/csv,text/plain"
+										ref={fileInput}
+										onChange={() => {
+											updateFile();
+										}}
+										onDragEnter={(e) => {
+											e.stopPropagation();
+											e.preventDefault();
+										}}
+										onDragOver={(e) => {
+											e.stopPropagation();
+											e.preventDefault();
+										}}
+										onDrop={(e) => {
+											e.stopPropagation();
+											e.preventDefault();
+
+											const dt = e.dataTransfer;
+											const files = dt.files;
+											updateFile(files[0]);
+										}}
+									/>
+								</div>
+
+								<input
+									type="radio"
+									name="csv_type"
+									role="tab"
+									className="tab"
+									aria-label="Text"
+								/>
+								<div
+									role="tabpanel"
+									className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+								>
+									{/* TODO: convert it to a list GUI */}
+									<textarea
+										className="textarea textarea-bordered w-full"
+										placeholder="Alice,Carl,Bob"
+										value={customOrder?.join(",") ?? ""}
+										onChange={(e) => {
+											setCustomOrder(e.target.value.split(","));
+										}}
+									/>
+								</div>
+							</div>
+
 							<div className="my-2 opacity-75">
 								For example, your CSV could look like this:{" "}
 								<span className="font-mono bg-secondary !border-base-300 !border-[1px] !px-2 py-1 rounded-full">
@@ -189,6 +243,9 @@ export default function ExportButton({ group }: { group: Tables<"groups"> }) {
 							</div>
 						</div>
 					)}
+					<form method="dialog" className="modal-action">
+						<button className="btn btn-standard">Close</button>
+					</form>
 				</div>
 				<form method="dialog" className="modal-backdrop">
 					<button>Close</button>
