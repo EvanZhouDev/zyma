@@ -111,8 +111,8 @@ export default function SignUp({
 								value={role}
 								onChange={(e) => setRole(e.target.value)}
 							>
-								<option value="HOST">Host</option>
 								<option value="ATTENDEE">Attendee</option>
+								<option value="HOST">Host</option>
 							</select>
 						</label>
 
