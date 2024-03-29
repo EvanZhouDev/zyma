@@ -120,6 +120,7 @@ export interface Database {
           joinable: boolean
           metadata: Json
           name: string
+          order: Json
         }
         Insert: {
           admin: string
@@ -130,6 +131,7 @@ export interface Database {
           joinable?: boolean
           metadata?: Json
           name: string
+          order?: Json
         }
         Update: {
           admin?: string
@@ -140,6 +142,7 @@ export interface Database {
           joinable?: boolean
           metadata?: Json
           name?: string
+          order?: Json
         }
         Relationships: [
           {

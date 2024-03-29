@@ -226,6 +226,17 @@ body {
 	overflow: hidden;
 }
 
+.file-input-standard {
+	@apply input-standard;
+}
+
+.file-input-standard::file-selector-button {
+	all: unset;
+	padding: 10px;
+	margin-right: 10px;
+	@apply btn-standard;
+}
+
 .zyma-code-bg::before {
 	content: "";
 	position: absolute;
