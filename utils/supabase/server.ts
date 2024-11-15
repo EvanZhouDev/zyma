@@ -3,14 +3,14 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Database } from "./types";
 
-export function getServerClient() {
-	const cookieStore = cookies();
+export async function getServerClient() {
+	const cookieStore = await cookies();
 	const client = createClient(cookieStore);
 	return client;
 }
 export type ServerClient = Awaited<ReturnType<typeof getServerClient>>;
 export async function getServerClientWithRedirect(currentRoute: string) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	const user = (await client.auth.getUser()).data?.user;
 	if (user == null) {
 		redirect(`/?redirectTo=${encodeURIComponent(currentRoute)}`);
@@ -22,7 +22,9 @@ export async function getServerClientWithRedirect(currentRoute: string) {
 	}
 	return { client, attendeeId, user };
 }
-export const createClient = (cookieStore: ReturnType<typeof cookies>) => {
+export const createClient = (
+	cookieStore: Awaited<ReturnType<typeof cookies>>,
+) => {
 	return createServerClient<Database>(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

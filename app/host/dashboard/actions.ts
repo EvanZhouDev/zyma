@@ -5,7 +5,7 @@ import { getServerClient } from "@/utils/supabase/server";
 import { AttendeeMetadata } from "./contexts";
 
 export async function addAttendee(code: string, form: FormData) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	const attendees = v(
 		await client
 			.from("profiles")
@@ -30,7 +30,7 @@ export async function addAttendee(code: string, form: FormData) {
 	}
 }
 export async function removeAttendee(group: number, attendee: string) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	v(
 		await client
 			.from("attendees_with_group")
@@ -40,7 +40,7 @@ export async function removeAttendee(group: number, attendee: string) {
 	);
 }
 export async function createClass(className: string) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	return await client
 		.from("groups")
 		.insert([
@@ -48,7 +48,7 @@ export async function createClass(className: string) {
 		]);
 }
 export async function deleteClass(groupId: number) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	v(await client.from("groups").delete().eq("id", groupId));
 }
 // "Currently, it is only possible to update the entire JSON document."
@@ -58,7 +58,7 @@ export async function editRowGroupMetadata(
 	row: string,
 	newValue = "",
 ) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	v(
 		await client
 			.from("groups")
@@ -69,7 +69,7 @@ export async function editRowGroupMetadata(
 	);
 }
 export async function deleteRowGroupMetadata(groupId: number, row: string) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	const original = await getGroupMetadata(groupId);
 	delete original[row];
 	v(
@@ -80,16 +80,16 @@ export async function deleteRowGroupMetadata(groupId: number, row: string) {
 	);
 }
 async function getGroupMetadata(groupId: number) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	return v(await client.from("groups").select("metadata").eq("id", groupId))[0]
 		.metadata as { [key: string]: string };
 }
 export async function setGroupOrder(groupId: number, newOrder: string[]) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	v(await client.from("groups").update({ order: newOrder }).eq("id", groupId));
 }
 export async function getGroupOrder(groupId: number) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	return v(await client.from("groups").select("order").eq("id", groupId))[0]
 		.order as null | string[];
 }
@@ -99,7 +99,7 @@ export async function editRowAttendeeMetadata(
 	row: string,
 	newValue = "",
 ) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	const original = await getAttendeeMetadata(attendee);
 	original.customProperties[row] = newValue;
 	v(
@@ -112,7 +112,7 @@ export async function editRowAttendeeMetadata(
 	);
 }
 export async function deleteRowAttendeeMetadata(attendee: string, row: string) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	const original = await getAttendeeMetadata(attendee);
 	delete original.customProperties[row];
 	v(
@@ -123,7 +123,7 @@ export async function deleteRowAttendeeMetadata(attendee: string, row: string) {
 	);
 }
 async function getAttendeeMetadata(attendee: string) {
-	const client = getServerClient();
+	const client = await getServerClient();
 	return v(
 		await client.from("attendees").select("metadata").eq("attendee", attendee),
 	)[0].metadata as AttendeeMetadata;

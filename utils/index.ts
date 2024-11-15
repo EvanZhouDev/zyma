@@ -1,7 +1,9 @@
 import { GetResult } from "@supabase/postgrest-js/src/select-query-parser";
 import { Database } from "./supabase/types";
-import { GenericTable } from "@supabase/supabase-js/dist/module/lib/types";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import {
+	GenericSchema,
+	GenericTable,
+} from "@supabase/supabase-js/dist/module/lib/types";
 
 export function v<T, E>({
 	data,

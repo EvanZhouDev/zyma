@@ -8,23 +8,22 @@ import { STATUS_TO_NUMBER } from "@/components/constants";
 export default async function Page({
 	searchParams,
 }: {
-	searchParams: { code?: string };
+	searchParams: Promise<{ code?: string }>;
 }) {
+	const { code } = await searchParams;
 	const { client, attendeeId } = await getServerClientWithRedirect(
 		`/attendee/attend${
-			searchParams.code !== undefined
-				? `?code=${encodeURIComponent(searchParams.code)}`
-				: ""
+			code !== undefined ? `?code=${encodeURIComponent(code)}` : ""
 		}`,
 	);
-	if (searchParams.code === undefined) {
+	if (code === undefined) {
 		return <NoCodeProvided action="Attend" />;
 	}
 	const { data, error } = await client
 		.from("attendance")
 		.upsert({
 			attendee: attendeeId,
-			code_used: searchParams.code,
+			code_used: code,
 			status: STATUS_TO_NUMBER.Present,
 		})
 		.select("status");
@@ -33,7 +32,7 @@ export default async function Page({
 		console.assert(error.code === "23503", JSON.stringify(error));
 		return (
 			<CodeNotFound
-				code={searchParams.code}
+				code={code}
 				action="Attend"
 				footer="The Attendance Session may have ended."
 			/>
@@ -46,16 +45,12 @@ export default async function Page({
 				<div className="grid card">
 					<p className="mt-10">
 						Attended with code <br />
-						<b>{searchParams.code}</b>
+						<b>{code}</b>
 					</p>
 				</div>
 				<div className="divider !m-0 !mt-10" />
 				<div className="grid card">
-					<Excuse
-						code={searchParams.code}
-						user={attendeeId}
-						status={data[0].status}
-					/>
+					<Excuse code={code} user={attendeeId} status={data[0].status} />
 				</div>
 			</div>
 		</MainHero>

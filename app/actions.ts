@@ -12,7 +12,7 @@ export async function signIn(
 ) {
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
-	const client = getServerClient();
+	const client = await getServerClient();
 
 	const { data, error } = await client.auth.signInWithPassword({
 		email,
@@ -20,7 +20,7 @@ export async function signIn(
 	});
 
 	if (error) {
-		const redirectURL = new URL(headers().get("origin")!);
+		const redirectURL = new URL((await headers()).get("origin")!);
 		redirectURL.searchParams.append("error", error.message);
 		if (redirectTo) {
 			redirectURL.searchParams.append("redirectTo", redirectTo);
@@ -35,13 +35,13 @@ export async function signIn(
 	);
 }
 export async function signUp(formData: FormData, trial = 3): Promise<never> {
-	const origin = headers().get("origin");
+	const origin = (await headers()).get("origin");
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
 	const name = formData.get("name") as string;
 	const role = convertRole(formData.get("role") as string);
 
-	const client = getServerClient();
+	const client = await getServerClient();
 
 	const { error } = await client.auth.signUp({
 		email,

@@ -5,17 +5,15 @@ import Dashboard from "./Dashboard";
 export default async function Index({
 	searchParams,
 }: {
-	searchParams: { groupId: number };
+	searchParams: Promise<{ groupId: number }>;
 }) {
+	const { groupId } = await searchParams;
 	const { client } = await getServerClientWithRedirect(
-		`/host/attendance?groupId=${encodeURIComponent(searchParams.groupId)}`,
+		`/host/attendance?groupId=${encodeURIComponent(groupId)}`,
 	);
 	const CODE_SELECT = "groups (name), code, created_at";
 	const existingCode = v(
-		await client
-			.from("codes")
-			.select(CODE_SELECT)
-			.eq("group", searchParams.groupId),
+		await client.from("codes").select(CODE_SELECT).eq("group", groupId),
 	);
 	let data: (typeof existingCode)[0];
 	//XXX: Can't I just do an UPSERT?
@@ -25,7 +23,7 @@ export default async function Index({
 		data = v(
 			await client
 				.from("codes")
-				.insert([{ group: searchParams.groupId }])
+				.insert([{ group: groupId }])
 				.select(CODE_SELECT),
 		)[0];
 	}
@@ -42,7 +40,7 @@ export default async function Index({
 			await client
 				.from("attendees_with_group")
 				.select("*")
-				.eq("group", searchParams.groupId),
+				.eq("group", groupId),
 		) ?? [];
 	// console.log(totalAttendees);
 	return (

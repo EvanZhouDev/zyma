@@ -2,7 +2,7 @@ import MainHero from "@/components/MainHero";
 import { getServerClient } from "@/utils/supabase/server";
 
 export default async function ErrorPage() {
-	const client = getServerClient();
+	const client = await getServerClient();
 	const user = (await client.auth.getUser()).data.user;
 
 	return (

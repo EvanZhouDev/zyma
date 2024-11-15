@@ -7,21 +7,20 @@ import { InfoIcon } from "@primer/octicons-react";
 export default async function Join({
 	searchParams,
 }: {
-	searchParams: { code?: string };
+	searchParams: Promise<{ code?: string }>;
 }) {
+	const { code } = await searchParams;
 	const { client, attendeeId } = await getServerClientWithRedirect(
 		`/attendee/join${
-			searchParams.code !== undefined
-				? `?code=${encodeURIComponent(searchParams.code)}`
-				: ""
+			code !== undefined ? `?code=${encodeURIComponent(code)}` : ""
 		}`,
 	);
-	if (searchParams.code === undefined) {
+	if (code === undefined) {
 		return <NoCodeProvided action="Join" />;
 	}
 	const { error } = await client.from("attendees").insert({
 		attendee: attendeeId,
-		with_code: searchParams.code,
+		with_code: code,
 	});
 	if (error !== null) {
 		if (error.code === "23505") {
@@ -42,15 +41,13 @@ export default async function Join({
 		console.assert(error.code === "42501"); // "42501" is the error code for RLS violations
 		return (
 			<CodeNotFound
-				code={searchParams.code}
+				code={code}
 				action="Join"
 				footer="The Code may have expired."
 			/>
 		);
 	}
-	const data = v(
-		await client.from("groups").select("name").eq("code", searchParams.code),
-	);
+	const data = v(await client.from("groups").select("name").eq("code", code));
 	return (
 		<MainHero>
 			<h1 className="my-5 text-xl">

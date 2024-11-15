@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export async function endSession(code: string) {
 	"use server";
-	const client = getServerClient();
+	const client = await getServerClient();
 	v(
 		await client.rpc("end_session", {
 			attendance_code: code,
