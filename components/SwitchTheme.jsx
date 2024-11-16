@@ -25,14 +25,14 @@ const SwitchTheme = () => {
 	}, [theme]);
 
 	return (
-		<button onClick={toggleTheme} className="swap">
+		<button onClick={toggleTheme} className="swap w-fit btn-ghost btn">
 			<SunIcon
-				className={`fill-current w-8 h-8 mx-5 ${
+				className={`fill-current w-8 h-8 ${
 					theme === "githubDark" ? "swap-on" : "swap-off"
 				}`}
 			/>
 			<MoonIcon
-				className={`fill-current w-8 h-8 mx-5 ${
+				className={`fill-current w-8 h-8 ${
 					theme === "github" ? "swap-on" : "swap-off"
 				}`}
 			/>

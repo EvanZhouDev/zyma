@@ -10,6 +10,7 @@ import {
 	ReportIcon,
 	SignOutIcon,
 	AlertIcon,
+	PersonIcon,
 } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -22,6 +23,7 @@ import RegisterAttendee from "./RegisterAttendee";
 import YourLastAttendance from "./YourLastAttendance";
 import { SELECT_ATTENDEES } from "../queries";
 import pDebounce from "p-debounce";
+import Profile from "@/components/Profile";
 
 async function getAttendees(group: number) {
 	const client = await createClient();
@@ -183,7 +185,6 @@ export default function Dashboard({
 				);
 		})();
 	}, [groupId, refetchAttendees]);
-
 	return (
 		<div className="bg-secondary flex h-full w-full justify-around">
 			<div className="rounded-box m-3 mr-1.5 basis-3/5">
@@ -377,12 +378,13 @@ export default function Dashboard({
 					</AttendeesInClassContext.Provider>
 				</div>
 				<div className="bg-base-100 rounded-box outline-base-200 flex flex-col items-center outline outline-1 justify-between w-full mt-3">
-					<div className="flex flex-row items-center justify-between w-full mb-5 mt-5 px-5">
-						<Logo className="ml-2" size={125} />
+					<div className="flex flex-row items-center justify-between w-full mb-5 mt-5 px-5 space-x-3">
+						<Logo className="" size={125} />
 						<div className="flex flex-row items-center justify-between">
 							<SwitchTheme />
+							<Profile />
 							<a
-								className="mx-5"
+								className="btn btn-ghost"
 								href="https://github.com/EvanZhouDev/zyma/issues"
 								title="Report an issue"
 								target="_blank"
