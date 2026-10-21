@@ -9,7 +9,7 @@
     "fix": "biome check --apply .",
     "fix-unsafe": "biome check --apply-unsafe .",
     "update-types": "supabase gen types typescript --local --schema public > utils/supabase/types.ts",
-    "test": "bunx playwright test",
+    "test": "bun x playwright test",
     "format:zed": "biome format"
   },
   "dependencies": {
