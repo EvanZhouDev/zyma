@@ -11,41 +11,47 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - name: Setup Bun
-              uses: oven-sh/setup-bun@v1
+            - uses: actions/checkout@v4
+            - name: Setup patched Node
+              uses: actions/setup-node@v4
               with:
-                  bun-version: latest
+                  node-version: 22.23.4
+            - name: Setup verified Bun
+              run: node scripts/install-secure-bun.mjs "$RUNNER_TEMP/zyma-secure-bun"
             - name: Install dependencies
-              run: bun install
+              run: bun install --frozen-lockfile
             - name: Build
               run: bun run build
     lint:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - name: Setup Bun
-              uses: oven-sh/setup-bun@v1
+            - uses: actions/checkout@v4
+            - name: Setup patched Node
+              uses: actions/setup-node@v4
               with:
-                  bun-version: latest
+                  node-version: 22.23.4
+            - name: Setup verified Bun
+              run: node scripts/install-secure-bun.mjs "$RUNNER_TEMP/zyma-secure-bun"
             - name: Install dependencies
-              run: bun install
+              run: bun install --frozen-lockfile
             - name: Lint
               run: bun run lint
     check-database-types:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - name: Setup Bun
-              uses: oven-sh/setup-bun@v1
+            - uses: actions/checkout@v4
+            - name: Setup patched Node
+              uses: actions/setup-node@v4
               with:
-                  bun-version: latest
+                  node-version: 22.23.4
+            - name: Setup verified Bun
+              run: node scripts/install-secure-bun.mjs "$RUNNER_TEMP/zyma-secure-bun"
             - name: Setup Supabase v${{ env.SUPABASE_VERSION }}
               uses: supabase/setup-cli@v1
               with:
                   version: ${{ env.SUPABASE_VERSION }}
             - name: Install dependencies
-              run: bun install
+              run: bun install --frozen-lockfile
             - name: Start database
               run: |
                   supabase db start
@@ -74,10 +80,12 @@ jobs:
         timeout-minutes: 60
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: oven-sh/setup-bun@v1
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  bun-version: latest
+                  node-version: 22.23.4
+            - name: Setup verified Bun
+              run: node scripts/install-secure-bun.mjs "$RUNNER_TEMP/zyma-secure-bun"
             - name: Setup Supabase v${{ env.SUPABASE_VERSION }}
               uses: supabase/setup-cli@v1
               with:
@@ -87,7 +95,7 @@ jobs:
                   supabase start
                   supabase status -o env | sed s/API_URL/NEXT_PUBLIC_SUPABASE_URL/g | sed s/ANON_KEY/NEXT_PUBLIC_SUPABASE_ANON_KEY/g > .env.local
             - name: Install dependencies
-              run: bun install
+              run: bun install --frozen-lockfile
             - name: Install Playwright Browsers
               run: bunx playwright install --with-deps
             - name: Build project
@@ -95,7 +103,7 @@ jobs:
             - name: Run Playwright tests
               run: bun run test
               id: tests
-            - uses: actions/upload-artifact@v3
+            - uses: actions/upload-artifact@v4
               if: ${{ !cancelled() }}
               with:
                   name: playwright-report

@@ -1,5 +1,8 @@
+import { installEmudhraDistrust } from "./utils/emudhra-default-ca.mjs";
 import { createClient } from "@/utils/supabase/middleware";
 import { type NextRequest } from "next/server";
+
+installEmudhraDistrust();
 
 export async function middleware(request: NextRequest) {
 	// This `try/catch` block is only here for the interactive tutorial.
@@ -12,3 +15,5 @@ export async function middleware(request: NextRequest) {
 
 	return response;
 }
+
+export const config = { runtime: "nodejs" };

@@ -1,4 +1,4 @@
-import { GetResult } from "@supabase/postgrest-js/src/select-query-parser";
+import type { UnstableGetResult as GetResult } from "@supabase/postgrest-js";
 import { Database } from "./supabase/types";
 import {
 	GenericSchema,
