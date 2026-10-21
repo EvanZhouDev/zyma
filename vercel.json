@@ -1,0 +1,4 @@
+{
+  "installCommand": "node scripts/install-secure-node.mjs .security-runtime/node && .security-runtime/node/bin/node scripts/install-secure-bun.mjs .security-runtime/bun && .security-runtime/bun/bun install --frozen-lockfile",
+  "buildCommand": ".security-runtime/node/bin/node node_modules/next/dist/bin/next build"
+}
